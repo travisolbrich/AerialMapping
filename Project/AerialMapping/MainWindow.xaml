@@ -4,10 +4,11 @@
         xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
 		Title="MainWindow" 
 		Height="350" 
-		Width="525">
+		Width="525" WindowState="Maximized">
     <Grid>
-		<esri:MapView x:Name="MyMapView"
-					  LayerLoaded="MyMapView_LayerLoaded">
+		<esri:MapView x:Name="BaseMapView"
+					  LayerLoaded="BaseMapView_LayerLoaded"
+                      Initialized="BaseMapView_Initialized">
 			<esri:Map>
 				<esri:ArcGISTiledMapServiceLayer ID="Basemap"
 					ServiceUri="http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
