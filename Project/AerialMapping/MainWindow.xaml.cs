@@ -35,7 +35,7 @@ namespace AerialMapping
             }
             catch
             {
-                Debug.WriteLine("Could not load KML with path ", path);
+                Debug.WriteLine(string.Format("(MainWindows{LoadKml}) Could not load KML with path {0}", path));
             }
         }
 
@@ -43,7 +43,7 @@ namespace AerialMapping
         {
             if (e.LoadError != null)
             {
-                Debug.WriteLine(string.Format("Error while loading layer : {0} - {1}", e.Layer.ID, e.LoadError.Message));
+                Debug.WriteLine(string.Format("(MainWindows{BaseMapView_LayerLoaded}) Error while loading layer : {0} - {1}", e.Layer.ID, e.LoadError.Message));
                 return;
             }
             if (m_IdToZoomOn != "" && e.Layer.ID == m_IdToZoomOn) 
