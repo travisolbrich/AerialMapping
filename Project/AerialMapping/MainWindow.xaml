@@ -14,5 +14,10 @@
 					ServiceUri="http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
 			</esri:Map>
 		</esri:MapView>
+        
+        <Button x:Name="bOpenFileDialog" Content="Open File"
+                Height="30" Width="60" Margin="10,10"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Background="Beige" Click="bOpenFileDialog_Click" />
     </Grid>
 </Window>

@@ -2,6 +2,7 @@
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Layers;
 using Esri.ArcGISRuntime.Symbology;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace AerialMapping
 
         public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
         {
+            Console.WriteLine("Path: " + path);
             try
             {
                 Uri dataPath = new Uri(path, bRelativePath ? UriKind.Relative : UriKind.Absolute);
@@ -57,6 +59,16 @@ namespace AerialMapping
         {
             m_MapView = (MapView) sender;
             LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+        }
+
+        private void bOpenFileDialog_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                LoadKml(filePath, true, false);
+            }
         }
     }
 }
