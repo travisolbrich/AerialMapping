@@ -25,7 +25,7 @@ namespace AerialMapping
 
         public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
         {
-            Console.WriteLine("Path: " + path);
+            Debug.WriteLine("Path: " + path);
             try
             {
                 Uri dataPath = new Uri(path, bRelativePath ? UriKind.Relative : UriKind.Absolute);
