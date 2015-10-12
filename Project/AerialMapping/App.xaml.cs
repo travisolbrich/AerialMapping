@@ -19,9 +19,9 @@ namespace AerialMapping
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            OpenFileDialog file = new OpenFileDialog();
+            /*OpenFileDialog file = new OpenFileDialog();
             file.ShowDialog();
-            entry(file.FileName);
+            entry(file.FileName);*/
             try
             {
                 // Deployed applications must be licensed at the Basic level or greater (https://developers.arcgis.com/licensing).
