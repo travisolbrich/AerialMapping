@@ -64,6 +64,7 @@ namespace AerialMapping
         private void bOpenFileDialog_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Map Data|*.kml;*.kmz";
             if (openFileDialog.ShowDialog() == true)
             {
                 string filePath = openFileDialog.FileName;
