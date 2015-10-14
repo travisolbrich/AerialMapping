@@ -108,9 +108,8 @@ namespace AerialMapping
 
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double zoomPercent = e.NewValue;
-            m_MapView.ZoomToScaleAsync(zoomPercent);
-            Console.WriteLine(zoomPercent);
+            double zoomScale = e.NewValue;
+            m_MapView.ZoomToScaleAsync(zoomScale);
         }
     }
 }
