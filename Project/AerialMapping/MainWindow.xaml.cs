@@ -97,11 +97,20 @@ namespace AerialMapping
         private void bZoomIn_Click(object sender, RoutedEventArgs e)
         {
             m_MapView.ZoomAsync(1.2);
+            bZoomSlider.Value = m_MapView.Scale;
         }
 
         private void bZoomOut_Click(object sender, RoutedEventArgs e)
         {
             m_MapView.ZoomAsync(0.8);
+            bZoomSlider.Value = m_MapView.Scale;
+        }
+
+        private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double zoomPercent = e.NewValue;
+            m_MapView.ZoomToScaleAsync(zoomPercent);
+            Console.WriteLine(zoomPercent);
         }
     }
 }

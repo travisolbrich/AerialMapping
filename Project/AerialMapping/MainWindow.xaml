@@ -6,15 +6,15 @@
 		Height="350" 
 		Width="525" WindowState="Maximized">
     <Grid>
-		<esri:MapView x:Name="BaseMapView"
+        <esri:MapView x:Name="BaseMapView"
 					  LayerLoaded="BaseMapView_LayerLoaded"
                       Initialized="BaseMapView_Initialized">
-			<esri:Map>
-				<esri:ArcGISTiledMapServiceLayer ID="Basemap"
+            <esri:Map>
+                <esri:ArcGISTiledMapServiceLayer ID="Basemap"
 					ServiceUri="http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
-			</esri:Map>
-		</esri:MapView>
-        
+            </esri:Map>
+        </esri:MapView>
+
         <Button x:Name="bOpenFileDialog" Content="Open File"
                 Height="30" Width="60" Margin="10,10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -36,8 +36,15 @@
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bZoomIn_Click" />
         <Button x:Name="bZoomOut" Content="-"
-                Height="20" Width="20" Margin="10, 100, 0 0"
+                Height="20" Width="20" Margin="10,410,0,-111"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bZoomOut_Click" />
+        <Slider x:Name="bZoomSlider" HorizontalAlignment="Left" 
+                Margin="10,105,0,0" VerticalAlignment="Top" 
+                Height="300" Width="20" RenderTransformOrigin="0.5,0.5"
+                Orientation="Vertical" Minimum="0.01" 
+                Maximum="50000000" ValueChanged="bZoomSlider_Click"
+                IsDirectionReversed="True"/>
+
     </Grid>
 </Window>
