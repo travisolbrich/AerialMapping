@@ -72,6 +72,7 @@ namespace AerialMapping
             }
         }
 
+        // The following are buttons for rotation
         private void bRotateLeft_Click(object sender, RoutedEventArgs e)
         {
             currAngle = (currAngle += 10) % 360;
@@ -90,6 +91,17 @@ namespace AerialMapping
             currAngle = (currAngle -= 10) % 360;
             // apply the rotation to the map
             m_MapView.SetRotationAsync(currAngle);
+        }
+
+        // The following are buttons for zoom
+        private void bZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            m_MapView.ZoomAsync(1.2);
+        }
+
+        private void bZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            m_MapView.ZoomAsync(0.8);
         }
     }
 }

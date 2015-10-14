@@ -31,5 +31,13 @@
                 Height="20" Width="20" Margin="50, 40, 0 0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bRotateRight_Click" />
+        <Button x:Name="bZoomIn" Content="+"
+                Height="20" Width="20" Margin="10, 80, 0 0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Background="Beige" Click="bZoomIn_Click" />
+        <Button x:Name="bZoomOut" Content="-"
+                Height="20" Width="20" Margin="10, 100, 0 0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Background="Beige" Click="bZoomOut_Click" />
     </Grid>
 </Window>
