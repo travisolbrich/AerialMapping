@@ -63,7 +63,7 @@ namespace AerialMapping
 
         private void bOpenFileDialog_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
             openFileDialog.Filter = "Map Data|*.kml;*.kmz";
             if (openFileDialog.ShowDialog() == true)
             {
@@ -82,7 +82,8 @@ namespace AerialMapping
         private void bRotateDefault_Click(object sender, RoutedEventArgs e)
         {
             // apply the rotation to the map
-            m_MapView.SetRotationAsync(0);
+            currAngle = 0;
+            m_MapView.SetRotationAsync(currAngle);
         }
         private void bRotateRight_Click(object sender, RoutedEventArgs e)
         {
