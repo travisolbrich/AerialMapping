@@ -14,7 +14,7 @@ namespace AerialMapping
     public partial class MainWindow : Window
     {
         public double m_KmzZoomDelaySec = 3;
-
+        private double currAngle = 0;
         private string m_IdToZoomOn = "";
         private MapView m_MapView;
 
@@ -70,6 +70,25 @@ namespace AerialMapping
                 string filePath = openFileDialog.FileName;
                 LoadKml(filePath, true, false);
             }
+        }
+
+        private void bRotateLeft_Click(object sender, RoutedEventArgs e)
+        {
+            currAngle = (currAngle += 10) % 360;
+            // apply the rotation to the map
+            m_MapView.SetRotationAsync(currAngle);
+        }
+
+        private void bRotateDefault_Click(object sender, RoutedEventArgs e)
+        {
+            // apply the rotation to the map
+            m_MapView.SetRotationAsync(0);
+        }
+        private void bRotateRight_Click(object sender, RoutedEventArgs e)
+        {
+            currAngle = (currAngle -= 10) % 360;
+            // apply the rotation to the map
+            m_MapView.SetRotationAsync(currAngle);
         }
     }
 }

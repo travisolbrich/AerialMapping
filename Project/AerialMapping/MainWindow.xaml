@@ -19,5 +19,17 @@
                 Height="30" Width="60" Margin="10,10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bOpenFileDialog_Click" />
+        <Button x:Name="bRotateLeft" Content="&lt;"
+                Height="20" Width="20" Margin="10,40,0,0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Background="Beige" Click="bRotateLeft_Click" />
+        <Button x:Name="bRotateDefault" Content="O"
+                Height="20" Width="20" Margin="30,40,0,0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Background="Beige" Click="bRotateDefault_Click" />
+        <Button x:Name="bRotateRight" Content="&gt;"
+                Height="20" Width="20" Margin="50, 40, 0 0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Background="Beige" Click="bRotateRight_Click" />
     </Grid>
 </Window>
