@@ -9,6 +9,15 @@ using System.Linq;
 using System.Windows;
 using System.IO;
 
+/*
+ *        _ _    _  _____ _______   _____   ____    _____ _______ 
+ *       | | |  | |/ ____|__   __| |  __ \ / __ \  |_   _|__   __|
+ *       | | |  | | (___    | |    | |  | | |  | |   | |    | |   
+ *   _   | | |  | |\___ \   | |    | |  | | |  | |   | |    | |   
+ *  | |__| | |__| |____) |  | |    | |__| | |__| |  _| |_   | |   
+ *   \____/ \____/|_____/   |_|    |_____/ \____/  |_____|  |_|  
+ */
+
 namespace AerialMapping
 {
     public partial class MainWindow : Window
@@ -109,15 +118,27 @@ namespace AerialMapping
             bZoomSlider.Value = m_MapView.Scale;
         }
 
+        // The following is for zoom slider action
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoomScale = e.NewValue;
             m_MapView.ZoomToScaleAsync(zoomScale);
         }
+        
+        // The following is for the time slider
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // this is for testing only.
             if (e.NewValue == 3) m_MapView.Map.Layers.Add(kmllayerTest);
             else if (e.NewValue == 2) m_MapView.Map.Layers.Remove(kmllayerTest);
+           // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
+        }
+
+        // This will update the time slider with new range and tick marks
+        private void updateTimeSlider(int numLayers, int currLayer)
+        {
+            bTimeSlider.Maximum = numLayers - 1;
+            bTimeSlider.Value = currLayer;
         }
     }
 }

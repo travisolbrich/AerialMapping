@@ -51,7 +51,7 @@
                 Orientation="Horizontal" IsSnapToTickEnabled="True"
                 TickPlacement="Both" TickFrequency="1"
                 Background="Gray"
-                Minimum="1" Maximum="10" 
+                Minimum="0" Maximum="10" 
                 ValueChanged="bTimeSlider_Click"/>
 
     </Grid>
