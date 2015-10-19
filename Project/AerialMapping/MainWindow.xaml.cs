@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿/*
  *        _ _    _  _____ _______   _____   ____    _____ _______ 
  *       | | |  | |/ ____|__   __| |  __ \ / __ \  |_   _|__   __|
  *       | | |  | | (___    | |    | |  | | |  | |   | |    | |   
@@ -27,6 +27,7 @@ namespace AerialMapping
         private double currAngle = 0;
         private string m_IdToZoomOn = "";
         private MapView m_MapView;
+        private Viewpoint m_CenterPoint;
         KmlLayer kmllayerTest;
 
         public class MenuItem
@@ -76,7 +77,8 @@ namespace AerialMapping
             if (m_IdToZoomOn != "" && e.Layer.ID == m_IdToZoomOn) 
             {
                 m_IdToZoomOn = "";
-                ((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+                m_CenterPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
+                ((MapView)sender).SetViewAsync(m_CenterPoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
             }
             AddLayerToTree(e.Layer);
         }
@@ -146,7 +148,6 @@ namespace AerialMapping
             LayerView.Items.Add(root);
         }
         
-        
         // The following is for the time slider
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -161,6 +162,12 @@ namespace AerialMapping
         {
             bTimeSlider.Maximum = numLayers - 1;
             bTimeSlider.Value = currLayer;
+        }
+
+        private void bCenterView_Click(object sender, RoutedEventArgs e)
+        {
+            //((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+            m_MapView.SetViewAsync(m_CenterPoint);
         }
     }
 }
