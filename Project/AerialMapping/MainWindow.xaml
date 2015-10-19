@@ -12,7 +12,7 @@
                       Initialized="BaseMapView_Initialized">
             <esri:Map>
                 <esri:ArcGISTiledMapServiceLayer ID="Basemap"
-					ServiceUri="http://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer"/>
+					ServiceUri="http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
             </esri:Map>
         </esri:MapView>
         <DockPanel>
