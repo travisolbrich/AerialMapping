@@ -1,3 +1,12 @@
+﻿﻿/*
+ *        _ _    _  _____ _______   _____   ____    _____ _______ 
+ *       | | |  | |/ ____|__   __| |  __ \ / __ \  |_   _|__   __|
+ *       | | |  | | (___    | |    | |  | | |  | |   | |    | |   
+ *   _   | | |  | |\___ \   | |    | |  | | |  | |   | |    | |   
+ *  | |__| | |__| |____) |  | |    | |__| | |__| |  _| |_   | |   
+ *   \____/ \____/|_____/   |_|    |_____/ \____/  |_____|  |_|  
+ */
+
 ﻿using Esri.ArcGISRuntime.Controls;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Layers;
@@ -18,6 +27,7 @@ namespace AerialMapping
         private double currAngle = 0;
         private string m_IdToZoomOn = "";
         private MapView m_MapView;
+        private Viewpoint m_CenterPoint;
         KmlLayer kmllayerTest;
 
         public class MenuItem
@@ -67,7 +77,8 @@ namespace AerialMapping
             if (m_IdToZoomOn != "" && e.Layer.ID == m_IdToZoomOn) 
             {
                 m_IdToZoomOn = "";
-                ((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+                m_CenterPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
+                ((MapView)sender).SetViewAsync(m_CenterPoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
             }
             AddLayerToTree(e.Layer);
         }
@@ -87,6 +98,11 @@ namespace AerialMapping
                 string filePath = openFileDialog.FileName;
                 LoadKml(filePath, true, false);
             }
+        }
+
+        private void bExitProgram_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         // The following are buttons for rotation
@@ -123,21 +139,40 @@ namespace AerialMapping
             bZoomSlider.Value = m_MapView.Scale;
         }
 
+        // The following is for zoom slider action
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoomScale = e.NewValue;
             m_MapView.ZoomToScaleAsync(zoomScale);
         }
+
         public void AddLayerToTree(Layer layer)
         {
             MenuItem root = new MenuItem() { Title = "Test" };
             root.Items.Add(new MenuItem() { Title = "Test2" });
             LayerView.Items.Add(root);
         }
+        
+        // The following is for the time slider
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // this is for testing only.
             if (e.NewValue == 3) m_MapView.Map.Layers.Add(kmllayerTest);
             else if (e.NewValue == 2) m_MapView.Map.Layers.Remove(kmllayerTest);
+           // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
+        }
+
+        // This will update the time slider with new range and tick marks
+        private void updateTimeSlider(int numLayers, int currLayer)
+        {
+            bTimeSlider.Maximum = numLayers - 1;
+            bTimeSlider.Value = currLayer;
+        }
+
+        private void bCenterView_Click(object sender, RoutedEventArgs e)
+        {
+            //((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+            m_MapView.SetViewAsync(m_CenterPoint);
         }
     }
 }
