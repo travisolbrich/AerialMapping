@@ -19,15 +19,15 @@
                 Height="30" Width="60" Margin="10,10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bOpenFileDialog_Click" />
-        <Button x:Name="bRotateLeft" Content="&lt;"
+        <Button x:Name="bRotateLeft" Content="⟲"
                 Height="20" Width="20" Margin="10,40,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bRotateLeft_Click" />
-        <Button x:Name="bRotateDefault" Content="O"
+        <Button x:Name="bRotateDefault" Content="↑"
                 Height="20" Width="20" Margin="30,40,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bRotateDefault_Click" />
-        <Button x:Name="bRotateRight" Content="&gt;"
+        <Button x:Name="bRotateRight" Content="⟳"
                 Height="20" Width="20" Margin="50, 40, 0 0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="Beige" Click="bRotateRight_Click" />
@@ -43,8 +43,16 @@
                 Margin="10,105,0,0" VerticalAlignment="Top" 
                 Height="300" Width="20" RenderTransformOrigin="0.5,0.5"
                 Orientation="Vertical" Minimum="0.01" 
-                Maximum="50000000" ValueChanged="bZoomSlider_Click"
+                Maximum="80000000" ValueChanged="bZoomSlider_Click"
                 IsDirectionReversed="True"/>
+        <Slider x:Name="bTimeSlider" HorizontalAlignment="Center" 
+                Margin="0,0,0,10" VerticalAlignment="Bottom" 
+                Width="800" RenderTransformOrigin="0.5,0.5"
+                Orientation="Horizontal" IsSnapToTickEnabled="True"
+                TickPlacement="Both" TickFrequency="1"
+                Background="Gray"
+                Minimum="1" Maximum="10" 
+                ValueChanged="bTimeSlider_Click"/>
 
     </Grid>
 </Window>

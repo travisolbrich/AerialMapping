@@ -53,6 +53,8 @@ namespace AerialMapping
             {
                 m_IdToZoomOn = "";
                 ((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+                // System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(m_KmzZoomDelaySec)).Wait();
+                // bZoomSlider.Value = m_MapView.Scale;
             }
         }
 
@@ -111,6 +113,10 @@ namespace AerialMapping
         {
             double zoomScale = e.NewValue;
             m_MapView.ZoomToScaleAsync(zoomScale);
+        }
+        private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
         }
     }
 }
