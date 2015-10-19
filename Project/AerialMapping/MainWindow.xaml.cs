@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace AerialMapping
 {
@@ -17,6 +18,18 @@ namespace AerialMapping
         private double currAngle = 0;
         private string m_IdToZoomOn = "";
         private MapView m_MapView;
+
+        public class MenuItem
+        {
+            public MenuItem()
+            {
+                this.Items = new ObservableCollection<MenuItem>();
+            }
+
+            public string Title { get; set; }
+
+            public ObservableCollection<MenuItem> Items { get; set; }
+        }
 
         public MainWindow()
         {
@@ -53,6 +66,7 @@ namespace AerialMapping
                 m_IdToZoomOn = "";
                 ((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
             }
+            AddLayerToTree(e.Layer);
         }
 
         private void BaseMapView_Initialized(object sender, EventArgs e)
@@ -110,6 +124,13 @@ namespace AerialMapping
         {
             double zoomScale = e.NewValue;
             m_MapView.ZoomToScaleAsync(zoomScale);
+        }
+
+        public void AddLayerToTree(Layer layer)
+        {
+            MenuItem root = new MenuItem(){Title = "Test"};
+            root.Items.Add(new MenuItem() { Title = "Test2" });
+            LayerView.Items.Add(root);
         }
     }
 }
