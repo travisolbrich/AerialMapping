@@ -53,6 +53,7 @@
                 Background="Gray"
                 Minimum="1" Maximum="10" 
                 ValueChanged="bTimeSlider_Click"/>
+        <Button Content="Center View" HorizontalAlignment="Left" Margin="88,15,0,0" VerticalAlignment="Top" Width="68" Click="bCenterView_Click"/>
 
     </Grid>
 </Window>

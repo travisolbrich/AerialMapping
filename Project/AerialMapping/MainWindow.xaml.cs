@@ -17,6 +17,7 @@ namespace AerialMapping
         private double currAngle = 0;
         private string m_IdToZoomOn = "";
         private MapView m_MapView;
+        private Viewpoint m_CenterPoint;
 
         public MainWindow()
         {
@@ -52,7 +53,8 @@ namespace AerialMapping
             if (m_IdToZoomOn != "" && e.Layer.ID == m_IdToZoomOn) 
             {
                 m_IdToZoomOn = "";
-                ((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+                m_CenterPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
+                ((MapView)sender).SetViewAsync(m_CenterPoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
                 // System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(m_KmzZoomDelaySec)).Wait();
                 // bZoomSlider.Value = m_MapView.Scale;
             }
@@ -114,9 +116,17 @@ namespace AerialMapping
             double zoomScale = e.NewValue;
             m_MapView.ZoomToScaleAsync(zoomScale);
         }
+
+        // Time slider actions
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
+        }
+
+        private void bCenterView_Click(object sender, RoutedEventArgs e)
+        {
+            //((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+            m_MapView.SetViewAsync(m_CenterPoint);
         }
     }
 }
