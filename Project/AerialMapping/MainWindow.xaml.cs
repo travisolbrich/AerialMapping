@@ -1,4 +1,4 @@
-﻿﻿/*
+﻿/*
  *        _ _    _  _____ _______   _____   ____    _____ _______ 
  *       | | |  | |/ ____|__   __| |  __ \ / __ \  |_   _|__   __|
  *       | | |  | | (___    | |    | |  | | |  | |   | |    | |   
@@ -74,7 +74,7 @@ namespace AerialMapping
                 Debug.WriteLine(string.Format("(MainWindows{BaseMapView_LayerLoaded}) Error while loading layer : {0} - {1}", e.Layer.ID, e.LoadError.Message));
                 return;
             }
-            if (m_IdToZoomOn != "" && e.Layer.ID == m_IdToZoomOn) 
+            if (m_IdToZoomOn != "" && e.Layer.ID == m_IdToZoomOn)
             {
                 m_IdToZoomOn = "";
                 m_CenterPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
@@ -85,7 +85,7 @@ namespace AerialMapping
 
         private void BaseMapView_Initialized(object sender, EventArgs e)
         {
-            m_MapView = (MapView) sender;
+            m_MapView = (MapView)sender;
             LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }
 
@@ -152,14 +152,14 @@ namespace AerialMapping
             root.Items.Add(new MenuItem() { Title = "Test2" });
             LayerView.Items.Add(root);
         }
-        
+
         // The following is for the time slider
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             // this is for testing only.
             if (e.NewValue == 3) m_MapView.Map.Layers.Add(kmllayerTest);
             else if (e.NewValue == 2) m_MapView.Map.Layers.Remove(kmllayerTest);
-           // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
+            // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
         }
 
         // This will update the time slider with new range and tick marks
