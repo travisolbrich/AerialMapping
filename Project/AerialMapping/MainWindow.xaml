@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
         x:Name="_this"
-		Title="MainWindow" 
+		Title="AirView" 
 		Height="350" 
 		Width="525" WindowState="Maximized">
     <Grid>
@@ -15,11 +15,28 @@
 					ServiceUri="http://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer"/>
             </esri:Map>
         </esri:MapView>
+        <DockPanel>
+            <Menu x:Name="Menu_Bar" DockPanel.Dock="Top">
+                <MenuItem x:Name="File_Menu" Header="_File">
+                    <MenuItem Header="_Open"
+                              Click="bOpenFileDialog_Click" />
+                    <MenuItem Header="_Exit"
+                              Click="bExitProgram_Click" />
+                </MenuItem>
+                <MenuItem Header="_View">
+                    <MenuItem Header="_Do Something" />
+                </MenuItem>
+                <MenuItem Header="_Window">
+                    <MenuItem Header="_Analytics" />
+                </MenuItem>
+            </Menu>
+            <StackPanel></StackPanel>
+        </DockPanel>
 
-        <Button x:Name="bOpenFileDialog" Content="Open File"
+        <!--<Button x:Name="bOpenFileDialog" Content="Open File"
                 Height="30" Width="60" Margin="10,10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bOpenFileDialog_Click" />
+                Background="Beige" Click="bOpenFileDialog_Click" />-->
         <Button x:Name="bRotateLeft" Content="⟲"
                 Height="20" Width="20" Margin="10,40,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -58,8 +75,17 @@
                 Width="800" 
                 Orientation="Horizontal" IsSnapToTickEnabled="True"
                 TickPlacement="Both" TickFrequency="1"
-                Background="Gray"
                 Minimum="0" Maximum="10" 
-                ValueChanged="bTimeSlider_Click"/>
+                ValueChanged="bTimeSlider_Click" BorderThickness="2">
+            <Slider.BorderBrush>
+                <SolidColorBrush Color="#FFD4D4D4" Opacity="0.5"/>
+            </Slider.BorderBrush>
+            <Slider.Background>
+                <SolidColorBrush Color="#7FFFFFFF" Opacity="0.5"/>
+            </Slider.Background>
+            <Slider.Effect>
+                <DropShadowEffect ShadowDepth="2" Direction="300" BlurRadius="3"/>
+            </Slider.Effect>
+        </Slider>
     </Grid>
 </Window>

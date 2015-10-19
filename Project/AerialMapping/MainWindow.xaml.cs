@@ -100,6 +100,11 @@ namespace AerialMapping
             }
         }
 
+        private void bExitProgram_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
         // The following are buttons for rotation
         private void bRotateLeft_Click(object sender, RoutedEventArgs e)
         {
