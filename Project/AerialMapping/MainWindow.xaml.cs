@@ -1,3 +1,12 @@
+﻿﻿/*
+ *        _ _    _  _____ _______   _____   ____    _____ _______ 
+ *       | | |  | |/ ____|__   __| |  __ \ / __ \  |_   _|__   __|
+ *       | | |  | | (___    | |    | |  | | |  | |   | |    | |   
+ *   _   | | |  | |\___ \   | |    | |  | | |  | |   | |    | |   
+ *  | |__| | |__| |____) |  | |    | |__| | |__| |  _| |_   | |   
+ *   \____/ \____/|_____/   |_|    |_____/ \____/  |_____|  |_|  
+ */
+
 ﻿using Esri.ArcGISRuntime.Controls;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Layers;
@@ -8,6 +17,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace AerialMapping
 {
@@ -18,6 +28,19 @@ namespace AerialMapping
         private string m_IdToZoomOn = "";
         private MapView m_MapView;
         private Viewpoint m_CenterPoint;
+        KmlLayer kmllayerTest;
+
+        public class MenuItem
+        {
+            public MenuItem()
+            {
+                this.Items = new ObservableCollection<MenuItem>();
+            }
+
+            public string Title { get; set; }
+
+            public ObservableCollection<MenuItem> Items { get; set; }
+        }
 
         public MainWindow()
         {
@@ -36,6 +59,7 @@ namespace AerialMapping
                 m_IdToZoomOn = bZoomTo ? path : "";
 
                 m_MapView.Map.Layers.Add(kmllayer);
+                kmllayerTest = kmllayer;
             }
             catch
             {
@@ -55,9 +79,8 @@ namespace AerialMapping
                 m_IdToZoomOn = "";
                 m_CenterPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
                 ((MapView)sender).SetViewAsync(m_CenterPoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
-                // System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(m_KmzZoomDelaySec)).Wait();
-                // bZoomSlider.Value = m_MapView.Scale;
             }
+            AddLayerToTree(e.Layer);
         }
 
         private void BaseMapView_Initialized(object sender, EventArgs e)
@@ -111,16 +134,34 @@ namespace AerialMapping
             bZoomSlider.Value = m_MapView.Scale;
         }
 
+        // The following is for zoom slider action
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoomScale = e.NewValue;
             m_MapView.ZoomToScaleAsync(zoomScale);
         }
 
-        // Time slider actions
+        public void AddLayerToTree(Layer layer)
+        {
+            MenuItem root = new MenuItem() { Title = "Test" };
+            root.Items.Add(new MenuItem() { Title = "Test2" });
+            LayerView.Items.Add(root);
+        }
+        
+        // The following is for the time slider
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // this is for testing only.
+            if (e.NewValue == 3) m_MapView.Map.Layers.Add(kmllayerTest);
+            else if (e.NewValue == 2) m_MapView.Map.Layers.Remove(kmllayerTest);
+           // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
+        }
 
+        // This will update the time slider with new range and tick marks
+        private void updateTimeSlider(int numLayers, int currLayer)
+        {
+            bTimeSlider.Maximum = numLayers - 1;
+            bTimeSlider.Value = currLayer;
         }
 
         private void bCenterView_Click(object sender, RoutedEventArgs e)
