@@ -18,6 +18,7 @@ namespace AerialMapping
         private double currAngle = 0;
         private string m_IdToZoomOn = "";
         private MapView m_MapView;
+        KmlLayer kmllayerTest;
 
         public class MenuItem
         {
@@ -34,6 +35,7 @@ namespace AerialMapping
         public MainWindow()
         {
             InitializeComponent();
+            m_MapView.MaxScale = 2100; // set the maximum zoom value
         }
 
         public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
@@ -47,6 +49,7 @@ namespace AerialMapping
                 m_IdToZoomOn = bZoomTo ? path : "";
 
                 m_MapView.Map.Layers.Add(kmllayer);
+                kmllayerTest = kmllayer;
             }
             catch
             {
@@ -125,12 +128,16 @@ namespace AerialMapping
             double zoomScale = e.NewValue;
             m_MapView.ZoomToScaleAsync(zoomScale);
         }
-
         public void AddLayerToTree(Layer layer)
         {
-            MenuItem root = new MenuItem(){Title = "Test"};
+            MenuItem root = new MenuItem() { Title = "Test" };
             root.Items.Add(new MenuItem() { Title = "Test2" });
             LayerView.Items.Add(root);
+        }
+        private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (e.NewValue == 3) m_MapView.Map.Layers.Add(kmllayerTest);
+            else if (e.NewValue == 2) m_MapView.Map.Layers.Remove(kmllayerTest);
         }
     }
 }
