@@ -21,6 +21,7 @@ namespace AerialMapping
         public MainWindow()
         {
             InitializeComponent();
+            m_MapView.MaxScale = 2100; // set the maximum zoom value
         }
 
         public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
