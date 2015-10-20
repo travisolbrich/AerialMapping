@@ -153,7 +153,6 @@ namespace AerialMapping
             MenuItem root = new MenuItem() { Title = "Test" };
             root.Items.Add(new MenuItem() { Title = "Test2" });
             LayerView.Items.Add(root);
-            LayerView2.Items.Add(root);
         }
 
         // The following is for the time slider

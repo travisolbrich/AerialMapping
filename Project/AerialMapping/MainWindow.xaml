@@ -91,7 +91,7 @@
         </Slider>
         
         <!--Crappy Popout Side Menu-->
-		<Expander Header="" HorizontalAlignment="Right" ExpandDirection="Left" IsExpanded="false">
+		<!--<Expander Header="" HorizontalAlignment="Right" ExpandDirection="Left" IsExpanded="false">
             <StackPanel Background="AliceBlue" Height="300" Width="150" VerticalAlignment="Top">
                 <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="100" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
                     <TreeView.ItemTemplate>
@@ -103,9 +103,9 @@
                 <Button Content="First Element" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
                 <Button Content="Second Element" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
             </StackPanel>
-        </Expander>
+        </Expander>-->
 
-        <!--Better Popout Side Menu-->
+        <!--Popout Side Menu-->
         <StackPanel Panel.ZIndex="2" Name="pnlRightMenu" Orientation="Horizontal" Height="400" HorizontalAlignment="Right" Margin="0,0,-150,0">
             <Grid>
                 <Button Name="bRightMenuShowHide" Width="30" Height="30" Click="bRightMenuShowHide_Click" Content="&lt;" FontWeight="Bold">
@@ -135,7 +135,7 @@
             
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="150" Background="#4C808080" >
                 <StackPanel VerticalAlignment="Top">
-                    <TreeView x:Name="LayerView2" HorizontalAlignment="Center" Height="100" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
+                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="100" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
                                 <TextBlock Text="{Binding Title}" />
