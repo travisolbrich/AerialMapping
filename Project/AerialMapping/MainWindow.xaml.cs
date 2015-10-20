@@ -16,6 +16,8 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using System.IO;
 using System.Collections.ObjectModel;
 
@@ -151,6 +153,7 @@ namespace AerialMapping
             MenuItem root = new MenuItem() { Title = "Test" };
             root.Items.Add(new MenuItem() { Title = "Test2" });
             LayerView.Items.Add(root);
+            LayerView2.Items.Add(root);
         }
 
         // The following is for the time slider
@@ -173,6 +176,53 @@ namespace AerialMapping
         {
             //((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
             m_MapView.SetViewAsync(m_CenterPoint);
+        }
+
+
+        private void bRightMenuShowHide_Click(object sender, RoutedEventArgs e)
+        {
+            //ShowHideMenu("sbHideRightMenu", btnRightMenuHide, btnRightMenuShow, pnlRightMenu);
+            Button rightMenuToggle = sender as Button;
+            
+            // Menu is hidden
+            //if (rightMenuToggle.Content == "<")
+            if (String.Equals(rightMenuToggle.Content.ToString(), "<", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Storyboard sb = Resources["sbShowRightMenu"] as Storyboard;
+                sb.Begin(pnlRightMenu);
+
+                rightMenuToggle.Content = ">";
+            }
+            // Menu is out
+            else
+            {
+                Storyboard sb = Resources["sbHideRightMenu"] as Storyboard;
+                sb.Begin(pnlRightMenu);
+
+                rightMenuToggle.Content = "<";
+            }
+        }
+
+        //private void btnRightMenuShow_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ShowHideMenu("sbShowRightMenu", btnRightMenuHide, btnRightMenuShow, pnlRightMenu);
+        //}
+
+        private void ShowHideMenu(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
+        {
+            Storyboard sb = Resources[Storyboard] as Storyboard;
+            sb.Begin(pnl);
+
+            if (Storyboard.Contains("Show"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Visible;
+                btnShow.Visibility = System.Windows.Visibility.Hidden;
+            }
+            else if (Storyboard.Contains("Hide"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Hidden;
+                btnShow.Visibility = System.Windows.Visibility.Visible;
+            }
         }
     }
 }
