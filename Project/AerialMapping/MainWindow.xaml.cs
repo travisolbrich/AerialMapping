@@ -150,8 +150,8 @@ namespace AerialMapping
 
         public void AddLayerToTree(Layer layer)
         {
-            MenuItem root = new MenuItem() { Title = "Test" };
-            root.Items.Add(new MenuItem() { Title = "Test2" });
+            MenuItem root = new MenuItem() { Title = "Location" };
+            root.Items.Add(new MenuItem() { Title = "Time" });
             LayerView.Items.Add(root);
         }
 
