@@ -41,10 +41,6 @@
             <StackPanel></StackPanel>
         </DockPanel>
 
-        <!--<Button x:Name="bOpenFileDialog" Content="Open File"
-                Height="30" Width="60" Margin="10,10"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bOpenFileDialog_Click" />-->
         <Button x:Name="bRotateLeft" Content="⟲"
                 Height="20" Width="20" Margin="10,40,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -90,24 +86,10 @@
             </Slider.Effect>
         </Slider>
         
-        <!--Crappy Popout Side Menu-->
-		<!--<Expander Header="" HorizontalAlignment="Right" ExpandDirection="Left" IsExpanded="false">
-            <StackPanel Background="AliceBlue" Height="300" Width="150" VerticalAlignment="Top">
-                <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="100" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
-                            <TextBlock Text="{Binding Title}" />
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
-                <Button Content="First Element" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
-                <Button Content="Second Element" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
-            </StackPanel>
-        </Expander>-->
-
         <!--Popout Side Menu-->
         <StackPanel Panel.ZIndex="2" Name="pnlRightMenu" Orientation="Horizontal" Height="400" HorizontalAlignment="Right" Margin="0,0,-150,0">
             <Grid>
+                <!--Button to hide/show the Side Menu-->
                 <Button Name="bRightMenuShowHide" Width="30" Height="30" Click="bRightMenuShowHide_Click" Content="&lt;" FontWeight="Bold">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
@@ -116,13 +98,6 @@
                                     <Ellipse.Fill>
                                         <RadialGradientBrush>
                                             <GradientStop Offset="0" Color="PaleTurquoise" />
-                                            <!--<GradientStop Offset="1" Color="Lime" />
-                                            <GradientStop Offset="1" Color="Gold" />-->
-                                            <!--<RadialGradientBrush.Transform>
-                                                <TransformGroup>
-                                                    <ScaleTransform ScaleY="0.65" />
-                                                </TransformGroup>
-                                            </RadialGradientBrush.Transform>-->
                                         </RadialGradientBrush>
                                     </Ellipse.Fill>
                                 </Ellipse>
@@ -133,6 +108,7 @@
                 </Button>
             </Grid>
             
+            <!--Main Panel of the Side Menu-->
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="150" Background="#4C808080" >
                 <StackPanel VerticalAlignment="Top">
                     <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="100" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">

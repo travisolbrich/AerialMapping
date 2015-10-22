@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AerialMapping
 {
+    // This class represents the data for a map layer.
     public class Dataset
     {
         public string Location { get; set; }

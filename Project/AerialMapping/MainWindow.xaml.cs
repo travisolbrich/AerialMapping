@@ -34,17 +34,6 @@ namespace AerialMapping
         KmlLayer kmllayerTest;
         private List<Dataset> m_DatasetList;
 
-        public class MenuItem
-        {
-            public MenuItem()
-            {
-                this.Items = new ObservableCollection<MenuItem>();
-            }
-
-            public string Title { get; set; }
-
-            public ObservableCollection<MenuItem> Items { get; set; }
-        }
 
         public MainWindow()
         {
@@ -181,13 +170,12 @@ namespace AerialMapping
         }
 
 
+        // Callback for the button that shows/hides the popout menu on the right side.
         private void bRightMenuShowHide_Click(object sender, RoutedEventArgs e)
         {
-            //ShowHideMenu("sbHideRightMenu", btnRightMenuHide, btnRightMenuShow, pnlRightMenu);
             Button rightMenuToggle = sender as Button;
             
             // Menu is hidden
-            //if (rightMenuToggle.Content == "<")
             if (String.Equals(rightMenuToggle.Content.ToString(), "<", StringComparison.InvariantCultureIgnoreCase))
             {
                 Storyboard sb = Resources["sbShowRightMenu"] as Storyboard;
@@ -205,28 +193,11 @@ namespace AerialMapping
             }
         }
 
-        //private void btnRightMenuShow_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ShowHideMenu("sbShowRightMenu", btnRightMenuHide, btnRightMenuShow, pnlRightMenu);
-        //}
 
-        private void ShowHideMenu(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
-        {
-            Storyboard sb = Resources[Storyboard] as Storyboard;
-            sb.Begin(pnl);
-
-            if (Storyboard.Contains("Show"))
-            {
-                btnHide.Visibility = System.Windows.Visibility.Visible;
-                btnShow.Visibility = System.Windows.Visibility.Hidden;
-            }
-            else if (Storyboard.Contains("Hide"))
-            {
-                btnHide.Visibility = System.Windows.Visibility.Hidden;
-                btnShow.Visibility = System.Windows.Visibility.Visible;
-            }
-        }
-
+        // Callback for the Add Layer button in the right side popout menu.
+        // This pops up an "Add Layer" window and gathers the appropriate data
+        // from the user. The new layer is then added to the "layers" treeview
+        // and loaded into the map.
         private void bAddLayer_Click(object sender, RoutedEventArgs e)
         {
             // Popup a window to get the layer information
