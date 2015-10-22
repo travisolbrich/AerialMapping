@@ -1,0 +1,15 @@
+﻿<Window x:Class="AerialMapping.AddLayer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add Layer" Height="300" Width="300">
+    <Grid>
+        <Label Content="Location:" Margin="10,10,0,0"/>
+        <TextBox x:Name="LocationInput" Height="20" Width="200" Margin="75, 10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Content="Time:" Margin="10,40,0,0"/>
+        <TextBox x:Name="TimeInput" Height="20" Width="200" Margin="75, 40, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Content="File Path:" Margin="10,70,0,0"/>
+        <TextBox x:Name="FilePathInput" Height="20" Width="200" Margin="75, 70, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Button Content="Search" Height="20" Margin="0,70,0,0" Click="bFilePathLookup_Click"  HorizontalAlignment="Right" VerticalAlignment="Top"/>
+        <Button Content="Add" Height="20" Margin="0, 100, 0, 0" Click="bAdd_Click" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

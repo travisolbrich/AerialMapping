@@ -13,6 +13,7 @@ using Esri.ArcGISRuntime.Layers;
 using Esri.ArcGISRuntime.Symbology;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -31,6 +32,7 @@ namespace AerialMapping
         private MapView m_MapView;
         private Viewpoint m_CenterPoint;
         KmlLayer kmllayerTest;
+        private List<Dataset> m_DatasetList;
 
         public class MenuItem
         {
@@ -48,6 +50,7 @@ namespace AerialMapping
         {
             InitializeComponent();
             m_MapView.MaxScale = 2100; // set the maximum zoom value
+            m_DatasetList = new List<Dataset>();
         }
 
         public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
@@ -222,6 +225,33 @@ namespace AerialMapping
                 btnHide.Visibility = System.Windows.Visibility.Hidden;
                 btnShow.Visibility = System.Windows.Visibility.Visible;
             }
+        }
+
+        private void bAddLayer_Click(object sender, RoutedEventArgs e)
+        {
+            // Popup a window to get the layer information
+            AddLayer addLayer = new AddLayer();
+            addLayer.ShowDialog();
+            Dataset newLayer = addLayer.DatasetToAdd;
+            addLayer.Close();
+
+            if (!String.IsNullOrEmpty(newLayer.FilePath))
+            {
+                // Save the new dataset
+                m_DatasetList.Add(newLayer);
+
+                // Add it to the TreeView on the UI
+                MenuItem root = new MenuItem() { Title = newLayer.Location };
+                root.Items.Add(new MenuItem() { Title = newLayer.Time });
+                LayerView.Items.Add(root);
+
+                // Open the new layer
+                LoadKml(newLayer.FilePath, true, false);
+            }
+
+            Debug.WriteLine("Location: " + newLayer.Location);
+            Debug.WriteLine("Time: " + newLayer.Time);
+            Debug.WriteLine("File Path: " + newLayer.FilePath);
         }
     }
 }

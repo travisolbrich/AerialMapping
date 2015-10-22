@@ -142,7 +142,7 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
-                    <Button Content="Add Layer" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
+                    <Button Content="Add Layer" Click="bAddLayer_Click" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
                     <Button Content="Remove Layer" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
                 </StackPanel>
             </Border>
