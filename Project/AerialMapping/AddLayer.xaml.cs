@@ -40,8 +40,12 @@ namespace AerialMapping
         private void bAdd_Click(object sender, RoutedEventArgs e)
         {
             DatasetToAdd.Location = LocationInput.Text;
-            //DatasetToAdd.Time = DateTime.Parse(TimeInput.ToString());
-            DatasetToAdd.Time = TimeInput.Text;
+            
+            if (DateTimeInput.Value.HasValue)
+            {
+                DatasetToAdd.Time = DateTimeInput.Value.Value;
+            }
+
             DatasetToAdd.FilePath = FilePathInput.Text;
             this.Hide();
         }

@@ -202,7 +202,9 @@ namespace AerialMapping
         {
             // Popup a window to get the layer information
             AddLayer addLayer = new AddLayer();
+            addLayer.Owner = this;
             addLayer.ShowDialog();
+            
             Dataset newLayer = addLayer.DatasetToAdd;
             addLayer.Close();
 
@@ -213,7 +215,7 @@ namespace AerialMapping
 
                 // Add it to the TreeView on the UI
                 MenuItem root = new MenuItem() { Title = newLayer.Location };
-                root.Items.Add(new MenuItem() { Title = newLayer.Time });
+                root.Items.Add(new MenuItem() { Title = newLayer.Time.ToShortDateString() });
                 LayerView.Items.Add(root);
 
                 // Open the new layer
@@ -223,6 +225,7 @@ namespace AerialMapping
             Debug.WriteLine("Location: " + newLayer.Location);
             Debug.WriteLine("Time: " + newLayer.Time);
             Debug.WriteLine("File Path: " + newLayer.FilePath);
+            
         }
     }
 }

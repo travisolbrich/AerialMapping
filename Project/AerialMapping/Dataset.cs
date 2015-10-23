@@ -11,8 +11,8 @@ namespace AerialMapping
     {
         public string Location { get; set; }
 
-        //public DateTime Time { get; set; }
-        public string Time { get; set; }
+        public DateTime Time { get; set; }
+        //public string Time { get; set; }
 
         public string FilePath { get; set; }
     }
