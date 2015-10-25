@@ -32,9 +32,8 @@ namespace AerialMapping
 
         public DelegateCommand AddLayerCommand { get; set; }
 
-        //public DelegateCommand LayerLoadedCommand { get; set; }
+        public DelegateCommand RemoveLayerCommand { get; set; }
 
-        //public DelegateCommand ExtentChangedCommand { get; set; }
 
         public MainViewModel()
         {
@@ -47,8 +46,7 @@ namespace AerialMapping
 
             m_DatasetList = new List<Dataset>();
             AddLayerCommand = new DelegateCommand(AddLayer);
-            //LayerLoadedCommand = new DelegateCommand(BaseMapViewLayerLoaded);
-            //ExtentChangedCommand = new DelegateCommand(BaseMapViewExtentChanged);
+            RemoveLayerCommand = new DelegateCommand(RemoveLayer);
         }
 
         private void AddLayer(object parameter)
@@ -80,22 +78,16 @@ namespace AerialMapping
             Debug.WriteLine("File Path: " + newLayer.FilePath);
         }
 
-        private void BaseMapViewLayerLoaded(object parameter)
+        private void RemoveLayer(object parameter)
         {
-            //Console.WriteLine("It worked!");
-            //m_MapView = (MapView)parameter;
-            //m_MapView.MaxScale = 2100; // set the maximum zoom value
-            //LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+            RemoveLayers removeLayers = new RemoveLayers(TreeViewItems);
+            removeLayers.Owner = (Window)parameter;
 
-            
+            //removeLayers.OC = TreeViewItems;
+
+            removeLayers.ShowDialog();
         }
 
-        public void BaseMapViewExtentChanged(object parameter)
-        {
-            var mv = parameter as MapView;
-            var extent = mv.Extent;
-
-        }
 
         public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
         {

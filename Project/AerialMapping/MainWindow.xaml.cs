@@ -238,12 +238,12 @@ namespace AerialMapping
             
         //}
 
-        private void bRemoveLayer_Click(object sender, RoutedEventArgs e)
-        {
-            //LayerView.Items.
+        //private void bRemoveLayer_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //LayerView.Items.
 
-            RemoveLayers removeLayers = new RemoveLayers();
-            removeLayers.ShowDialog();
-        }
+        //    RemoveLayers removeLayers = new RemoveLayers();
+        //    removeLayers.ShowDialog();
+        //}
     }
 }

@@ -14,20 +14,21 @@
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
                     <CheckBox IsChecked="{Binding Checked}" Click="CheckBox_Click" Loaded="CheckBox_Loaded">
-                        <TextBlock Text="{Binding Name}"></TextBlock>
+                        <TextBlock Text="{Binding Title}"></TextBlock>
                     </CheckBox>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
 
-        <ListView Name="listbox" Grid.Column="1">
+        <!--<ListView Name="listbox" Grid.Column="1">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"></TextBlock>
+                    <TextBlock Text="{Binding Title}"></TextBlock>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
+        </ListView>-->
+        <Button Content="Remove" Click="RemoveButton_Click" HorizontalAlignment="Center" Margin="0, 250, 0, 0" Width="100" />
     </Grid>
 </Window>

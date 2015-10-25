@@ -2,7 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"        
-        xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
         x:Name="_this"
 		Title="AirView" 
 		Height="350" 
@@ -16,20 +15,6 @@
         </Storyboard>
     </Window.Resources>
     <Grid>
-        
-        <!--<interactivity:Interaction.Triggers>
-            <interactivity:EventTrigger EventName="LayerLoaded">
-                <interactivity:InvokeCommandAction 
-                        Command="{Binding LayerLoadedCommand}"
-                        CommandParameter="{Binding ElementName=BaseMapView}"/>
-            </interactivity:EventTrigger>
-
-            <interactivity:EventTrigger EventName="ExtentChanged">
-                <interactivity:InvokeCommandAction 
-                        Command="{Binding ExtentChangedCommand}"
-                        CommandParameter="{Binding ElementName=BaseMapView}"/>
-            </interactivity:EventTrigger>
-        </interactivity:Interaction.Triggers>-->
         <esri:MapView x:Name="BaseMapView"
 					  Initialized="BaseMapView_Initialized"
                       LayerLoaded="BaseMapView_LayerLoaded"
@@ -133,7 +118,7 @@
                         </TreeView.ItemTemplate>
                     </TreeView>
                     <Button Content="Add Layer" Command="{Binding AddLayerCommand}" CommandParameter="{Binding ElementName=_this}" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
-                    <Button Content="Remove Layer" Click="bRemoveLayer_Click" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
+                    <Button Content="Remove Layer" Command="{Binding RemoveLayerCommand}" CommandParameter="{Binding ElementName=_this}" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
                 </StackPanel>
             </Border>
         </StackPanel>

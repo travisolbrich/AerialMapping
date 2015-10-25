@@ -21,56 +21,57 @@ namespace AerialMapping
     public partial class RemoveLayers : Window
     {
         
-        ObservableCollection<CustomItem> OC { get; set; }
-        ObservableCollection<CustomItem> ChildOC { get; set; }
-        public RemoveLayers()
+        public ObservableCollection<MenuItem> OC { get; set; }
+        ObservableCollection<MenuItem> ChildOC { get; set; }
+        public RemoveLayers(ObservableCollection<MenuItem> TreeViewItems)
         {
-            OC = new ObservableCollection<CustomItem>()
-            {
-                new CustomItem(){Name="Item1", Checked=true,
-                  Children = new ObservableCollection<CustomItem>()
-                  {            
-                    new CustomItem(){Name="SubItem11", Checked=false},
-                    new CustomItem(){Name="SubItem12", Checked=false},
-                    new CustomItem(){Name="SubItem13", Checked=false}
-                  }
-                },
-                new CustomItem(){Name="Item2", Checked=true,
-                  Children = new ObservableCollection<CustomItem>()
-                  {
-                    new CustomItem(){Name="SubItem21", Checked=true},            
-                    new CustomItem(){Name="SubItem22", Checked=true},
-                    new CustomItem(){Name="SubItem23", Checked=true}
-                  }},
-                new CustomItem(){Name="Item3", Checked=true,
-                  Children = new ObservableCollection<CustomItem>()
-                  {
-                    new CustomItem(){Name="SubItem31", Checked=false},
-                    new CustomItem(){Name="SubItem32", Checked=false},            
-                    new CustomItem(){Name="SubItem33", Checked=false}
-                  }},
-                new CustomItem(){Name="Item4", Checked=true,
-                  Children = new ObservableCollection<CustomItem>()
-                  {
-                    new CustomItem(){Name="SubItem41", Checked=false},
-                    new CustomItem(){Name="SubItem42", Checked=false},
-                    new CustomItem(){Name="SubItem43", Checked=false}
-                  }
-                }
-              };
+            OC = TreeViewItems;
+            //OC = new ObservableCollection<MenuItem>()
+            //{
+            //    new MenuItem(){Title="Item1", Checked=true,
+            //      Items = new ObservableCollection<MenuItem>()
+            //      {            
+            //        new MenuItem(){Title="SubItem11", Checked=false},
+            //        new MenuItem(){Title="SubItem12", Checked=false},
+            //        new MenuItem(){Title="SubItem13", Checked=false}
+            //      }
+            //    },
+            //    new MenuItem(){Title="Item2", Checked=true,
+            //      Items = new ObservableCollection<MenuItem>()
+            //      {
+            //        new MenuItem(){Title="SubItem21", Checked=true},            
+            //        new MenuItem(){Title="SubItem22", Checked=true},
+            //        new MenuItem(){Title="SubItem23", Checked=true}
+            //      }},
+            //    new MenuItem(){Title="Item3", Checked=true,
+            //      Items = new ObservableCollection<MenuItem>()
+            //      {
+            //        new MenuItem(){Title="SubItem31", Checked=false},
+            //        new MenuItem(){Title="SubItem32", Checked=false},            
+            //        new MenuItem(){Title="SubItem33", Checked=false}
+            //      }},
+            //    new MenuItem(){Title="Item4", Checked=true,
+            //      Items = new ObservableCollection<MenuItem>()
+            //      {
+            //        new MenuItem(){Title="SubItem41", Checked=false},
+            //        new MenuItem(){Title="SubItem42", Checked=false},
+            //        new MenuItem(){Title="SubItem43", Checked=false}
+            //      }
+            //    }
+            //  };
               InitializeComponent();
               this.DataContext = OC;
         }
 
         public void OnCheck()
         {
-            ChildOC = new ObservableCollection<CustomItem>() { };
-            foreach (CustomItem item in OC)
+            ChildOC = new ObservableCollection<MenuItem>() { };
+            foreach (MenuItem item in OC)
             {
                 if (item.Checked == true)
                 {
                     ChildOC.Add(item);
-                    foreach (CustomItem subitem in item.Children)
+                    foreach (MenuItem subitem in item.Items)
                     {
                         if (subitem.Checked == true)
                         {
@@ -79,16 +80,41 @@ namespace AerialMapping
                     }         
                 }
             }
-            listbox.ItemsSource = ChildOC;
+            //listbox.ItemsSource = ChildOC;
         }
         private void CheckBox_Click(object sender, RoutedEventArgs e) { OnCheck(); }
         private void CheckBox_Loaded(object sender, RoutedEventArgs e) { OnCheck(); }
+
+        private void RemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<MenuItem> itemsList = OC.ToList<MenuItem>();
+
+            foreach (MenuItem item in itemsList)
+            {
+                if (item.Checked)
+                {
+                    itemsList.Remove(item);
+                }
+                else
+                {
+                    foreach (MenuItem child in item.Items)
+                    {
+                        if (child.Checked)
+                        {
+                            item.Items.Remove(child);
+                        }
+                    }
+                }
+            }
+
+            OC = new ObservableCollection<MenuItem>(itemsList);
+        }
     }
-    public class CustomItem
-    {
-        public string Name { get; set; }
-        public bool Checked { get; set; }
-        public ObservableCollection<CustomItem> Children { get; set; }
-    }
+    //public class CustomItem
+    //{
+    //    public string Name { get; set; }
+    //    public bool Checked { get; set; }
+    //    public ObservableCollection<CustomItem> Items { get; set; }
+    //}
 }
 
