@@ -1,7 +1,8 @@
 ﻿<Window x:Class="AerialMapping.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
+        xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"        
+        xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
         x:Name="_this"
 		Title="AirView" 
 		Height="350" 
@@ -15,13 +16,26 @@
         </Storyboard>
     </Window.Resources>
     <Grid>
+        
+        <!--<interactivity:Interaction.Triggers>
+            <interactivity:EventTrigger EventName="LayerLoaded">
+                <interactivity:InvokeCommandAction 
+                        Command="{Binding LayerLoadedCommand}"
+                        CommandParameter="{Binding ElementName=BaseMapView}"/>
+            </interactivity:EventTrigger>
+
+            <interactivity:EventTrigger EventName="ExtentChanged">
+                <interactivity:InvokeCommandAction 
+                        Command="{Binding ExtentChangedCommand}"
+                        CommandParameter="{Binding ElementName=BaseMapView}"/>
+            </interactivity:EventTrigger>
+        </interactivity:Interaction.Triggers>-->
         <esri:MapView x:Name="BaseMapView"
-					  LayerLoaded="BaseMapView_LayerLoaded"
-                      Initialized="BaseMapView_Initialized">
-            <esri:Map>
-                <esri:ArcGISTiledMapServiceLayer ID="Basemap"
-					ServiceUri="http://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer"/>
-            </esri:Map>
+					  Initialized="BaseMapView_Initialized"
+                      LayerLoaded="BaseMapView_LayerLoaded"
+                      
+                      Map="{Binding IncidentMap}">
+ 
         </esri:MapView>
         <DockPanel>
             <Menu x:Name="Menu_Bar" DockPanel.Dock="Top">
@@ -111,15 +125,15 @@
             <!--Main Panel of the Side Menu-->
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="150" Background="#4C808080" >
                 <StackPanel VerticalAlignment="Top">
-                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="100" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
+                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="100" ItemsSource="{Binding TreeViewItems}" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
                                 <TextBlock Text="{Binding Title}" />
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
-                    <Button Content="Add Layer" Click="bAddLayer_Click" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
-                    <Button Content="Remove Layer" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
+                    <Button Content="Add Layer" Command="{Binding AddLayerCommand}" CommandParameter="{Binding ElementName=_this}" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
+                    <Button Content="Remove Layer" Click="bRemoveLayer_Click" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
                 </StackPanel>
             </Border>
         </StackPanel>
