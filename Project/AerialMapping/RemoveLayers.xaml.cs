@@ -87,27 +87,28 @@ namespace AerialMapping
 
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
-            List<MenuItem> itemsList = OC.ToList<MenuItem>();
+            Hide();
+            //List<MenuItem> itemsList = OC.ToList<MenuItem>();
 
-            foreach (MenuItem item in itemsList)
-            {
-                if (item.Checked)
-                {
-                    itemsList.Remove(item);
-                }
-                else
-                {
-                    foreach (MenuItem child in item.Items)
-                    {
-                        if (child.Checked)
-                        {
-                            item.Items.Remove(child);
-                        }
-                    }
-                }
-            }
+            //foreach (MenuItem item in itemsList)
+            //{
+            //    if (item.Checked)
+            //    {
+            //        itemsList.Remove(item);
+            //    }
+            //    else
+            //    {
+            //        foreach (MenuItem child in item.Items)
+            //        {
+            //            if (child.Checked)
+            //            {
+            //                item.Items.Remove(child);
+            //            }
+            //        }
+            //    }
+            //}
 
-            OC = new ObservableCollection<MenuItem>(itemsList);
+            //OC = new ObservableCollection<MenuItem>(itemsList);
         }
     }
     //public class CustomItem
