@@ -1,0 +1,34 @@
+﻿<Window x:Class="AerialMapping.RemoveLayers"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RemoveLayers" Height="300" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition ></ColumnDefinition>
+            <ColumnDefinition ></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TreeView Name="treeView" Grid.Column ="0" ItemsSource="{Binding}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True"></Setter>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                    <CheckBox IsChecked="{Binding Checked}" Click="CheckBox_Click" Loaded="CheckBox_Loaded">
+                        <TextBlock Text="{Binding Title}"></TextBlock>
+                    </CheckBox>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <!--<ListView Name="listbox" Grid.Column="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+        <Button Content="Remove" Click="RemoveButton_Click" HorizontalAlignment="Center" Margin="0, 250, 0, 0" Width="100" />
+    </Grid>
+</Window>

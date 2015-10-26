@@ -18,6 +18,8 @@ namespace AerialMapping
 
         public string Title { get; set; }
 
+        public bool Checked { get; set; }
+
         public ObservableCollection<MenuItem> Items { get; set; }
     }
 }
