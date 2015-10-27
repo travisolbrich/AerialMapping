@@ -7,15 +7,15 @@
             <ColumnDefinition ></ColumnDefinition>
             <ColumnDefinition ></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TreeView Name="treeView" Grid.Column ="0" ItemsSource="{Binding}">
+        <TreeView Name="treeView" Grid.Column ="0" ItemsSource="{Binding Items}">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
                     <Setter Property="IsExpanded" Value="True"></Setter>
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
-                    <CheckBox IsChecked="{Binding Checked}" Click="CheckBox_Click" Loaded="CheckBox_Loaded">
+                <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
+                    <CheckBox x:Name="Checkbox" IsChecked="{Binding Checked, Mode=TwoWay}" Click="CheckBox_Click">
                         <TextBlock Text="{Binding Title}"></TextBlock>
                     </CheckBox>
                 </HierarchicalDataTemplate>

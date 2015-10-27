@@ -66,11 +66,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="FooViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MenuItem.cs" />
     <Compile Include="RemoveLayers.xaml.cs">
       <DependentUpon>RemoveLayers.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RemoveLayerViewModel.cs" />
+    <Compile Include="VirtualToggleButton.cs" />
+    <Compile Include="Window1.xaml.cs" />
     <Page Include="AddLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -94,6 +98,10 @@
     <Page Include="RemoveLayers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

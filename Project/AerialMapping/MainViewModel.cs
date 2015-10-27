@@ -119,14 +119,18 @@ namespace AerialMapping
         // they wish to removes. The treeview of layers is updated accordingly.
         private void RemoveLayer(object parameter)
         {
-            RemoveLayers removeLayers = new RemoveLayers(TreeViewItems);
+            Window1 win = new Window1();
+            win.ShowDialog();
+
+            RemoveLayerViewModel removeViewModel = new RemoveLayerViewModel(TreeViewItems);
+            RemoveLayers removeLayers = new RemoveLayers(removeViewModel);
             removeLayers.Owner = (Window)parameter;
 
-            TreeViewItems = removeLayers.OC;
+            TreeViewItems = removeViewModel.Items;
 
             removeLayers.ShowDialog();
 
-            List<MenuItem> itemsList = removeLayers.OC.ToList<MenuItem>();
+            List<MenuItem> itemsList = removeViewModel.Items.ToList<MenuItem>();
 
             // For each parent
             for (int i = itemsList.Count - 1; i >= 0; i--)
