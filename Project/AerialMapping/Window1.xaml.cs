@@ -6,6 +6,8 @@ namespace AerialMapping
 {
     public partial class Window1 : Window
     {
+        public FooViewModel root;
+
         public Window1(List<FooViewModel> viewModels)
         {
             InitializeComponent();
@@ -13,7 +15,7 @@ namespace AerialMapping
             DataContext = viewModels;
 
             //FooViewModel root = this.tree.Items[0] as FooViewModel;
-            FooViewModel root = viewModels[0];
+            root = viewModels[0];
 
             base.CommandBindings.Add(
                 new CommandBinding(
@@ -31,6 +33,36 @@ namespace AerialMapping
                     }));
 
             this.tree.Focus();
+        }
+
+        public List<MenuItem> GetMenuItems()
+        {
+            List<MenuItem> locationsToKeep = new List<MenuItem>();
+
+            List<FooViewModel> locations = root.Children;
+            foreach (FooViewModel location in locations)
+            {
+                if (location.IsChecked != true)
+                {
+                    MenuItem loc = new MenuItem(location.Name, location.FilePath);
+                    foreach (FooViewModel time in location.Children)
+                    {
+                        if (time.IsChecked != true)
+                        {
+                            MenuItem t = new MenuItem(time.Name, time.FilePath);
+                            loc.Items.Add(t);
+                        }
+                    }
+                    locationsToKeep.Add(loc);
+                }
+            }
+
+            return locationsToKeep;
+        }
+
+        private void bRemove_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
         }
     }
 }

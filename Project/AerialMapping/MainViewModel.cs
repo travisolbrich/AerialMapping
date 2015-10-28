@@ -51,8 +51,8 @@ namespace AerialMapping
             // when the view model initializes, read the map from the App.xaml resources
             this.map = App.Current.Resources["IncidentMap"] as Map;
             TreeViewItems = new ObservableCollection<MenuItem>();
-            MenuItem root = new MenuItem() { Title = "Location" };
-            root.Items.Add(new MenuItem() { Title = "Time" });
+            MenuItem root = new MenuItem() { Title = "Test Location" };
+            root.Items.Add(new MenuItem() { Title = "01-01-2015" });
             TreeViewItems.Add(root);
 
             m_DatasetList = new List<Dataset>();
@@ -119,18 +119,20 @@ namespace AerialMapping
         // they wish to removes. The treeview of layers is updated accordingly.
         private void RemoveLayer(object parameter)
         {
-            Window1 win = new Window1(FooViewModel.CreateFoos());
+            Window1 win = new Window1(FooViewModel.CreateFoos(TreeViewItems));
             win.ShowDialog();
 
-            RemoveLayerViewModel removeViewModel = new RemoveLayerViewModel(TreeViewItems);
-            RemoveLayers removeLayers = new RemoveLayers(removeViewModel);
-            removeLayers.Owner = (Window)parameter;
+            List<MenuItem> itemsList = win.GetMenuItems();
 
-            TreeViewItems = removeViewModel.Items;
+            //RemoveLayerViewModel removeViewModel = new RemoveLayerViewModel(TreeViewItems);
+            //RemoveLayers removeLayers = new RemoveLayers(removeViewModel);
+            //removeLayers.Owner = (Window)parameter;
 
-            removeLayers.ShowDialog();
+            //TreeViewItems = removeViewModel.Items;
 
-            List<MenuItem> itemsList = removeViewModel.Items.ToList<MenuItem>();
+            //removeLayers.ShowDialog();
+
+            //List<MenuItem> itemsList = removeViewModel.Items.ToList<MenuItem>();
 
             // For each parent
             for (int i = itemsList.Count - 1; i >= 0; i--)
@@ -156,7 +158,7 @@ namespace AerialMapping
 
             TreeViewItems = new ObservableCollection<MenuItem>(itemsList);
 
-            removeLayers.Close();
+            win.Close();
         }
 
 

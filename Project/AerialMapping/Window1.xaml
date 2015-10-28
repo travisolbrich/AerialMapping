@@ -53,8 +53,8 @@
   <DockPanel>
     <Button 
       DockPanel.Dock="Bottom" 
-      Command="Undo"
-      Content="Uncheck All" 
+      Click="bRemove_Click"
+      Content="Remove" 
       HorizontalAlignment="Center"
       Margin="0,2"
       Padding="8,0"
