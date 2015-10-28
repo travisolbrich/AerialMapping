@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace AerialMapping
 {
-    class DelegateCommand : System.Windows.Input.ICommand
+    public class DelegateCommand : System.Windows.Input.ICommand
     {
         // a var to store the command's execute logic (button click, for example)
         private readonly Action<object> execute;
