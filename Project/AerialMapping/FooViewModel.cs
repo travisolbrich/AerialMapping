@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace AerialMapping
 {
@@ -14,51 +15,74 @@ namespace AerialMapping
 
         #region CreateFoos
 
-        public static List<FooViewModel> CreateFoos()
+        public static List<FooViewModel> CreateFoos(ObservableCollection<MenuItem> locationsTimes)
         {
-            FooViewModel root = new FooViewModel("Weapons")
+            FooViewModel root = new FooViewModel("All", "")
             {
-                IsInitiallySelected = true,
-                Children =
-                {
-                    new FooViewModel("Blades")
-                    {
-                        Children =
-                        {
-                            new FooViewModel("Dagger"),
-                            new FooViewModel("Machete"),
-                            new FooViewModel("Sword"),
-                        }
-                    },
-                    new FooViewModel("Vehicles")
-                    {
-                        Children =
-                        {
-                            new FooViewModel("Apache Helicopter"),
-                            new FooViewModel("Submarine"),
-                            new FooViewModel("Tank"),                            
-                        }
-                    },
-                    new FooViewModel("Guns")
-                    {
-                        Children =
-                        {
-                            new FooViewModel("AK 47"),
-                            new FooViewModel("Beretta"),
-                            new FooViewModel("Uzi"),
-                        }
-                    },
-                }
+                IsInitiallySelected = false,
+                
+                Children = new List<FooViewModel>()
             };
+
+            List<FooViewModel> locations = new List<FooViewModel>();
+            foreach (MenuItem location in locationsTimes){
+                FooViewModel loc = new FooViewModel(location.Title, location.FilePath);
+                List<FooViewModel> times = new List<FooViewModel>();
+                foreach (MenuItem time in location.Items)
+                {
+                    FooViewModel t = new FooViewModel(time.Title, time.FilePath);
+                    times.Add(t);
+                }
+                loc.Children = times;
+                locations.Add(loc);
+            }
+
+            root.Children = locations;
+
+            //FooViewModel root = new FooViewModel("Weapons", "")
+            //{
+            //    IsInitiallySelected = true,
+            //    Children =
+            //    {
+            //        new FooViewModel("Blades", "")
+            //        {
+            //            Children =
+            //            {
+            //                new FooViewModel("Dagger", ""),
+            //                new FooViewModel("Machete", ""),
+            //                new FooViewModel("Sword", ""),
+            //            }
+            //        },
+            //        new FooViewModel("Vehicles", "")
+            //        {
+            //            Children =
+            //            {
+            //                new FooViewModel("Apache Helicopter", ""),
+            //                new FooViewModel("Submarine", ""),
+            //                new FooViewModel("Tank", ""),                            
+            //            }
+            //        },
+            //        new FooViewModel("Guns", "")
+            //        {
+            //            Children =
+            //            {
+            //                new FooViewModel("AK 47", ""),
+            //                new FooViewModel("Beretta", ""),
+            //                new FooViewModel("Uzi", ""),
+            //            }
+            //        },
+            //    }
+            //};
 
             root.Initialize();
             return new List<FooViewModel> { root };
         }
 
-        FooViewModel(string name)
+        FooViewModel(string name, string filePath)
         {
-            this.Name = name;
-            this.Children = new List<FooViewModel>();
+            Name = name;
+            FilePath = filePath;
+            Children = new List<FooViewModel>();
         }
 
         void Initialize()
@@ -79,6 +103,8 @@ namespace AerialMapping
         public bool IsInitiallySelected { get; private set; }
 
         public string Name { get; private set; }
+
+        public string FilePath { get; private set; }
 
         #region IsChecked
 

@@ -119,7 +119,7 @@ namespace AerialMapping
         // they wish to removes. The treeview of layers is updated accordingly.
         private void RemoveLayer(object parameter)
         {
-            Window1 win = new Window1();
+            Window1 win = new Window1(FooViewModel.CreateFoos());
             win.ShowDialog();
 
             RemoveLayerViewModel removeViewModel = new RemoveLayerViewModel(TreeViewItems);

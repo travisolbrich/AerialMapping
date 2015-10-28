@@ -1,15 +1,19 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace AerialMapping
 {
     public partial class Window1 : Window
     {
-        public Window1()
+        public Window1(List<FooViewModel> viewModels)
         {
             InitializeComponent();
 
-            FooViewModel root = this.tree.Items[0] as FooViewModel;
+            DataContext = viewModels;
+
+            //FooViewModel root = this.tree.Items[0] as FooViewModel;
+            FooViewModel root = viewModels[0];
 
             base.CommandBindings.Add(
                 new CommandBinding(

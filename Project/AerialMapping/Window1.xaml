@@ -44,11 +44,11 @@
     </ResourceDictionary>
   </Window.Resources>
 
-  <Window.DataContext>
+  <!--<Window.DataContext>
     <ObjectDataProvider 
       MethodName="CreateFoos"
       ObjectType="{x:Type local:FooViewModel}" />
-  </Window.DataContext>
+  </Window.DataContext>-->
 
   <DockPanel>
     <Button 
