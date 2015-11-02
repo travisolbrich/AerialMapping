@@ -43,15 +43,21 @@
         <Button x:Name="bRotateLeft" Content="⟲"
                 Height="20" Width="20" Margin="10,40,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bRotateLeft_Click" />
+                Background="Beige" Click="bRotateLeft_Click">
+            <Button.ToolTip>Rotate to the left</Button.ToolTip>
+        </Button>
         <Button x:Name="bRotateDefault" Content="↑"
                 Height="20" Width="20" Margin="30,40,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bRotateDefault_Click" />
+                Background="Beige" Click="bRotateDefault_Click">
+            <Button.ToolTip>Default rotation</Button.ToolTip>
+        </Button>
         <Button x:Name="bRotateRight" Content="⟳"
                 Height="20" Width="20" Margin="50, 40, 0 0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bRotateRight_Click" />
+                Background="Beige" Click="bRotateRight_Click">
+            <Button.ToolTip>Rotate to the right</Button.ToolTip>
+        </Button>
         <Button x:Name="bZoomIn" Content="+"
                 Height="20" Width="20" Margin="10, 80, 0 0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"

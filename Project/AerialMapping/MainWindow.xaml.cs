@@ -84,7 +84,7 @@ namespace AerialMapping
         private void BaseMapView_Initialized(object sender, EventArgs e)
         {
             mainViewModel.m_MapView = (MapView)sender;
-            mainViewModel.m_MapView.MaxScale = 2100; // set the maximum zoom value
+            mainViewModel.m_MapView.MaxScale = 1; // set the maximum zoom value
             mainViewModel.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }
 
