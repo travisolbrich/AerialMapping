@@ -1,16 +1,22 @@
-﻿using Esri.ArcGISRuntime;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Windows;
+﻿//-----------------------------------------------------------------------
+// <copyright file="App.xaml.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace AerialMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using Esri.ArcGISRuntime;
+    using Microsoft.Win32;
+
     public partial class App : Application
     {
         [DllImport("TreeDetection.dll", CallingConvention = CallingConvention.Cdecl)]

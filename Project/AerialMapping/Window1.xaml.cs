@@ -1,4 +1,10 @@
-﻿namespace AerialMapping
+﻿//-----------------------------------------------------------------------
+// <copyright file="Window1.xaml.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace AerialMapping
 {
     using System.Collections.Generic;
     using System.Windows;

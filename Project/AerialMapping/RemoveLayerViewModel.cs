@@ -1,4 +1,10 @@
-﻿namespace AerialMapping
+﻿//-----------------------------------------------------------------------
+// <copyright file="RemoveLayerModel.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace AerialMapping
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +18,11 @@
 
     public class RemoveLayerViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<MenuItem> Items { get; set; }
+        public ObservableCollection<MenuItem> Items 
+        { 
+            get; 
+            set; 
+        }
 
         //public DelegateCommand OnCheckCommand { get; set; }
 
@@ -26,7 +36,7 @@
         public void OnCheck()
         {
             Debug.WriteLine("test");
-            foreach (MenuItem parent in this.Items)
+            foreach (MenuItem parent in Items)
             {
                 foreach (MenuItem child in parent.Items)
                 {
@@ -34,13 +44,15 @@
                 }
             }
 
-            NotifiyPropertyChanged("Items");
+            this.NotifiyPropertyChanged("Items");
         }
 
         void NotifiyPropertyChanged(string property)
         {
             if (PropertyChanged != null)
+            {
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//-----------------------------------------------------------------------
+// <copyright file="FooViewModel.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 
@@ -17,7 +23,7 @@ namespace AerialMapping
 
         public static List<FooViewModel> CreateFoos(ObservableCollection<MenuItem> locationsTimes)
         {
-            FooViewModel root = new FooViewModel("All", "")
+            FooViewModel root = new FooViewModel("All", string.Empty)
             {
                 IsInitiallySelected = false,
                 
@@ -25,14 +31,18 @@ namespace AerialMapping
             };
 
             List<FooViewModel> locations = new List<FooViewModel>();
-            foreach (MenuItem location in locationsTimes){
+
+            foreach (MenuItem location in locationsTimes) 
+            {
                 FooViewModel loc = new FooViewModel(location.Title, location.FilePath);
                 List<FooViewModel> times = new List<FooViewModel>();
+
                 foreach (MenuItem time in location.Items)
                 {
                     FooViewModel t = new FooViewModel(time.Title, time.FilePath);
                     times.Add(t);
                 }
+
                 loc.Children = times;
                 locations.Add(loc);
             }
@@ -80,9 +90,9 @@ namespace AerialMapping
 
         FooViewModel(string name, string filePath)
         {
-            Name = name;
-            FilePath = filePath;
-            Children = new List<FooViewModel>();
+            this.Name = name;
+            this.FilePath = filePath;
+            this.Children = new List<FooViewModel>();
         }
 
         void Initialize()
@@ -117,22 +127,35 @@ namespace AerialMapping
         /// </summary>
         public bool? IsChecked
         {
-            get { return _isChecked; }
-            set { this.SetIsChecked(value, true, true); }
+            get 
+            { 
+                return this._isChecked; 
+            }
+
+            set 
+            { 
+                this.SetIsChecked(value, true, true); 
+            }
         }
 
         void SetIsChecked(bool? value, bool updateChildren, bool updateParent)
         {
-            if (value == _isChecked)
+            if (value == this._isChecked)
+            {
                 return;
+            }
 
-            _isChecked = value;
+            this._isChecked = value;
 
-            if (updateChildren && _isChecked.HasValue)
-                this.Children.ForEach(c => c.SetIsChecked(_isChecked, true, false));
+            if (updateChildren && this._isChecked.HasValue)
+            {
+                this.Children.ForEach(c => c.SetIsChecked(this._isChecked, true, false));
+            }
 
-            if (updateParent && _parent != null)
-                _parent.VerifyCheckState();
+            if (updateParent && this._parent != null)
+            {
+                this._parent.VerifyCheckState();
+            }
 
             this.OnPropertyChanged("IsChecked");
         }

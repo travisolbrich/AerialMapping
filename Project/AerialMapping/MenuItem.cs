@@ -1,4 +1,10 @@
-﻿namespace AerialMapping
+﻿//-----------------------------------------------------------------------
+// <copyright file="MenuItems.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace AerialMapping
 {
     using System;
     using System.Collections.Generic;
@@ -14,15 +20,15 @@
     {
         public MenuItem()
         {
-            Items = new ObservableCollection<MenuItem>();
+            this.Items = new ObservableCollection<MenuItem>();
         }
 
         public MenuItem(string title, string filePath)
         {
-            FilePath = filePath;
-            Title = title;
-            Checked = false;
-            Items = new ObservableCollection<MenuItem>();
+            this.FilePath = filePath;
+            this.Title = title;
+            this.Checked = false;
+            this.Items = new ObservableCollection<MenuItem>();
         }
 
         public string FilePath 

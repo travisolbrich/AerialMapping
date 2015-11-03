@@ -1,4 +1,10 @@
-﻿namespace AerialMapping
+﻿//-----------------------------------------------------------------------
+// <copyright file="MainViewModel.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace AerialMapping
 {
     using Esri.ArcGISRuntime.Controls;
     using Esri.ArcGISRuntime.Layers;

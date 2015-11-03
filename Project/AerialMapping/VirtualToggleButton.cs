@@ -1,4 +1,10 @@
-﻿namespace AerialMapping
+﻿//-----------------------------------------------------------------------
+// <copyright file="VirtualToggleButton.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace AerialMapping
 {
     using System;
     using System.Windows;
@@ -73,7 +79,10 @@
         /// IsThreeState Attached Dependency Property
         /// </summary>
         public static readonly DependencyProperty IsThreeStateProperty =
-            DependencyProperty.RegisterAttached("IsThreeState", typeof(bool), typeof(VirtualToggleButton),
+            DependencyProperty.RegisterAttached(
+                "IsThreeState", 
+                typeof(bool), 
+                typeof(VirtualToggleButton),
                 new FrameworkPropertyMetadata((bool)false));
 
         /// <summary>
