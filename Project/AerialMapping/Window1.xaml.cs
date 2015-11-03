@@ -1,21 +1,21 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using System.Collections.Generic;
-
-namespace AerialMapping
+﻿namespace AerialMapping
 {
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Input;
+
     public partial class Window1 : Window
     {
         public FooViewModel root;
 
         public Window1(List<FooViewModel> viewModels)
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            DataContext = viewModels;
+            this.DataContext = viewModels;
 
             //FooViewModel root = this.tree.Items[0] as FooViewModel;
-            root = viewModels[0];
+            this.root = viewModels[0];
 
             base.CommandBindings.Add(
                 new CommandBinding(
@@ -39,7 +39,7 @@ namespace AerialMapping
         {
             List<MenuItem> locationsToKeep = new List<MenuItem>();
 
-            List<FooViewModel> locations = root.Children;
+            List<FooViewModel> locations = this.root.Children;
             foreach (FooViewModel location in locations)
             {
                 if (location.IsChecked != true)
@@ -53,6 +53,7 @@ namespace AerialMapping
                             loc.Items.Add(t);
                         }
                     }
+
                     locationsToKeep.Add(loc);
                 }
             }
@@ -62,7 +63,7 @@ namespace AerialMapping
 
         private void bRemove_Click(object sender, RoutedEventArgs e)
         {
-            Hide();
+            this.Hide();
         }
     }
 }

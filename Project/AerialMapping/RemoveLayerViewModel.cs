@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-
-namespace AerialMapping
+﻿namespace AerialMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows.Input;
+
     public class RemoveLayerViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<MenuItem> Items { get; set; }
@@ -26,7 +26,7 @@ namespace AerialMapping
         public void OnCheck()
         {
             Debug.WriteLine("test");
-            foreach (MenuItem parent in Items)
+            foreach (MenuItem parent in this.Items)
             {
                 foreach (MenuItem child in parent.Items)
                 {

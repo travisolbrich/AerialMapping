@@ -6,14 +6,37 @@ using System.Threading.Tasks;
 
 namespace AerialMapping
 {
-    // This class represents the data for a map layer.
+    /// <summary>
+    /// This class represents the data for a map layer
+    /// </summary>
     public class Dataset
     {
-        public string Location { get; set; }
+        /// <summary>
+        /// This function specifies the location for the Dataset.
+        /// </summary>
+        public string Location 
+        { 
+            get; 
+            set; 
+        }
 
-        public DateTime Time { get; set; }
+        /// <summary>
+        /// This function specifies the date and time for the Dataset. 
+        /// </summary>
+        public DateTime Time 
+        { 
+            get; 
+            set; 
+        }
         //public string Time { get; set; }
 
-        public string FilePath { get; set; }
+        /// <summary>
+        /// This function specifies the path of the Dataset file. 
+        /// </summary>
+        public string FilePath 
+        { 
+            get; 
+            set; 
+        }
     }
 }

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-
-namespace AerialMapping
+﻿namespace AerialMapping
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Input;
+
     public static class VirtualToggleButton
     {
         #region attached properties
@@ -15,10 +15,13 @@ namespace AerialMapping
         /// IsChecked Attached Dependency Property
         /// </summary>
         public static readonly DependencyProperty IsCheckedProperty =
-            DependencyProperty.RegisterAttached("IsChecked", typeof(Nullable<bool>), typeof(VirtualToggleButton),
-                new FrameworkPropertyMetadata((Nullable<bool>)false,
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.Journal,
-                    new PropertyChangedCallback(OnIsCheckedChanged)));
+            DependencyProperty.RegisterAttached(
+                                    "IsChecked", 
+                                    typeof(Nullable<bool>), 
+                                    typeof(VirtualToggleButton),
+                                    new FrameworkPropertyMetadata((Nullable<bool>)false,
+                                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.Journal,
+                                    new PropertyChangedCallback(OnIsCheckedChanged)));
 
         /// <summary>
         /// Gets the IsChecked property.  This dependency property 
@@ -160,7 +163,10 @@ namespace AerialMapping
         /// <param name="target">UIElement or ContentElement on which to raise the event</param>
         internal static RoutedEventArgs RaiseCheckedEvent(UIElement target)
         {
-            if (target == null) return null;
+            if (target == null)
+            {
+                return null;
+            }
 
             RoutedEventArgs args = new RoutedEventArgs();
             args.RoutedEvent = ToggleButton.CheckedEvent;
@@ -210,12 +216,22 @@ namespace AerialMapping
 
         #region private methods
 
+        /// <summary>
+        /// Specifies the action when the left mouse button is pressed down.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
             UpdateIsChecked(sender as DependencyObject);
         }
 
+        /// <summary>
+        /// Specifies the action when a key is pressed down. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.OriginalSource == sender)
@@ -223,7 +239,10 @@ namespace AerialMapping
                 if (e.Key == Key.Space)
                 {
                     // ignore alt+space which invokes the system menu
-                    if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt) return;
+                    if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
+                    {
+                        return;
+                    }
 
                     UpdateIsChecked(sender as DependencyObject);
                     e.Handled = true;
