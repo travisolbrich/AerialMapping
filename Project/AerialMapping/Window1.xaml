@@ -53,7 +53,7 @@
   <DockPanel>
     <Button 
       DockPanel.Dock="Bottom" 
-      Click="bRemove_Click"
+      Click="BRemove_Click"
       Content="Remove" 
       HorizontalAlignment="Center"
       Margin="0,2"

@@ -12,7 +12,7 @@ namespace AerialMapping
 
     public partial class Window1 : Window
     {
-        public FooViewModel root;
+        private FooViewModel root;
 
         public Window1(List<FooViewModel> viewModels)
         {
@@ -23,7 +23,7 @@ namespace AerialMapping
             //FooViewModel root = this.tree.Items[0] as FooViewModel;
             this.root = viewModels[0];
 
-            base.CommandBindings.Add(
+            CommandBindings.Add(
                 new CommandBinding(
                     ApplicationCommands.Undo,
                     (sender, e) => // Execute
@@ -35,10 +35,16 @@ namespace AerialMapping
                     (sender, e) => // CanExecute
                     {
                         e.Handled = true;
-                        e.CanExecute = (root.IsChecked != false);
+                        e.CanExecute = root.IsChecked != false;
                     }));
 
             this.tree.Focus();
+        }
+
+        public FooViewModel Root
+        {
+            get;
+            set;
         }
 
         public List<MenuItem> GetMenuItems()
@@ -67,7 +73,7 @@ namespace AerialMapping
             return locationsToKeep;
         }
 
-        private void bRemove_Click(object sender, RoutedEventArgs e)
+        private void BRemove_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
         }

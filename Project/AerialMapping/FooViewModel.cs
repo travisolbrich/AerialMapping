@@ -3,23 +3,54 @@
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
-
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-
 namespace AerialMapping
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+
     public class FooViewModel : INotifyPropertyChanged
     {
-        #region Data
+        private bool? isChecked = false;
 
-        bool? _isChecked = false;
-        FooViewModel _parent;
+        private FooViewModel parent;
 
-        #endregion // Data
+        public FooViewModel(string name, string filePath)
+        {
+            this.Name = name;
+            this.FilePath = filePath;
+            this.Children = new List<FooViewModel>();
+        }
 
-        #region CreateFoos
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public List<FooViewModel> Children { get; private set; }
+
+        public bool IsInitiallySelected { get; private set; }
+
+        public string Name { get; private set; }
+
+        public string FilePath { get; private set; }
+
+        /// <summary>
+        /// Gets/sets the state of the associated UI toggle (ex. CheckBox).
+        /// The return value is calculated based on the check state of all
+        /// child FooViewModels.  Setting this property to true or false
+        /// will set all children to the same check state, and setting it 
+        /// to any value will cause the parent to verify its check state.
+        /// </summary>
+        public bool? IsChecked
+        {
+            get
+            {
+                return this.isChecked;
+            }
+
+            set
+            {
+                this.SetIsChecked(value, true, true);
+            }
+        }
 
         public static List<FooViewModel> CreateFoos(ObservableCollection<MenuItem> locationsTimes)
         {
@@ -83,84 +114,42 @@ namespace AerialMapping
             //        },
             //    }
             //};
-
             root.Initialize();
             return new List<FooViewModel> { root };
         }
 
-        FooViewModel(string name, string filePath)
-        {
-            this.Name = name;
-            this.FilePath = filePath;
-            this.Children = new List<FooViewModel>();
-        }
-
-        void Initialize()
+        private void Initialize()
         {
             foreach (FooViewModel child in this.Children)
             {
-                child._parent = this;
+                child.parent = this;
                 child.Initialize();
             }
         }
 
-        #endregion // CreateFoos
-
-        #region Properties
-
-        public List<FooViewModel> Children { get; private set; }
-
-        public bool IsInitiallySelected { get; private set; }
-
-        public string Name { get; private set; }
-
-        public string FilePath { get; private set; }
-
-        #region IsChecked
-
-        /// <summary>
-        /// Gets/sets the state of the associated UI toggle (ex. CheckBox).
-        /// The return value is calculated based on the check state of all
-        /// child FooViewModels.  Setting this property to true or false
-        /// will set all children to the same check state, and setting it 
-        /// to any value will cause the parent to verify its check state.
-        /// </summary>
-        public bool? IsChecked
+        private void SetIsChecked(bool? value, bool updateChildren, bool updateParent)
         {
-            get 
-            { 
-                return this._isChecked; 
-            }
-
-            set 
-            { 
-                this.SetIsChecked(value, true, true); 
-            }
-        }
-
-        void SetIsChecked(bool? value, bool updateChildren, bool updateParent)
-        {
-            if (value == this._isChecked)
+            if (value == this.isChecked)
             {
                 return;
             }
 
-            this._isChecked = value;
+            this.isChecked = value;
 
-            if (updateChildren && this._isChecked.HasValue)
+            if (updateChildren && this.isChecked.HasValue)
             {
-                this.Children.ForEach(c => c.SetIsChecked(this._isChecked, true, false));
+                this.Children.ForEach(c => c.SetIsChecked(this.isChecked, true, false));
             }
 
-            if (updateParent && this._parent != null)
+            if (updateParent && this.parent != null)
             {
-                this._parent.VerifyCheckState();
+                this.parent.VerifyCheckState();
             }
 
             this.OnPropertyChanged("IsChecked");
         }
 
-        void VerifyCheckState()
+        private void VerifyCheckState()
         {
             bool? state = null;
             for (int i = 0; i < this.Children.Count; ++i)
@@ -176,25 +165,16 @@ namespace AerialMapping
                     break;
                 }
             }
+
             this.SetIsChecked(state, false, true);
         }
 
-        #endregion // IsChecked
-
-        #endregion // Properties
-
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged(string prop)
+        private void OnPropertyChanged(string prop)
         {
             if (this.PropertyChanged != null)
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(prop));
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

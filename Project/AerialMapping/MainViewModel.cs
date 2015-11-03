@@ -6,8 +6,6 @@
 
 namespace AerialMapping
 {
-    using Esri.ArcGISRuntime.Controls;
-    using Esri.ArcGISRuntime.Layers;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -16,62 +14,22 @@ namespace AerialMapping
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using System.Windows;    
+    using System.Windows; 
+    using Esri.ArcGISRuntime.Controls;
+    using Esri.ArcGISRuntime.Layers;   
 
     /// <summary>
     /// This is the MainViewModel class which displays the map
     /// </summary>
-    class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
-        public MapView m_MapView;
+        private string idToZoomOn = string.Empty;
 
-        private Map map;
+        private List<Dataset> datasetList;
 
-        public Map IncidentMap
-        {
-            get 
-            { 
-                return this.map; 
-            }
+        private KmlLayer kmllayerTest; // need to reconcile this with the one in the mainwindow code behind
 
-            set 
-            { 
-                this.map = value; 
-            }
-        }
-
-        private List<Dataset> m_DatasetList;
-
-        KmlLayer kmllayerTest; // need to reconcile this with the one in the mainwindow code behind
-        public string m_IdToZoomOn = string.Empty;
-
-        private ObservableCollection<MenuItem> _treeViewItems;
-
-        public ObservableCollection<MenuItem> TreeViewItems
-        {
-            get 
-            { 
-                return this._treeViewItems; 
-            }
-
-            set 
-            { 
-                this._treeViewItems = value;
-                this.NotifiyPropertyChanged("TreeViewItems");
-            }
-        }
-
-        public DelegateCommand AddLayerCommand 
-        { 
-            get; 
-            set; 
-        }
-
-        public DelegateCommand RemoveLayerCommand 
-        { 
-            get; 
-            set; 
-        }
+        private ObservableCollection<MenuItem> treeViewItems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel" /> class.
@@ -80,34 +38,86 @@ namespace AerialMapping
         /// </summary>
         public MainViewModel()
         {
-            this.map = App.Current.Resources["IncidentMap"] as Map;
+            this.Map = App.Current.Resources["IncidentMap"] as Map;
             this.TreeViewItems = new ObservableCollection<MenuItem>();
             MenuItem root = new MenuItem() { Title = "Test Location" };
             root.Items.Add(new MenuItem() { Title = "01-01-2015" });
             this.TreeViewItems.Add(root);
 
-            this.m_DatasetList = new List<Dataset>();
+            this.datasetList = new List<Dataset>();
             this.AddLayerCommand = new DelegateCommand(this.AddLayer);
             this.RemoveLayerCommand = new DelegateCommand(this.RemoveLayer);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string IdToZoomOn
+        {
+            get { return this.idToZoomOn; }
+            set { this.idToZoomOn = value; }
+        }
+
+        public MapView MapView
+        {
+            get;
+            set;
+        }
+
+        public Map Map
+        { 
+            get; 
+            set; 
+        }
+
+        public Map IncidentMap
+        {
+            get { return this.Map; }
+            set { this.Map = value; }
+        }
+
+        public ObservableCollection<MenuItem> TreeViewItems
+        {
+            get
+            {
+                return this.treeViewItems;
+            }
+
+            set
+            {
+                this.treeViewItems = value;
+                this.NotifiyPropertyChanged("TreeViewItems");
+            }
+        }
+
+        public DelegateCommand AddLayerCommand
+        {
+            get;
+            set;
+        }
+
+        public DelegateCommand RemoveLayerCommand
+        {
+            get;
+            set;
         }
 
         /// <summary>
         /// This function loads a KML layer to the map. 
         /// </summary>
         /// <param name="path">The path of the .kml file.</param>
-        /// <param name="bZoomTo">Whether we should zoom to the new area (true) or not (false).</param>
-        /// <param name="bRelativePath">Specifies if the path is relative (true) or absolute (false).</param>
-        public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
+        /// <param name="zoomTo">Whether we should zoom to the new area (true) or not (false).</param>
+        /// <param name="relativePath">Specifies if the path is relative (true) or absolute (false).</param>
+        public void LoadKml(string path, bool zoomTo, bool relativePath)
         {
             Debug.WriteLine("Path: " + path);
             try
             {
-                Uri dataPath = new Uri(path, bRelativePath ? UriKind.Relative : UriKind.Absolute);
+                Uri dataPath = new Uri(path, relativePath ? UriKind.Relative : UriKind.Absolute);
                 KmlLayer kmllayer = new KmlLayer(dataPath);
                 kmllayer.ID = path;
-                this.m_IdToZoomOn = bZoomTo ? path : string.Empty;
+                this.idToZoomOn = zoomTo ? path : string.Empty;
 
-                this.m_MapView.Map.Layers.Add(kmllayer);
+                this.MapView.Map.Layers.Add(kmllayer);
                 this.kmllayerTest = kmllayer;
             }
             catch
@@ -122,21 +132,19 @@ namespace AerialMapping
         /// <param name="item">The MenuItem item</param>
         public void UnloadKML(MenuItem item)
         {
-            if (!this.m_MapView.Map.Layers.Remove(item.FilePath))
+            if (!this.MapView.Map.Layers.Remove(item.FilePath))
             {
                 Debug.WriteLine("Failed to remove layer with filepath: " + item.FilePath); 
             }
         }
 
-        void NotifiyPropertyChanged(string property)
+        private void NotifiyPropertyChanged(string property)
         {
             if (this.PropertyChanged != null)
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// "Add Layer" button callback
@@ -155,13 +163,13 @@ namespace AerialMapping
             Dataset newLayer = addLayer.DatasetToAdd;
             addLayer.Close();
 
-            if (!String.IsNullOrEmpty(newLayer.FilePath))
+            if (!string.IsNullOrEmpty(newLayer.FilePath))
             {
                 // Save the new dataset
-                this.m_DatasetList.Add(newLayer);
+                this.datasetList.Add(newLayer);
 
                 // See if the Location already exists
-                bool bLocationExists = false;
+                bool locationExists = false;
 
                 foreach (MenuItem location in this.TreeViewItems)
                 {
@@ -170,13 +178,13 @@ namespace AerialMapping
                     {
                         MenuItem newChild = new MenuItem(newLayer.Time.ToShortDateString(), newLayer.FilePath);
                         location.Items.Add(newChild);
-                        bLocationExists = true;
+                        locationExists = true;
                         break;
                     }
                 }
 
                 // If not, then we also need to add the Location to the treeview
-                if (!bLocationExists)
+                if (!locationExists)
                 {
                     // Add it to the TreeView on the UI
                     MenuItem root = new MenuItem() { Title = newLayer.Location };
@@ -198,7 +206,7 @@ namespace AerialMapping
         /// This pops up a window which allows the user to select which layers they wish to remove.
         /// The TreeView of layers is updated accordingly. 
         /// </summary>
-        /// <param name="parameter"></param>
+        /// <param name="parameter">Layer to be removed</param>
         private void RemoveLayer(object parameter)
         {
             Window1 win = new Window1(FooViewModel.CreateFoos(this.TreeViewItems));

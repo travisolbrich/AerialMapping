@@ -34,7 +34,6 @@ namespace AerialMapping
             get; 
             set; 
         }
-        //public string Time { get; set; }
 
         /// <summary>
         /// This function specifies the path of the Dataset file. 

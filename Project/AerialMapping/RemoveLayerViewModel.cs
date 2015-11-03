@@ -18,25 +18,23 @@ namespace AerialMapping
 
     public class RemoveLayerViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<MenuItem> Items 
-        { 
-            get; 
-            set; 
+        public RemoveLayerViewModel(ObservableCollection<MenuItem> treeViewItems)
+        {
+            this.Items = treeViewItems;
         }
 
-        //public DelegateCommand OnCheckCommand { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public RemoveLayerViewModel(ObservableCollection<MenuItem> TreeViewItems)
+        public ObservableCollection<MenuItem> Items
         {
-            Items = TreeViewItems;
-
-            //OnCheckCommand = new DelegateCommand(OnCheck);
+            get;
+            set;
         }
 
         public void OnCheck()
         {
             Debug.WriteLine("test");
-            foreach (MenuItem parent in Items)
+            foreach (MenuItem parent in this.Items)
             {
                 foreach (MenuItem child in parent.Items)
                 {
@@ -44,17 +42,15 @@ namespace AerialMapping
                 }
             }
 
-            NotifiyPropertyChanged("Items");
+            this.NotifiyPropertyChanged("Items");
         }
 
-        void NotifiyPropertyChanged(string property)
+        private void NotifiyPropertyChanged(string property)
         {
-            if (PropertyChanged != null)
+            if (this.PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

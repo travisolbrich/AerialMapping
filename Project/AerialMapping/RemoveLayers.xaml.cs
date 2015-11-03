@@ -27,7 +27,6 @@ namespace AerialMapping
     public partial class RemoveLayers : Window
     {
         private RemoveLayerViewModel viewModel;
-        //public ObservableCollection<MenuItem> OC { get; set; }
 
         public RemoveLayers(RemoveLayerViewModel removeLayerViewModel)
         {
@@ -77,7 +76,7 @@ namespace AerialMapping
         /// <param name="e"></param>
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.OnCheck();
+            this.viewModel.OnCheck();
         }
 
         //public void OnCheck()
@@ -125,7 +124,7 @@ namespace AerialMapping
         /// <param name="e"></param>
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
-            Hide();
+            this.Hide();
         }
     }
 }

@@ -20,8 +20,7 @@ namespace AerialMapping
     public partial class App : Application
     {
         [DllImport("TreeDetection.dll", CallingConvention = CallingConvention.Cdecl)]
-        private extern static void entry(string s);
-
+        private static extern void Entry(string s);
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {

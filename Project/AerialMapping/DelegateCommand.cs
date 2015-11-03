@@ -26,11 +26,6 @@ namespace AerialMapping
         private readonly Func<object, bool> canExecute;
 
         /// <summary>
-        /// an event for when the value of "CanExecute" changes (not implemented)
-        /// </summary>
-        public event EventHandler CanExecuteChanged;
-
-        /// <summary>
         /// constructor: store the logic for executing and enabling the command
         /// </summary>
         /// <param name="executeAction"></param>
@@ -42,9 +37,14 @@ namespace AerialMapping
         }
 
         /// <summary>
+        /// an event for when the value of "CanExecute" changes (not implemented)
+        /// </summary>
+        public event EventHandler CanExecuteChanged;
+
+        /// <summary>
         /// if it was passed in, execute the enabling logic for the command
         /// </summary>
-        /// <param name="parameter"></param>
+        /// <param name="parameter">Paramater to be tested</param>
         /// <returns></returns>
         public bool CanExecute(object parameter)
         {
@@ -59,7 +59,7 @@ namespace AerialMapping
         /// <summary>
         /// execute the command logic 
         /// </summary>
-        /// <param name="parameter"></param>
+        /// <param name="parameter">Paramater to be executed</param>
         public void Execute(object parameter)
         {
             this.execute(parameter);

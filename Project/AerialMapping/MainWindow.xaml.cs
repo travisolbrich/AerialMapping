@@ -12,7 +12,6 @@
  *  | |__| | |__| |____) |  | |    | |__| | |__| |  _| |_   | |   
  *   \____/ \____/|_____/   |_|    |_____/ \____/  |_____|  |_|  
  */
-
 ﻿using Esri.ArcGISRuntime.Controls;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Layers;
@@ -34,13 +33,11 @@ namespace AerialMapping
     {
         public double m_KmzZoomDelaySec = 3;
         private double currAngle = 0;
-        //private string m_IdToZoomOn = "";
-        //private MapView m_MapView;
         private Viewpoint m_CenterPoint;
         KmlLayer kmllayerTest;
         private List<Dataset> m_DatasetList;
         
-        MainViewModel mainViewModel;
+        public MainViewModel mainViewModel;
 
         public MainWindow()
         {
@@ -78,9 +75,9 @@ namespace AerialMapping
                 Debug.WriteLine(string.Format("(MainWindows{BaseMapView_LayerLoaded}) Error while loading layer : {0} - {1}", e.Layer.ID, e.LoadError.Message));
                 return;
             }
-            if (mainViewModel.m_IdToZoomOn != "" && e.Layer.ID == mainViewModel.m_IdToZoomOn)
+            if (mainViewModel.IdToZoomOn != "" && e.Layer.ID == mainViewModel.IdToZoomOn)
             {
-                mainViewModel.m_IdToZoomOn = "";
+                mainViewModel.IdToZoomOn = "";
                 m_CenterPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
                 ((MapView)sender).SetViewAsync(m_CenterPoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
             }
@@ -89,8 +86,8 @@ namespace AerialMapping
 
         private void BaseMapView_Initialized(object sender, EventArgs e)
         {
-            mainViewModel.m_MapView = (MapView)sender;
-            mainViewModel.m_MapView.MaxScale = 1; // set the maximum zoom value
+            mainViewModel.MapView = (MapView)sender;
+            mainViewModel.MapView.MaxScale = 1; // set the maximum zoom value
             mainViewModel.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }
 
@@ -115,42 +112,42 @@ namespace AerialMapping
         {
             currAngle = (currAngle += 10) % 360;
             // apply the rotation to the map
-            mainViewModel.m_MapView.SetRotationAsync(currAngle);
+            mainViewModel.MapView.SetRotationAsync(currAngle);
         }
 
         private void bRotateDefault_Click(object sender, RoutedEventArgs e)
         {
             // apply the rotation to the map
             currAngle = 0;
-            mainViewModel.m_MapView.SetRotationAsync(currAngle);
+            mainViewModel.MapView.SetRotationAsync(currAngle);
         }
         private void bRotateRight_Click(object sender, RoutedEventArgs e)
         {
             currAngle = (currAngle -= 10) % 360;
             // apply the rotation to the map
-            mainViewModel.m_MapView.SetRotationAsync(currAngle);
+            mainViewModel.MapView.SetRotationAsync(currAngle);
         }
 
         // The following are buttons for zoom
         private void bZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            mainViewModel.m_MapView.ZoomAsync(1.2);
-            bZoomSlider.Value = mainViewModel.m_MapView.Scale;
+            mainViewModel.MapView.ZoomAsync(1.2);
+            bZoomSlider.Value = mainViewModel.MapView.Scale;
         }
 
         private void bZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            mainViewModel.m_MapView.ZoomAsync(0.8);
-            bZoomSlider.Value = mainViewModel.m_MapView.Scale;
+            mainViewModel.MapView.ZoomAsync(0.8);
+            bZoomSlider.Value = mainViewModel.MapView.Scale;
         }
 
         // The following is for zoom slider action
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoomScale = e.NewValue;
-            if (mainViewModel != null && mainViewModel.m_MapView != null)
+            if (mainViewModel != null && mainViewModel.MapView != null)
             {
-                mainViewModel.m_MapView.ZoomToScaleAsync(zoomScale);
+                mainViewModel.MapView.ZoomToScaleAsync(zoomScale);
             }
             
         }
@@ -167,8 +164,8 @@ namespace AerialMapping
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             // this is for testing only.
-            if (e.NewValue == 3) mainViewModel.m_MapView.Map.Layers.Add(kmllayerTest);
-            else if (e.NewValue == 2) mainViewModel.m_MapView.Map.Layers.Remove(kmllayerTest);
+            if (e.NewValue == 3) mainViewModel.MapView.Map.Layers.Add(kmllayerTest);
+            else if (e.NewValue == 2) mainViewModel.MapView.Map.Layers.Remove(kmllayerTest);
             // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
         }
 
@@ -182,7 +179,7 @@ namespace AerialMapping
         private void bCenterView_Click(object sender, RoutedEventArgs e)
         {
             //((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
-            mainViewModel.m_MapView.SetViewAsync(m_CenterPoint);
+            mainViewModel.MapView.SetViewAsync(m_CenterPoint);
         }
 
 
