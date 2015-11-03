@@ -44,7 +44,7 @@ namespace AerialMapping
                 }
             }
 
-            this.NotifiyPropertyChanged("Items");
+            NotifiyPropertyChanged("Items");
         }
 
         void NotifiyPropertyChanged(string property)

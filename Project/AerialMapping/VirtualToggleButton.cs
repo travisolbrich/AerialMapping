@@ -193,7 +193,10 @@ namespace AerialMapping
         /// <param name="target">UIElement or ContentElement on which to raise the event</param>
         internal static RoutedEventArgs RaiseUncheckedEvent(UIElement target)
         {
-            if (target == null) return null;
+            if (target == null)
+            {
+                return null;
+            }
 
             RoutedEventArgs args = new RoutedEventArgs();
             args.RoutedEvent = ToggleButton.UncheckedEvent;
@@ -211,7 +214,10 @@ namespace AerialMapping
         /// <param name="target">UIElement or ContentElement on which to raise the event</param>
         internal static RoutedEventArgs RaiseIndeterminateEvent(UIElement target)
         {
-            if (target == null) return null;
+            if (target == null)
+            {
+                return null;
+            }
 
             RoutedEventArgs args = new RoutedEventArgs();
             args.RoutedEvent = ToggleButton.IndeterminateEvent;
