@@ -1,23 +1,29 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using System.Collections.Generic;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Window1.xaml.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace AerialMapping
 {
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Input;
+
     public partial class Window1 : Window
     {
-        public FooViewModel root;
+        private FooViewModel root;
 
         public Window1(List<FooViewModel> viewModels)
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            DataContext = viewModels;
+            this.DataContext = viewModels;
 
             //FooViewModel root = this.tree.Items[0] as FooViewModel;
-            root = viewModels[0];
+            this.root = viewModels[0];
 
-            base.CommandBindings.Add(
+            CommandBindings.Add(
                 new CommandBinding(
                     ApplicationCommands.Undo,
                     (sender, e) => // Execute
@@ -29,17 +35,23 @@ namespace AerialMapping
                     (sender, e) => // CanExecute
                     {
                         e.Handled = true;
-                        e.CanExecute = (root.IsChecked != false);
+                        e.CanExecute = root.IsChecked != false;
                     }));
 
             this.tree.Focus();
+        }
+
+        public FooViewModel Root
+        {
+            get;
+            set;
         }
 
         public List<MenuItem> GetMenuItems()
         {
             List<MenuItem> locationsToKeep = new List<MenuItem>();
 
-            List<FooViewModel> locations = root.Children;
+            List<FooViewModel> locations = this.root.Children;
             foreach (FooViewModel location in locations)
             {
                 MenuItem loc;
@@ -62,8 +74,10 @@ namespace AerialMapping
                     {
                         t = new MenuItem(time.Name, time.FilePath, false);
                     }
+
                     loc.Items.Add(t);
-                        
+                    //locationsToKeep.Add(loc);
+
                 }
                 locationsToKeep.Add(loc);
                 
@@ -72,9 +86,9 @@ namespace AerialMapping
             return locationsToKeep;
         }
 
-        private void bRemove_Click(object sender, RoutedEventArgs e)
+        private void BRemove_Click(object sender, RoutedEventArgs e)
         {
-            Hide();
+            this.Hide();
         }
     }
 }
