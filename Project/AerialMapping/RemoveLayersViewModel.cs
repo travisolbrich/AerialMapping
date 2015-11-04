@@ -9,22 +9,22 @@ namespace AerialMapping
     using System.Collections.ObjectModel;
     using System.ComponentModel;
 
-    public class FooViewModel : INotifyPropertyChanged
+    public class RemoveLayersViewModel : INotifyPropertyChanged
     {
         private bool? isChecked = false;
 
-        private FooViewModel parent;
+        private RemoveLayersViewModel parent;
 
-        public FooViewModel(string name, string filePath)
+        public RemoveLayersViewModel(string name, string filePath)
         {
             this.Name = name;
             this.FilePath = filePath;
-            this.Children = new List<FooViewModel>();
+            this.Children = new List<RemoveLayersViewModel>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public List<FooViewModel> Children { get; private set; }
+        public List<RemoveLayersViewModel> Children { get; private set; }
 
         public bool IsInitiallySelected { get; private set; }
 
@@ -52,25 +52,25 @@ namespace AerialMapping
             }
         }
 
-        public static List<FooViewModel> CreateFoos(ObservableCollection<MenuItem> locationsTimes)
+        public static List<RemoveLayersViewModel> CreateFoos(ObservableCollection<MenuItem> locationsTimes)
         {
-            FooViewModel root = new FooViewModel("All", string.Empty)
+            RemoveLayersViewModel root = new RemoveLayersViewModel("All", string.Empty)
             {
                 IsInitiallySelected = false,
                 
-                Children = new List<FooViewModel>()
+                Children = new List<RemoveLayersViewModel>()
             };
 
-            List<FooViewModel> locations = new List<FooViewModel>();
+            List<RemoveLayersViewModel> locations = new List<RemoveLayersViewModel>();
 
             foreach (MenuItem location in locationsTimes) 
             {
-                FooViewModel loc = new FooViewModel(location.Title, location.FilePath);
-                List<FooViewModel> times = new List<FooViewModel>();
+                RemoveLayersViewModel loc = new RemoveLayersViewModel(location.Title, location.FilePath);
+                List<RemoveLayersViewModel> times = new List<RemoveLayersViewModel>();
 
                 foreach (MenuItem time in location.Items)
                 {
-                    FooViewModel t = new FooViewModel(time.Title, time.FilePath);
+                    RemoveLayersViewModel t = new RemoveLayersViewModel(time.Title, time.FilePath);
                     times.Add(t);
                 }
 
@@ -115,12 +115,12 @@ namespace AerialMapping
             //    }
             //};
             root.Initialize();
-            return new List<FooViewModel> { root };
+            return new List<RemoveLayersViewModel> { root };
         }
 
         private void Initialize()
         {
-            foreach (FooViewModel child in this.Children)
+            foreach (RemoveLayersViewModel child in this.Children)
             {
                 child.parent = this;
                 child.Initialize();

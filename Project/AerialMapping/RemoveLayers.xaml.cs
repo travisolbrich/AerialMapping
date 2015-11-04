@@ -1,128 +1,98 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="RemoveLayers.xaml.cs" company="CSCE 482: Aerial Mapping">
+// <copyright file="Window1.xaml.cs" company="CSCE 482: Aerial Mapping">
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
 
 namespace AerialMapping
 {
-    using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
     using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Shapes;
 
-    /// <summary>
-    /// Interaction logic for RemoveLayers.xaml
-    /// </summary>
     public partial class RemoveLayers : Window
     {
-        private RemoveLayerViewModel viewModel;
+        private RemoveLayersViewModel root;
 
-        public RemoveLayers(RemoveLayerViewModel removeLayerViewModel)
+        public RemoveLayers(List<RemoveLayersViewModel> viewModels)
         {
-            //OC = TreeViewItems;
-            //OC = new ObservableCollection<MenuItem>()
-            //{
-            //    new MenuItem(){Title="Item1", Checked=true,
-            //      Items = new ObservableCollection<MenuItem>()
-            //      {            
-            //        new MenuItem(){Title="SubItem11", Checked=false},
-            //        new MenuItem(){Title="SubItem12", Checked=false},
-            //        new MenuItem(){Title="SubItem13", Checked=false}
-            //      }
-            //    },
-            //    new MenuItem(){Title="Item2", Checked=true,
-            //      Items = new ObservableCollection<MenuItem>()
-            //      {
-            //        new MenuItem(){Title="SubItem21", Checked=true},            
-            //        new MenuItem(){Title="SubItem22", Checked=true},
-            //        new MenuItem(){Title="SubItem23", Checked=true}
-            //      }},
-            //    new MenuItem(){Title="Item3", Checked=true,
-            //      Items = new ObservableCollection<MenuItem>()
-            //      {
-            //        new MenuItem(){Title="SubItem31", Checked=false},
-            //        new MenuItem(){Title="SubItem32", Checked=false},            
-            //        new MenuItem(){Title="SubItem33", Checked=false}
-            //      }},
-            //    new MenuItem(){Title="Item4", Checked=true,
-            //      Items = new ObservableCollection<MenuItem>()
-            //      {
-            //        new MenuItem(){Title="SubItem41", Checked=false},
-            //        new MenuItem(){Title="SubItem42", Checked=false},
-            //        new MenuItem(){Title="SubItem43", Checked=false}
-            //      }
-            //    }
-            //  };
-              this.InitializeComponent();
-              this.DataContext = removeLayerViewModel;
-              this.viewModel = removeLayerViewModel;
+            this.InitializeComponent();
+
+            this.DataContext = viewModels;
+
+            //FooViewModel root = this.tree.Items[0] as FooViewModel;
+            this.root = viewModels[0];
+
+            CommandBindings.Add(
+                new CommandBinding(
+                    ApplicationCommands.Undo,
+                    (sender, e) => // Execute
+                    {                        
+                        e.Handled = true;
+                        root.IsChecked = false;
+                        this.tree.Focus();
+                    },
+                    (sender, e) => // CanExecute
+                    {
+                        e.Handled = true;
+                        e.CanExecute = root.IsChecked != false;
+                    }));
+
+            this.tree.Focus();
+        }
+
+        public RemoveLayersViewModel Root
+        {
+            get;
+            set;
         }
 
         /// <summary>
-        /// This function specifies the action when the checkbox is clicked.
+        /// This method converts all of the information from the remove layers
+        /// window and returns it as a list of menuitems. This is how the
+        /// remove layers window returns the results of the users actions.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        /// <returns>List of MenuItems including the user's checkbox selections.</returns>
+        public List<MenuItem> GetMenuItems()
         {
-            this.viewModel.OnCheck();
+            List<MenuItem> locationsToKeep = new List<MenuItem>();
+
+            List<RemoveLayersViewModel> locations = this.root.Children;
+            foreach (RemoveLayersViewModel location in locations)
+            {
+                MenuItem loc;
+                if (location.IsChecked != true)
+                {
+                   loc = new MenuItem(location.Name, location.FilePath, true);
+                }
+                else
+                {
+                    loc = new MenuItem(location.Name, location.FilePath, false);
+                }
+                foreach (RemoveLayersViewModel time in location.Children)
+                {
+                    MenuItem t;
+                    if (time.IsChecked != true)
+                    {
+                        t = new MenuItem(time.Name, time.FilePath, true);
+                    }
+                    else
+                    {
+                        t = new MenuItem(time.Name, time.FilePath, false);
+                    }
+
+                    loc.Items.Add(t);
+                    //locationsToKeep.Add(loc);
+
+                }
+                locationsToKeep.Add(loc);
+                
+            }
+
+            return locationsToKeep;
         }
 
-        //public void OnCheck()
-        //{
-            
-        //    foreach (MenuItem item in OC)
-        //    {
-        //        if (item.Checked == true)
-        //        {                    
-        //            foreach (MenuItem subitem in item.Items)
-        //            {
-        //                subitem.Checked = true;
-        //            }         
-        //        }
-        //        else
-        //        {
-        //            bool bAllChildrenChecked = true;
-
-        //            foreach (MenuItem subItem in item.Items)
-        //            {
-        //                if (subItem.Checked == false)
-        //                {
-        //                    bAllChildrenChecked = false;
-        //                    break;
-        //                }
-        //            }
-
-        //            if (bAllChildrenChecked)
-        //            {
-        //                item.Checked = true;
-        //            }
-        //        }
-        //    }
-        //    CommandManager.InvalidateRequerySuggested();
-            
-        //}
-
-        //private void CheckBox_Click(object sender, RoutedEventArgs e) { OnCheck(); }
-        //private void CheckBox_Loaded(object sender, RoutedEventArgs e) { OnCheck(); }
-
-        /// <summary>
-        /// This function specifies the action when the Remove button is clicked.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RemoveButton_Click(object sender, RoutedEventArgs e)
+        private void BRemove_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
         }

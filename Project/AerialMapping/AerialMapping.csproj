@@ -66,15 +66,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DelegateCommand.cs" />
-    <Compile Include="FooViewModel.cs" />
+    <Compile Include="RemoveLayersViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MenuItem.cs" />
-    <Compile Include="RemoveLayers.xaml.cs">
-      <DependentUpon>RemoveLayers.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RemoveLayerViewModel.cs" />
     <Compile Include="VirtualToggleButton.cs" />
-    <Compile Include="Window1.xaml.cs" />
+    <Compile Include="RemoveLayers.xaml.cs" />
     <Page Include="AddLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -96,16 +92,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="RemoveLayers.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Window1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.targets" /> 
+  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
