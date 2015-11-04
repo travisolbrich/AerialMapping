@@ -42,19 +42,31 @@ namespace AerialMapping
             List<FooViewModel> locations = root.Children;
             foreach (FooViewModel location in locations)
             {
+                MenuItem loc;
                 if (location.IsChecked != true)
                 {
-                    MenuItem loc = new MenuItem(location.Name, location.FilePath);
-                    foreach (FooViewModel time in location.Children)
-                    {
-                        if (time.IsChecked != true)
-                        {
-                            MenuItem t = new MenuItem(time.Name, time.FilePath);
-                            loc.Items.Add(t);
-                        }
-                    }
-                    locationsToKeep.Add(loc);
+                   loc = new MenuItem(location.Name, location.FilePath, true);
                 }
+                else
+                {
+                    loc = new MenuItem(location.Name, location.FilePath, false);
+                }
+                foreach (FooViewModel time in location.Children)
+                {
+                    MenuItem t;
+                    if (time.IsChecked != true)
+                    {
+                        t = new MenuItem(time.Name, time.FilePath, true);
+                    }
+                    else
+                    {
+                        t = new MenuItem(time.Name, time.FilePath, false);
+                    }
+                    loc.Items.Add(t);
+                        
+                }
+                locationsToKeep.Add(loc);
+                
             }
 
             return locationsToKeep;

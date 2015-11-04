@@ -24,6 +24,14 @@ namespace AerialMapping
             Items = new ObservableCollection<MenuItem>();
         }
 
+        public MenuItem(string title, string filePath, bool check)
+        {
+            FilePath = filePath;
+            Title = title;
+            Checked = check;
+            Items = new ObservableCollection<MenuItem>();
+        }
+
         public string FilePath { get; set; }
 
         public string Title { get; set; }
