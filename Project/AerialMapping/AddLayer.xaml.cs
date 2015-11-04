@@ -63,6 +63,7 @@ namespace AerialMapping
         /// <param name="e"></param>
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
+            // Read the data from the boxes on screen.
             this.DatasetToAdd.Location = LocationInput.Text;
             
             if (DateTimeInput.Value.HasValue)
@@ -71,6 +72,8 @@ namespace AerialMapping
             }
 
             this.DatasetToAdd.FilePath = FilePathInput.Text;
+
+            // Close this window.
             this.Hide();
         }
     }

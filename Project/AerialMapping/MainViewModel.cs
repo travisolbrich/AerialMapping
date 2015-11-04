@@ -223,20 +223,10 @@ namespace AerialMapping
         /// <param name="parameter">Layer to be removed</param>
         private void RemoveLayer(object parameter)
         {
-            RemoveLayers win = new RemoveLayers(RemoveLayersViewModel.CreateFoos(this.TreeViewItems));
+            RemoveLayers win = new RemoveLayers(RemoveLayersViewModel.CreateViewModels(this.TreeViewItems));
             win.ShowDialog();
 
             List<MenuItem> itemsList = win.GetMenuItems();
-
-            //RemoveLayerViewModel removeViewModel = new RemoveLayerViewModel(TreeViewItems);
-            //RemoveLayers removeLayers = new RemoveLayers(removeViewModel);
-            //removeLayers.Owner = (Window)parameter;
-
-            //TreeViewItems = removeViewModel.Items;
-
-            //removeLayers.ShowDialog();
-
-            //List<MenuItem> itemsList = removeViewModel.Items.ToList<MenuItem>();
 
             // For each parent
             for (int i = itemsList.Count - 1; i >= 0; i--)

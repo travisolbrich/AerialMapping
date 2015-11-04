@@ -14,13 +14,17 @@ namespace AerialMapping
     {
         private RemoveLayersViewModel root;
 
+        /// <summary>
+        /// Constructor - takes the viewModels and sets up
+        /// the treeview for the window.
+        /// </summary>
+        /// <param name="viewModels">Data for the treeview.</param>
         public RemoveLayers(List<RemoveLayersViewModel> viewModels)
         {
             this.InitializeComponent();
 
             this.DataContext = viewModels;
 
-            //FooViewModel root = this.tree.Items[0] as FooViewModel;
             this.root = viewModels[0];
 
             CommandBindings.Add(
@@ -92,6 +96,11 @@ namespace AerialMapping
             return locationsToKeep;
         }
 
+        /// <summary>
+        /// Remove button callback.
+        /// </summary>
+        /// <param name="sender">The remove button.</param>
+        /// <param name="e">Button clicked event args.</param>
         private void BRemove_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();

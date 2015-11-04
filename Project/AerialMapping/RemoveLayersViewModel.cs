@@ -15,6 +15,11 @@ namespace AerialMapping
 
         private RemoveLayersViewModel parent;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name">The string to put in the treeview.</param>
+        /// <param name="filePath">The filepath associated with this object.</param>
         public RemoveLayersViewModel(string name, string filePath)
         {
             this.Name = name;
@@ -52,7 +57,13 @@ namespace AerialMapping
             }
         }
 
-        public static List<RemoveLayersViewModel> CreateFoos(ObservableCollection<MenuItem> locationsTimes)
+        /// <summary>
+        /// Takes the collection of locations and times from the main window and converts the data
+        /// into a list of removelayerviewmodels for the removelayers window to use.
+        /// </summary>
+        /// <param name="locationsTimes">Locations and times from the treeview in the mainwindow.</param>
+        /// <returns>The data from locationsTimes in a list of removelayerviewmodels format.</returns>
+        public static List<RemoveLayersViewModel> CreateViewModels(ObservableCollection<MenuItem> locationsTimes)
         {
             RemoveLayersViewModel root = new RemoveLayersViewModel("All", string.Empty)
             {
@@ -80,44 +91,14 @@ namespace AerialMapping
 
             root.Children = locations;
 
-            //FooViewModel root = new FooViewModel("Weapons", "")
-            //{
-            //    IsInitiallySelected = true,
-            //    Children =
-            //    {
-            //        new FooViewModel("Blades", "")
-            //        {
-            //            Children =
-            //            {
-            //                new FooViewModel("Dagger", ""),
-            //                new FooViewModel("Machete", ""),
-            //                new FooViewModel("Sword", ""),
-            //            }
-            //        },
-            //        new FooViewModel("Vehicles", "")
-            //        {
-            //            Children =
-            //            {
-            //                new FooViewModel("Apache Helicopter", ""),
-            //                new FooViewModel("Submarine", ""),
-            //                new FooViewModel("Tank", ""),                            
-            //            }
-            //        },
-            //        new FooViewModel("Guns", "")
-            //        {
-            //            Children =
-            //            {
-            //                new FooViewModel("AK 47", ""),
-            //                new FooViewModel("Beretta", ""),
-            //                new FooViewModel("Uzi", ""),
-            //            }
-            //        },
-            //    }
-            //};
             root.Initialize();
             return new List<RemoveLayersViewModel> { root };
         }
 
+        /// <summary>
+        /// Initializes a removelayerviewmodel by settings the children nodes
+        /// and recursively calls each child to initialize.
+        /// </summary>
         private void Initialize()
         {
             foreach (RemoveLayersViewModel child in this.Children)
@@ -127,6 +108,13 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// This is the method called when a checkbox is checked. It has the ability to update
+        /// the children and/or parent.
+        /// </summary>
+        /// <param name="value">New value for the checkbox.</param>
+        /// <param name="updateChildren">Whether to update the children.</param>
+        /// <param name="updateParent">Whether to update the parent.</param>
         private void SetIsChecked(bool? value, bool updateChildren, bool updateParent)
         {
             if (value == this.isChecked)
@@ -172,6 +160,10 @@ namespace AerialMapping
             this.SetIsChecked(state, false, true);
         }
 
+        /// <summary>
+        /// Method to notify the window to update the value of a property.
+        /// </summary>
+        /// <param name="prop">Denotes what needs to be updated on the window.</param>
         private void OnPropertyChanged(string prop)
         {
             if (this.PropertyChanged != null)
