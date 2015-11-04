@@ -1,69 +1,157 @@
-﻿using Esri.ArcGISRuntime.Controls;
-using Esri.ArcGISRuntime.Layers;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.ComponentModel;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Windows;
+﻿//-----------------------------------------------------------------------
+// <copyright file="MainViewModel.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace AerialMapping
 {
-    class MainViewModel : INotifyPropertyChanged
-    {
-        public MapView m_MapView;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows; 
+    using Esri.ArcGISRuntime.Controls;
+    using Esri.ArcGISRuntime.Layers;   
 
-        private Map map;
-        public Map IncidentMap
+    /// <summary>
+    /// This is the MainViewModel class which displays the map
+    /// </summary>
+    public class MainViewModel : INotifyPropertyChanged
+    {
+        private string idToZoomOn = string.Empty;
+
+        private List<Dataset> datasetList;
+
+        private KmlLayer kmllayerTest; // need to reconcile this with the one in the mainwindow code behind
+
+        private ObservableCollection<MenuItem> treeViewItems;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainViewModel" /> class.
+        /// This is the constructor for the MainViewModel.
+        /// When the view model initializes, it reads the map from the App.xaml resources.
+        /// </summary>
+        public MainViewModel()
         {
-            get { return this.map; }
-            set { this.map = value; }
+            this.Map = App.Current.Resources["IncidentMap"] as Map;
+            this.TreeViewItems = new ObservableCollection<MenuItem>();
+            MenuItem root = new MenuItem() { Title = "Test Location" };
+            root.Items.Add(new MenuItem() { Title = "01-01-2015" });
+            this.TreeViewItems.Add(root);
+
+            this.datasetList = new List<Dataset>();
+            this.AddLayerCommand = new DelegateCommand(this.AddLayer);
+            this.RemoveLayerCommand = new DelegateCommand(this.RemoveLayer);
         }
 
-        private List<Dataset> m_DatasetList;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        KmlLayer kmllayerTest; // need to reconcile this with the one in the mainwindow code behind
-        public string m_IdToZoomOn = "";
+        public string IdToZoomOn
+        {
+            get { return this.idToZoomOn; }
+            set { this.idToZoomOn = value; }
+        }
 
-        private ObservableCollection<MenuItem> _treeViewItems;
+        public MapView MapView
+        {
+            get;
+            set;
+        }
+
+        public Map Map
+        { 
+            get; 
+            set; 
+        }
+
+        public Map IncidentMap
+        {
+            get { return this.Map; }
+            set { this.Map = value; }
+        }
+
         public ObservableCollection<MenuItem> TreeViewItems
         {
-            get { return _treeViewItems; }
-            set 
-            { 
-                _treeViewItems = value;
-                NotifiyPropertyChanged("TreeViewItems");
+            get
+            {
+                return this.treeViewItems;
+            }
+
+            set
+            {
+                this.treeViewItems = value;
+                this.NotifiyPropertyChanged("TreeViewItems");
             }
         }
 
-
-        public DelegateCommand AddLayerCommand { get; set; }
-
-        public DelegateCommand RemoveLayerCommand { get; set; }
-
-
-        // Constructor
-        public MainViewModel()
+        public DelegateCommand AddLayerCommand
         {
-            // when the view model initializes, read the map from the App.xaml resources
-            this.map = App.Current.Resources["IncidentMap"] as Map;
-            TreeViewItems = new ObservableCollection<MenuItem>();
-            MenuItem root = new MenuItem() { Title = "Test Location" };
-            root.Items.Add(new MenuItem() { Title = "01-01-2015" });
-            TreeViewItems.Add(root);
-
-            m_DatasetList = new List<Dataset>();
-            AddLayerCommand = new DelegateCommand(AddLayer);
-            RemoveLayerCommand = new DelegateCommand(RemoveLayer);
+            get;
+            set;
         }
 
+        public DelegateCommand RemoveLayerCommand
+        {
+            get;
+            set;
+        }
 
-        // "Add Layer" button callback
-        // Pops up a window that gets the user to input the necessary information
-        // for adding a new layer and then adds the layer.
+        /// <summary>
+        /// This function loads a KML layer to the map. 
+        /// </summary>
+        /// <param name="path">The path of the .kml file.</param>
+        /// <param name="zoomTo">Whether we should zoom to the new area (true) or not (false).</param>
+        /// <param name="relativePath">Specifies if the path is relative (true) or absolute (false).</param>
+        public void LoadKml(string path, bool zoomTo, bool relativePath)
+        {
+            Debug.WriteLine("Path: " + path);
+            try
+            {
+                Uri dataPath = new Uri(path, relativePath ? UriKind.Relative : UriKind.Absolute);
+                KmlLayer kmllayer = new KmlLayer(dataPath);
+                kmllayer.ID = path;
+                this.idToZoomOn = zoomTo ? path : string.Empty;
+
+                this.MapView.Map.Layers.Add(kmllayer);
+                this.kmllayerTest = kmllayer;
+            }
+            catch
+            {
+                Debug.WriteLine(string.Format("(MainWindows{LoadKml}) Could not load KML with path {0}", path));
+            }
+        }
+
+        /// <summary>
+        /// Unloads a KML layer based on the file path in the MenuItem.
+        /// </summary>
+        /// <param name="item">The MenuItem item</param>
+        public void UnloadKML(MenuItem item)
+        {
+            if (!this.MapView.Map.Layers.Remove(item.FilePath))
+            {
+                Debug.WriteLine("Failed to remove layer with filepath: " + item.FilePath); 
+            }
+        }
+
+        private void NotifiyPropertyChanged(string property)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+        /// <summary>
+        /// "Add Layer" button callback
+        /// Pops up a window that gets the user to input the necessary information
+        /// for adding a new layer and then adds the layer.
+        /// </summary>
+        /// <param name="parameter">The window being passed.</param>
         private void AddLayer(object parameter)
         {
             // Popup a window to get the layer information
@@ -75,37 +163,37 @@ namespace AerialMapping
             Dataset newLayer = addLayer.DatasetToAdd;
             addLayer.Close();
 
-            if (!String.IsNullOrEmpty(newLayer.FilePath))
+            if (!string.IsNullOrEmpty(newLayer.FilePath))
             {
                 // Save the new dataset
-                m_DatasetList.Add(newLayer);
+                this.datasetList.Add(newLayer);
 
                 // See if the Location already exists
-                bool bLocationExists = false;
+                bool locationExists = false;
 
-                foreach (MenuItem location in TreeViewItems)
+                foreach (MenuItem location in this.TreeViewItems)
                 {
                     // If so, then add the new layer as a child of that Location
                     if (location.Title == newLayer.Location)
                     {
                         MenuItem newChild = new MenuItem(newLayer.Time.ToShortDateString(), newLayer.FilePath);
                         location.Items.Add(newChild);
-                        bLocationExists = true;
+                        locationExists = true;
                         break;
                     }
                 }
 
                 // If not, then we also need to add the Location to the treeview
-                if (!bLocationExists)
+                if (!locationExists)
                 {
                     // Add it to the TreeView on the UI
                     MenuItem root = new MenuItem() { Title = newLayer.Location };
                     root.Items.Add(new MenuItem() { Title = newLayer.Time.ToShortDateString() });
-                    TreeViewItems.Add(root);
-                }                
+                    this.TreeViewItems.Add(root);
+                }
 
                 // Open the new layer
-                LoadKml(newLayer.FilePath, true, false);
+                this.LoadKml(newLayer.FilePath, true, false);
             }
 
             Debug.WriteLine("Location: " + newLayer.Location);
@@ -113,13 +201,15 @@ namespace AerialMapping
             Debug.WriteLine("File Path: " + newLayer.FilePath);
         }
 
-
-        // "Remove Layers" button callback.
-        // Pops up a window which allows the user to select which layers
-        // they wish to removes. The treeview of layers is updated accordingly.
+        /// <summary>
+        /// "Remove Layers" button callback. 
+        /// This pops up a window which allows the user to select which layers they wish to remove.
+        /// The TreeView of layers is updated accordingly. 
+        /// </summary>
+        /// <param name="parameter">Layer to be removed</param>
         private void RemoveLayer(object parameter)
         {
-            Window1 win = new Window1(FooViewModel.CreateFoos(TreeViewItems));
+            Window1 win = new Window1(FooViewModel.CreateFoos(this.TreeViewItems));
             win.ShowDialog();
 
             List<MenuItem> itemsList = win.GetMenuItems();
@@ -142,7 +232,7 @@ namespace AerialMapping
                 {
                     if (itemsList[i].Items[j].Checked)
                     {
-                        UnloadKML(itemsList[i].Items[j]);
+                        this.UnloadKML(itemsList[i].Items[j]);
                         itemsList[i].Items.Remove(itemsList[i].Items[j]);
                     }
                 }
@@ -156,48 +246,9 @@ namespace AerialMapping
                 }
             }
 
-            TreeViewItems = new ObservableCollection<MenuItem>(itemsList);
+            this.TreeViewItems = new ObservableCollection<MenuItem>(itemsList);
 
             win.Close();
         }
-
-
-        // Loads a KML layer to the map
-        public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
-        {
-            Debug.WriteLine("Path: " + path);
-            try
-            {
-                Uri dataPath = new Uri(path, bRelativePath ? UriKind.Relative : UriKind.Absolute);
-                KmlLayer kmllayer = new KmlLayer(dataPath);
-                kmllayer.ID = path;
-                m_IdToZoomOn = bZoomTo ? path : "";
-
-                m_MapView.Map.Layers.Add(kmllayer);
-                kmllayerTest = kmllayer;
-            }
-            catch
-            {
-                Debug.WriteLine(string.Format("(MainWindows{LoadKml}) Could not load KML with path {0}", path));
-            }
-        }
-
-
-        // Unloads a KML layer based on the filepath in the MenuItem.
-        public void UnloadKML(MenuItem item)
-        {
-            if (!m_MapView.Map.Layers.Remove(item.FilePath))
-            {
-                Debug.WriteLine("Failed to remove layer with filepath: " + item.FilePath); 
-            }
-        }
-
-        void NotifiyPropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

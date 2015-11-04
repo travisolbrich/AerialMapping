@@ -1,33 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="AddLayer.xaml.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
 namespace AerialMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Interaction logic for AddLayer.xaml
     /// </summary>
     public partial class AddLayer : Window
     {
-        public Dataset DatasetToAdd { get; set; }
-
         public AddLayer()
         {
-            InitializeComponent();
-            DatasetToAdd = new Dataset();
+            this.InitializeComponent();
+            this.DatasetToAdd = new Dataset();
         }
 
-        private void bFilePathLookup_Click(object sender, RoutedEventArgs e)
+        public Dataset DatasetToAdd { get; set; }
+
+        private void BFilePathLookup_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
             openFileDialog.Filter = "Map Data|*.kml;*.kmz";
@@ -37,16 +42,16 @@ namespace AerialMapping
             }
         }
 
-        private void bAdd_Click(object sender, RoutedEventArgs e)
+        private void BAdd_Click(object sender, RoutedEventArgs e)
         {
-            DatasetToAdd.Location = LocationInput.Text;
+            this.DatasetToAdd.Location = LocationInput.Text;
             
             if (DateTimeInput.Value.HasValue)
             {
-                DatasetToAdd.Time = DateTimeInput.Value.Value;
+                this.DatasetToAdd.Time = DateTimeInput.Value.Value;
             }
 
-            DatasetToAdd.FilePath = FilePathInput.Text;
+            this.DatasetToAdd.FilePath = FilePathInput.Text;
             this.Hide();
         }
     }

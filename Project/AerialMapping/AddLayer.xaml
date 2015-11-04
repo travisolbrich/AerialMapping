@@ -12,7 +12,7 @@
         <xctk:DateTimePicker x:Name="DateTimeInput" Height="20" Width="200" Margin="75,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Label Content="File Path:" Margin="10,70,0,0"/>
         <TextBox x:Name="FilePathInput" Height="20" Width="200" Margin="75, 70, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Button Content="Search" Height="20" Width="50" Margin="280,70,0,0" Click="bFilePathLookup_Click"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Content="Add" Height="20" Width="50" Margin="0, 100, 0, 0" Click="bAdd_Click" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Button Content="Search" Height="20" Width="50" Margin="280,70,0,0" Click="BFilePathLookup_Click"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Add" Height="20" Width="50" Margin="0, 100, 0, 0" Click="BAdd_Click" HorizontalAlignment="Center" VerticalAlignment="Top"/>
     </Grid>
 </Window>

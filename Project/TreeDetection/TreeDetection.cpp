@@ -24,7 +24,7 @@ CascadeClassifier tree_cascade;
 string window_name = "Capture - Tree Detection";
 RNG rng( 12345 );
 
-extern "C" _declspec( dllexport ) void entry( const char *s )
+extern "C" _declspec( dllexport ) void Entry( const char *s )
 {
 
   if( !tree_cascade.load( tree_cascade_name ) ){ printf( "--(!)Error loading\n" ); return; };

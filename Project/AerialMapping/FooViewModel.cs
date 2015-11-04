@@ -1,23 +1,60 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="FooViewModel.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
 namespace AerialMapping
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+
     public class FooViewModel : INotifyPropertyChanged
     {
-        #region Data
+        private bool? isChecked = false;
 
-        bool? _isChecked = false;
-        FooViewModel _parent;
+        private FooViewModel parent;
 
-        #endregion // Data
+        public FooViewModel(string name, string filePath)
+        {
+            this.Name = name;
+            this.FilePath = filePath;
+            this.Children = new List<FooViewModel>();
+        }
 
-        #region CreateFoos
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public List<FooViewModel> Children { get; private set; }
+
+        public bool IsInitiallySelected { get; private set; }
+
+        public string Name { get; private set; }
+
+        public string FilePath { get; private set; }
+
+        /// <summary>
+        /// Gets/sets the state of the associated UI toggle (ex. CheckBox).
+        /// The return value is calculated based on the check state of all
+        /// child FooViewModels.  Setting this property to true or false
+        /// will set all children to the same check state, and setting it 
+        /// to any value will cause the parent to verify its check state.
+        /// </summary>
+        public bool? IsChecked
+        {
+            get
+            {
+                return this.isChecked;
+            }
+
+            set
+            {
+                this.SetIsChecked(value, true, true);
+            }
+        }
 
         public static List<FooViewModel> CreateFoos(ObservableCollection<MenuItem> locationsTimes)
         {
-            FooViewModel root = new FooViewModel("All", "")
+            FooViewModel root = new FooViewModel("All", string.Empty)
             {
                 IsInitiallySelected = false,
                 
@@ -25,14 +62,18 @@ namespace AerialMapping
             };
 
             List<FooViewModel> locations = new List<FooViewModel>();
-            foreach (MenuItem location in locationsTimes){
+
+            foreach (MenuItem location in locationsTimes) 
+            {
                 FooViewModel loc = new FooViewModel(location.Title, location.FilePath);
                 List<FooViewModel> times = new List<FooViewModel>();
+
                 foreach (MenuItem time in location.Items)
                 {
                     FooViewModel t = new FooViewModel(time.Title, time.FilePath);
                     times.Add(t);
                 }
+
                 loc.Children = times;
                 locations.Add(loc);
             }
@@ -73,71 +114,42 @@ namespace AerialMapping
             //        },
             //    }
             //};
-
             root.Initialize();
             return new List<FooViewModel> { root };
         }
 
-        FooViewModel(string name, string filePath)
-        {
-            Name = name;
-            FilePath = filePath;
-            Children = new List<FooViewModel>();
-        }
-
-        void Initialize()
+        private void Initialize()
         {
             foreach (FooViewModel child in this.Children)
             {
-                child._parent = this;
+                child.parent = this;
                 child.Initialize();
             }
         }
 
-        #endregion // CreateFoos
-
-        #region Properties
-
-        public List<FooViewModel> Children { get; private set; }
-
-        public bool IsInitiallySelected { get; private set; }
-
-        public string Name { get; private set; }
-
-        public string FilePath { get; private set; }
-
-        #region IsChecked
-
-        /// <summary>
-        /// Gets/sets the state of the associated UI toggle (ex. CheckBox).
-        /// The return value is calculated based on the check state of all
-        /// child FooViewModels.  Setting this property to true or false
-        /// will set all children to the same check state, and setting it 
-        /// to any value will cause the parent to verify its check state.
-        /// </summary>
-        public bool? IsChecked
+        private void SetIsChecked(bool? value, bool updateChildren, bool updateParent)
         {
-            get { return _isChecked; }
-            set { this.SetIsChecked(value, true, true); }
-        }
-
-        void SetIsChecked(bool? value, bool updateChildren, bool updateParent)
-        {
-            if (value == _isChecked)
+            if (value == this.isChecked)
+            {
                 return;
+            }
 
-            _isChecked = value;
+            this.isChecked = value;
 
-            if (updateChildren && _isChecked.HasValue)
-                this.Children.ForEach(c => c.SetIsChecked(_isChecked, true, false));
+            if (updateChildren && this.isChecked.HasValue)
+            {
+                this.Children.ForEach(c => c.SetIsChecked(this.isChecked, true, false));
+            }
 
-            if (updateParent && _parent != null)
-                _parent.VerifyCheckState();
+            if (updateParent && this.parent != null)
+            {
+                this.parent.VerifyCheckState();
+            }
 
             this.OnPropertyChanged("IsChecked");
         }
 
-        void VerifyCheckState()
+        private void VerifyCheckState()
         {
             bool? state = null;
             for (int i = 0; i < this.Children.Count; ++i)
@@ -153,23 +165,16 @@ namespace AerialMapping
                     break;
                 }
             }
+
             this.SetIsChecked(state, false, true);
         }
 
-        #endregion // IsChecked
-
-        #endregion // Properties
-
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged(string prop)
+        private void OnPropertyChanged(string prop)
         {
             if (this.PropertyChanged != null)
+            {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

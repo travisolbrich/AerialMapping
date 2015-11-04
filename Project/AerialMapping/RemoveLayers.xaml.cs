@@ -1,27 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Collections.ObjectModel;
+﻿//-----------------------------------------------------------------------
+// <copyright file="RemoveLayers.xaml.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace AerialMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Interaction logic for RemoveLayers.xaml
     /// </summary>
     public partial class RemoveLayers : Window
     {
         private RemoveLayerViewModel viewModel;
-        //public ObservableCollection<MenuItem> OC { get; set; }
 
         public RemoveLayers(RemoveLayerViewModel removeLayerViewModel)
         {
@@ -59,14 +64,19 @@ namespace AerialMapping
             //      }
             //    }
             //  };
-              InitializeComponent();
+              this.InitializeComponent();
               this.DataContext = removeLayerViewModel;
-              viewModel = removeLayerViewModel;
+              this.viewModel = removeLayerViewModel;
         }
 
+        /// <summary>
+        /// This function specifies the action when the checkbox is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.OnCheck();
+            this.viewModel.OnCheck();
         }
 
         //public void OnCheck()
@@ -107,10 +117,14 @@ namespace AerialMapping
         //private void CheckBox_Click(object sender, RoutedEventArgs e) { OnCheck(); }
         //private void CheckBox_Loaded(object sender, RoutedEventArgs e) { OnCheck(); }
 
+        /// <summary>
+        /// This function specifies the action when the Remove button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
-            Hide();
+            this.Hide();
         }
     }
 }
-
