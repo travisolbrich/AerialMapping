@@ -18,7 +18,7 @@ namespace AerialMapping
     public class Dataset
     {
         /// <summary>
-        /// This function specifies the location for the Dataset.
+        /// Gets or sets the location for the Dataset.
         /// </summary>
         public string Location 
         { 
@@ -27,7 +27,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// This function specifies the date and time for the Dataset. 
+        /// Gets or sets the date and time for the Dataset. 
         /// </summary>
         public DateTime Time 
         { 
@@ -36,7 +36,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// This function specifies the path of the Dataset file. 
+        /// Gets or sets the path of the Dataset file. 
         /// </summary>
         public string FilePath 
         { 

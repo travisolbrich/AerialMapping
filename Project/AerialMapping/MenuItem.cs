@@ -18,11 +18,19 @@ namespace AerialMapping
     /// </summary>
     public class MenuItem
     {
+        /// <summary>
+        /// The default constructor for a MenuItem
+        /// </summary>
         public MenuItem()
         {
             this.Items = new ObservableCollection<MenuItem>();
         }
 
+        /// <summary>
+        /// The overloaded constructor for a MenuItem
+        /// </summary>
+        /// <param name="title">The title of the item</param>
+        /// <param name="filePath">The filepath to the item</param>
         public MenuItem(string title, string filePath)
         {
             this.FilePath = filePath;
@@ -31,13 +39,18 @@ namespace AerialMapping
             this.Items = new ObservableCollection<MenuItem>();
         }
 
-
+        /// <summary>
+        /// The overloaded constructor for a MenuItem
+        /// </summary>
+        /// <param name="title">The title of the item</param>
+        /// <param name="filePath">The filepath to the item</param>
+        /// <param name="check">Whether the check is checked</param>
         public MenuItem(string title, string filePath, bool check)
         {
-            FilePath = filePath;
-            Title = title;
-            Checked = check;
-            Items = new ObservableCollection<MenuItem>();
+            this.FilePath = filePath;
+            this.Title = title;
+            this.Checked = check;
+            this.Items = new ObservableCollection<MenuItem>();
         }
 
         public string FilePath 
@@ -45,7 +58,6 @@ namespace AerialMapping
             get; 
             set; 
         }
-
 
         public string Title 
         { 

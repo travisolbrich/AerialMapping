@@ -16,6 +16,9 @@ namespace AerialMapping
     using System.Threading.Tasks;
     using System.Windows.Input;
 
+    /// <summary>
+    /// This class allows for removal of layer through the viewmodel
+    /// </summary>
     public class RemoveLayerViewModel : INotifyPropertyChanged
     {
         public RemoveLayerViewModel(ObservableCollection<MenuItem> treeViewItems)
@@ -31,6 +34,9 @@ namespace AerialMapping
             set;
         }
 
+        /// <summary>
+        /// Specifies the action when the checkbox is checked.
+        /// </summary>
         public void OnCheck()
         {
             Debug.WriteLine("test");

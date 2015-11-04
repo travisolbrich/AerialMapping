@@ -33,7 +33,7 @@ namespace AerialMapping
         public string FilePath { get; private set; }
 
         /// <summary>
-        /// Gets/sets the state of the associated UI toggle (ex. CheckBox).
+        /// Gets or sets the state of the associated UI toggle (ex. CheckBox).
         /// The return value is calculated based on the check state of all
         /// child FooViewModels.  Setting this property to true or false
         /// will set all children to the same check state, and setting it 
@@ -149,6 +149,9 @@ namespace AerialMapping
             this.OnPropertyChanged("IsChecked");
         }
 
+        /// <summary>
+        /// This function verifies the state of the checkboxes.
+        /// </summary>
         private void VerifyCheckState()
         {
             bool? state = null;

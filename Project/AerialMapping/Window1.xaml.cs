@@ -63,6 +63,7 @@ namespace AerialMapping
                 {
                     loc = new MenuItem(location.Name, location.FilePath, false);
                 }
+
                 foreach (FooViewModel time in location.Children)
                 {
                     MenuItem t;
@@ -77,10 +78,9 @@ namespace AerialMapping
 
                     loc.Items.Add(t);
                     //locationsToKeep.Add(loc);
-
                 }
+
                 locationsToKeep.Add(loc);
-                
             }
 
             return locationsToKeep;
