@@ -24,14 +24,28 @@ namespace AerialMapping
     /// </summary>
     public partial class AddLayer : Window
     {
+        /// <summary>
+        /// Adds a layer to the Window
+        /// </summary>
         public AddLayer()
         {
             this.InitializeComponent();
             this.DatasetToAdd = new Dataset();
         }
 
-        public Dataset DatasetToAdd { get; set; }
+        /// <summary>
+        /// Gets or sets the Dataset that we want to add
+        /// </summary>
+        public Dataset DatasetToAdd { 
+            get; 
+            set; 
+        }
 
+        /// <summary>
+        /// The function for the button that looks up the file path. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BFilePathLookup_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
@@ -42,6 +56,11 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// The function for the button "Add"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
             this.DatasetToAdd.Location = LocationInput.Text;

@@ -217,6 +217,10 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// Update the check status
+        /// </summary>
+        /// <param name="d"></param>
         private static void UpdateIsChecked(DependencyObject d)
         {
             bool? isChecked = GetIsChecked(d);

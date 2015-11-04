@@ -53,8 +53,15 @@ namespace AerialMapping
 
         public string IdToZoomOn
         {
-            get { return this.idToZoomOn; }
-            set { this.idToZoomOn = value; }
+            get 
+            { 
+                return this.idToZoomOn; 
+            }
+
+            set 
+            { 
+                this.idToZoomOn = value; 
+            }
         }
 
         public MapView MapView
@@ -71,8 +78,15 @@ namespace AerialMapping
 
         public Map IncidentMap
         {
-            get { return this.Map; }
-            set { this.Map = value; }
+            get 
+            { 
+                return this.Map; 
+            }
+
+            set 
+            { 
+                this.Map = value; 
+            }
         }
 
         public ObservableCollection<MenuItem> TreeViewItems

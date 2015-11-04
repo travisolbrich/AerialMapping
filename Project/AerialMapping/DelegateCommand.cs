@@ -13,6 +13,10 @@ namespace AerialMapping
     using System.Threading.Tasks;
     using System.Windows.Input;
 
+    /// <summary>
+    /// Passes a command from the View to the Viewmodel.
+    /// it allows for button callbacks within the Viewmodel. 
+    /// </summary>
     public class DelegateCommand : System.Windows.Input.ICommand
     {
         /// <summary>
