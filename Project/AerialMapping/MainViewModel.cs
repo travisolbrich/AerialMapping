@@ -23,9 +23,10 @@ namespace AerialMapping
     /// </summary>
     public class MainViewModel : INotifyPropertyChanged
     {
+        // Member Variables
         private string idToZoomOn = string.Empty;
 
-        private List<Dataset> datasetList;
+        private List<Dataset> datasetList; // Holds all of the layer data.
 
         private KmlLayer kmllayerTest; // need to reconcile this with the one in the mainwindow code behind
 
@@ -47,10 +48,11 @@ namespace AerialMapping
             this.datasetList = new List<Dataset>();
             this.AddLayerCommand = new DelegateCommand(this.AddLayer);
             this.RemoveLayerCommand = new DelegateCommand(this.RemoveLayer);
-        }
+        }        
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// The Layer ID on which to zoom upon loading the map.
+        /// </summary>
         public string IdToZoomOn
         {
             get 
@@ -64,31 +66,46 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// The ArcGIS MapView object that holds all of the map
+        /// and layer information.
+        /// </summary>
         public MapView MapView
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// The ArcGIS Map object that represents the primary map.
+        /// </summary>
         public Map Map
         { 
             get; 
             set; 
         }
 
+        /// <summary>
+        /// Reference to the ArcGIS Map application resource used in
+        /// creating the Map.
+        /// </summary>
         public Map IncidentMap
         {
-            get 
-            { 
-                return this.Map; 
+            get
+            {
+                return this.Map;
             }
 
-            set 
-            { 
-                this.Map = value; 
+            set
+            {
+                this.Map = value;
             }
         }
 
+        /// <summary>
+        /// Holds the items that are in the Layers treeview on the
+        /// pop out menu.
+        /// </summary>
         public ObservableCollection<MenuItem> TreeViewItems
         {
             get
@@ -103,12 +120,18 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// Used for capturing the Add Layer Button Callback.
+        /// </summary>
         public DelegateCommand AddLayerCommand
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Used for capturing the Remove Layers Button Callback.
+        /// </summary>
         public DelegateCommand RemoveLayerCommand
         {
             get;
@@ -152,6 +175,15 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// INotifyPropertyChanged event.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// INotifyPropertyChanged method for updating the UI.
+        /// </summary>
+        /// <param name="property">Name of the UI element to update.</param>
         private void NotifiyPropertyChanged(string property)
         {
             if (this.PropertyChanged != null)

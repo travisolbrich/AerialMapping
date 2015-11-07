@@ -61,9 +61,12 @@ namespace AerialMapping
         {
             List<MenuItem> locationsToKeep = new List<MenuItem>();
 
+            // Don't include the root, which is the "All" selection.
             List<RemoveLayersViewModel> locations = this.root.Children;
+
             foreach (RemoveLayersViewModel location in locations)
             {
+                // Add the location to the list.
                 MenuItem loc;
                 if (location.IsChecked != true)
                 {
@@ -73,6 +76,8 @@ namespace AerialMapping
                 {
                     loc = new MenuItem(location.Name, location.FilePath, false);
                 }
+
+                // Add each of the times for that location to that children of that location.
                 foreach (RemoveLayersViewModel time in location.Children)
                 {
                     MenuItem t;
@@ -86,9 +91,9 @@ namespace AerialMapping
                     }
 
                     loc.Items.Add(t);
-                    //locationsToKeep.Add(loc);
-
+                    
                 }
+
                 locationsToKeep.Add(loc);
                 
             }
