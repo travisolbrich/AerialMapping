@@ -10,8 +10,10 @@ namespace AerialMapping
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Media.Animation;
     using System.IO;
     using System.Collections.ObjectModel;
@@ -49,6 +51,7 @@ namespace AerialMapping
         {
             mainViewModel = new MainViewModel();
             this.DataContext = mainViewModel;
+            this.MouseWheel += zoomSlider_MouseWheel;
             InitializeComponent();
             datasetList = new List<Dataset>();
         }
@@ -181,6 +184,18 @@ namespace AerialMapping
             {
                 mainViewModel.MapView.ZoomToScaleAsync(zoomScale);
             }
+        }
+
+        /// <summary>
+        /// The callback for when the mouse wheel is moved.
+        /// It is supposed to update the zoom slider position. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void zoomSlider_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // this invokes some kinda witchcraft
+            // updateZoomSlider();
         }
 
         /// <summary>
