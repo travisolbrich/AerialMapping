@@ -3,35 +3,37 @@
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
-//        _ _    _  _____ _______   _____   ____    _____ _______ 
-//       | | |  | |/ ____|__   __| |  __ \ / __ \  |_   _|__   __|
-//       | | |  | | (___    | |    | |  | | |  | |   | |    | |   
-//   _   | | |  | |\___ \   | |    | |  | | |  | |   | |    | |   
-//  | |__| | |__| |____) |  | |    | |__| | |__| |  _| |_   | |   
-//   \____/ \____/|_____/   |_|    |_____/ \____/  |_____|  |_|  
-
-﻿using Esri.ArcGISRuntime.Controls;
-using Esri.ArcGISRuntime.Geometry;
-using Esri.ArcGISRuntime.Layers;
-using Esri.ArcGISRuntime.Symbology;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
-using System.IO;
-using System.Collections.ObjectModel;
 
 namespace AerialMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media.Animation;
+    using System.IO;
+    using System.Collections.ObjectModel;
+    ﻿using Esri.ArcGISRuntime.Controls;
+    using Esri.ArcGISRuntime.Geometry;
+    using Esri.ArcGISRuntime.Layers;
+    using Esri.ArcGISRuntime.Symbology;
+    using Microsoft.Win32;
+
     public partial class MainWindow : Window
     {
-        // Member Variables
+        /// <summary>
+        /// The following are constant variables.
+        /// </summary>
         public const int minScale = 1;
-        public const int maxScale = 40000000; 
+        public const int maxScale = 40000000;
+        public const int mapRotateDelta = 10;
+        public const int mapZoomScaleDelta = 0.2;
+
+        /// <summary>
+        /// The following are other member variables.
+        /// </summary>
         public double kmzZoomDelaySec = 3;
         private double currAngle = 0;
         private Viewpoint centerPoint;
@@ -40,18 +42,22 @@ namespace AerialMapping
         
         public MainViewModel mainViewModel;
 
-        // Constructor
+        /// <summary>
+        /// Constructor for the MainWindow. 
+        /// </summary>
         public MainWindow()
         {
             mainViewModel = new MainViewModel();
             this.DataContext = mainViewModel;
             InitializeComponent();
-            
-            //mainViewModel.m_MapView.MaxScale = 2100; // set the maximum zoom value
             datasetList = new List<Dataset>();
         }
 
-        // Event triggered when the mapview has a new layer that is loaded.
+        /// <summary>
+        /// The event that is triggered when the MapView has a new layer that is loaded. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BaseMapView_LayerLoaded(object sender, LayerLoadedEventArgs e)
         {
             if (e.LoadError != null)
@@ -68,7 +74,11 @@ namespace AerialMapping
             AddLayerToTree(e.Layer);
         }
 
-        // Event triggered when the mapview is initialized.
+        /// <summary>
+        /// The event that is triggered when the MapView is initialized.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BaseMapView_Initialized(object sender, EventArgs e)
         {
             mainViewModel.MapView = (MapView)sender;
@@ -76,53 +86,94 @@ namespace AerialMapping
             //mainViewModel.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }
 
-        // Button callback to allow the user to open a file.
+        /// <summary>
+        /// The button callback that allows the user to open a file. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bOpenFileDialog_Click(object sender, RoutedEventArgs e)
         {
             mainViewModel.AddLayer(this);
         }
 
-        // Callback for the quit button.
+        /// <summary>
+        /// The button callback that quits the program. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bExitProgram_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-        // The following are buttons for rotation
+        /// <summary>
+        /// The button callback for the Rotate Left button.
+        /// Rotates the map to the left. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bRotateLeft_Click(object sender, RoutedEventArgs e)
         {
-            currAngle = (currAngle += 10) % 360;
+            currAngle = (currAngle += mapRotateDelta) % 360;
             // apply the rotation to the map
             mainViewModel.MapView.SetRotationAsync(currAngle);
         }
 
+        /// <summary>
+        /// The button callback for the North Up button.
+        /// Resets the map rotation to North Up. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bRotateDefault_Click(object sender, RoutedEventArgs e)
         {
             // apply the rotation to the map
             currAngle = 0;
             mainViewModel.MapView.SetRotationAsync(currAngle);
         }
+
+        /// <summary>
+        /// The button callback for the Rotate Right button.
+        /// Rotates the map to the right.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bRotateRight_Click(object sender, RoutedEventArgs e)
         {
-            currAngle = (currAngle -= 10) % 360;
+            currAngle = (currAngle -= mapRotateDelta) % 360;
             // apply the rotation to the map
             mainViewModel.MapView.SetRotationAsync(currAngle);
         }
 
-        // The following are buttons for zoom
+        /// <summary>
+        /// The button callback for the Zoom In (+) button.
+        /// Zooms in the map by a scale. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            mainViewModel.MapView.ZoomAsync(1.2);
+            mainViewModel.MapView.ZoomAsync(1 + mapZoomScaleDelta);
             updateZoomSlider();
         }
 
+        /// <summary>
+        /// The button callback for the Zoom Out (-) button.
+        /// Zooms out the map by a scale. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            mainViewModel.MapView.ZoomAsync(0.8);
+            mainViewModel.MapView.ZoomAsync(1 - mapZoomScaleDelta);
             updateZoomSlider();
         }
 
-        // The following is for zoom slider action
+        /// <summary>
+        /// The callback for the Zoom Slider operation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoomScale = logZoomSlider(e.NewValue);
@@ -168,13 +219,18 @@ namespace AerialMapping
             return (Math.Log(value) - zoomMin) / resultScale + sliderMin;
         }
 
+        /// <summary>
+        /// This function updates the position of the zoom slider. 
+        /// </summary>
         private void updateZoomSlider()
         {
-            // bZoomSlider.Maximum = Math.Log(minScale);
             bZoomSlider.Value = logZoomScale(mainViewModel.MapView.Scale);
         }
 
-        // Add the given layer to the tree.
+        /// <summary>
+        /// This function adds a given layer to the tree. 
+        /// </summary>
+        /// <param name="layer">The layer that is being added. </param>
         public void AddLayerToTree(Layer layer)
         {
             MenuItem root = new MenuItem() { Title = "Location" };
