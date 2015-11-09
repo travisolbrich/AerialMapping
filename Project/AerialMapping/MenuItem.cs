@@ -53,6 +53,11 @@ namespace AerialMapping
             this.Items = new ObservableCollection<MenuItem>();
         }
 
+        public DateTime TimeAsDateTime()
+        {
+            return Convert.ToDateTime(Title);
+        }
+
         public string FilePath 
         { 
             get; 

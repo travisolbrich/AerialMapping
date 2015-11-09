@@ -78,8 +78,8 @@
                 Width="800" 
                 Orientation="Horizontal" IsSnapToTickEnabled="True"
                 TickPlacement="Both" TickFrequency="1"
-                Minimum="0" Maximum="10" 
-                ValueChanged="bTimeSlider_Click" BorderThickness="2">
+                Minimum="0" Maximum="{Binding TimeSliderMax}" 
+                Value="{Binding TimeSliderValue}" BorderThickness="2">
             <Slider.BorderBrush>
                 <SolidColorBrush Color="#FFD4D4D4" Opacity="0.5"/>
             </Slider.BorderBrush>

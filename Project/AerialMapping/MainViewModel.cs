@@ -30,6 +30,12 @@ namespace AerialMapping
 
         private KmlLayer kmllayerTest; // need to reconcile this with the one in the mainwindow code behind
 
+        private int timeSliderMax;
+
+        private int timeSliderValue;
+
+        private MenuItem currentLocation;
+
         private ObservableCollection<MenuItem> treeViewItems;
 
         /// <summary>
@@ -41,13 +47,30 @@ namespace AerialMapping
         {
             this.Map = App.Current.Resources["IncidentMap"] as Map;
             this.TreeViewItems = new ObservableCollection<MenuItem>();
-            MenuItem root = new MenuItem() { Title = "Test Location" };
-            root.Items.Add(new MenuItem() { Title = "01-01-2015" });
+            MenuItem root = new MenuItem()
+            { 
+                Title = "Test Location",
+                FilePath = "../../../../Data/SampleOne/TestData.kml"
+            };
+            root.Items.Add(new MenuItem()
+            { 
+                Title = "01-01-2015",
+                FilePath = "../../../../Data/SampleOne/TestData.kml"
+            });
+            root.Items.Add(new MenuItem()
+            {
+                Title = "02-01-2015",
+                FilePath = "../../../../Data/SampleOne/TestData.kml"
+            });
+            UpdateCurrentLocation(root);
             this.TreeViewItems.Add(root);
 
             this.datasetList = new List<Dataset>();
             this.AddLayerCommand = new DelegateCommand(this.AddLayer);
             this.RemoveLayerCommand = new DelegateCommand(this.RemoveLayer);
+
+            LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+            LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }        
 
         /// <summary>
@@ -103,6 +126,41 @@ namespace AerialMapping
         }
 
         /// <summary>
+        /// Holds the number of ticks for the time slider.
+        /// </summary>
+        public int TimeSliderMax
+        {
+            get
+            {
+                return this.timeSliderMax;
+            }
+
+            set
+            {
+                this.timeSliderMax = value;
+                this.NotifiyPropertyChanged("TimeSliderMax");
+            }
+        }
+
+        /// <summary>
+        /// The current value of the time slider.
+        /// </summary>
+        public int TimeSliderValue
+        {
+            get
+            {
+                return this.timeSliderValue;
+            }
+
+            set
+            {
+                this.timeSliderValue = value;
+                this.NotifiyPropertyChanged("TimeSliderValue");
+                TimeSliderChanged();
+            }
+        }
+
+        /// <summary>
         /// Holds the items that are in the Layers treeview on the
         /// pop out menu.
         /// </summary>
@@ -154,7 +212,8 @@ namespace AerialMapping
                 kmllayer.ID = path;
                 this.idToZoomOn = zoomTo ? path : string.Empty;
 
-                this.MapView.Map.Layers.Add(kmllayer);
+                //this.MapView.Map.Layers.Add(kmllayer);
+                Map.Layers.Add(kmllayer);
                 this.kmllayerTest = kmllayer;
             }
             catch
@@ -173,6 +232,13 @@ namespace AerialMapping
             {
                 Debug.WriteLine("Failed to remove layer with filepath: " + item.FilePath); 
             }
+        }
+
+        private void UpdateCurrentLocation(MenuItem newLocation)
+        {
+            currentLocation = newLocation;
+            TimeSliderMax = currentLocation.Items.Count - 1;
+            TimeSliderValue = 0;
         }
 
         /// <summary>
@@ -198,7 +264,7 @@ namespace AerialMapping
         /// for adding a new layer and then adds the layer.
         /// </summary>
         /// <param name="parameter">The window being passed.</param>
-        private void AddLayer(object parameter)
+        public void AddLayer(object parameter)
         {
             // Popup a window to get the layer information
             AddLayer addLayer = new AddLayer();
@@ -224,6 +290,10 @@ namespace AerialMapping
                     {
                         MenuItem newChild = new MenuItem(newLayer.Time.ToShortDateString(), newLayer.FilePath);
                         location.Items.Add(newChild);
+
+                        // Sort the children based on time
+                        location.Items = new ObservableCollection<MenuItem>(location.Items.OrderBy(time => time.Title).ToList());
+
                         locationExists = true;
                         break;
                     }
@@ -285,6 +355,32 @@ namespace AerialMapping
             this.TreeViewItems = new ObservableCollection<MenuItem>(itemsList);
 
             win.Close();
+        }
+
+        /// <summary>
+        /// Method executed when the time slider is moved by the user.
+        /// </summary>
+        private void TimeSliderChanged()
+        {
+            Debug.WriteLine("Time slider value: " + TimeSliderValue);
+
+            List<MenuItem> currentLocationItems = currentLocation.Items.ToList();
+            for (int i = 0; i < currentLocationItems.Count; i++)
+            {
+                Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
+                if (currentLayer != null)
+                {
+                    if (i == TimeSliderValue)
+                    {                    
+                        currentLayer.IsVisible = true;
+                    }
+                    else
+                    {
+                        currentLayer.IsVisible = false;
+                    }
+                }
+                
+            }
         }
     }
 }
