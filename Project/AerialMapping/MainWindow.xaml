@@ -69,8 +69,8 @@
         <Slider x:Name="bZoomSlider" HorizontalAlignment="Left" 
                 Margin="10,105,0,0" VerticalAlignment="Top" 
                 Height="300" Width="20" RenderTransformOrigin="0.5,0.5"
-                Orientation="Vertical" Minimum="0.01" 
-                Maximum="80000000" ValueChanged="bZoomSlider_Click"
+                Orientation="Vertical" Minimum="0" 
+                Maximum="100" ValueChanged="bZoomSlider_Click"
                 IsDirectionReversed="True"/>
         
         <Slider x:Name="bTimeSlider" HorizontalAlignment="Center" 

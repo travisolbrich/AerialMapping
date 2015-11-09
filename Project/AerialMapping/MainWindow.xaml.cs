@@ -30,6 +30,8 @@ namespace AerialMapping
     public partial class MainWindow : Window
     {
         // Member Variables
+        public const int minScale = 1;
+        public const int maxScale = 40000000; 
         public double kmzZoomDelaySec = 3;
         private double currAngle = 0;
         private Viewpoint centerPoint;
@@ -70,7 +72,7 @@ namespace AerialMapping
         private void BaseMapView_Initialized(object sender, EventArgs e)
         {
             mainViewModel.MapView = (MapView)sender;
-            mainViewModel.MapView.MaxScale = 1; // set the maximum zoom value
+            mainViewModel.MapView.MaxScale = minScale; // set the maximum zoom value
             //mainViewModel.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }
 
@@ -111,24 +113,65 @@ namespace AerialMapping
         private void bZoomIn_Click(object sender, RoutedEventArgs e)
         {
             mainViewModel.MapView.ZoomAsync(1.2);
-            bZoomSlider.Value = mainViewModel.MapView.Scale;
+            updateZoomSlider();
         }
 
         private void bZoomOut_Click(object sender, RoutedEventArgs e)
         {
             mainViewModel.MapView.ZoomAsync(0.8);
-            bZoomSlider.Value = mainViewModel.MapView.Scale;
+            updateZoomSlider();
         }
 
         // The following is for zoom slider action
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double zoomScale = e.NewValue;
+            double zoomScale = logZoomSlider(e.NewValue);
             if (mainViewModel != null && mainViewModel.MapView != null)
             {
                 mainViewModel.MapView.ZoomToScaleAsync(zoomScale);
             }
-            
+        }
+
+        /// <summary>
+        /// This function determines the actual scale given the zoom slider value
+        /// </summary>
+        /// <param name="value">The zoom slider value</param>
+        /// <returns>The actual zoom scale</returns>
+        private double logZoomSlider(double value)
+        {
+            double sliderMin = 0;
+            double sliderMax = 100;
+
+            double zoomMin = Math.Log(minScale);
+            double zoomMax = Math.Log(maxScale);
+
+            double resultScale = (zoomMax - zoomMin) / (sliderMax - sliderMin);
+
+            return Math.Exp(zoomMin + resultScale * (value - sliderMin));
+        }
+
+        /// <summary>
+        /// This function determines the zoom slider value given the actual scale
+        /// </summary>
+        /// <param name="value">The actual zoom scale</param>
+        /// <returns>The zoom slider value</returns>
+        private double logZoomScale(double value)
+        {
+            double sliderMin = 0;
+            double sliderMax = 100;
+
+            double zoomMin = Math.Log(minScale);
+            double zoomMax = Math.Log(maxScale);
+
+            double resultScale = (zoomMax - zoomMin) / (sliderMax - sliderMin);
+
+            return (Math.Log(value) - zoomMin) / resultScale + sliderMin;
+        }
+
+        private void updateZoomSlider()
+        {
+            // bZoomSlider.Maximum = Math.Log(minScale);
+            bZoomSlider.Value = logZoomScale(mainViewModel.MapView.Scale);
         }
 
         // Add the given layer to the tree.
