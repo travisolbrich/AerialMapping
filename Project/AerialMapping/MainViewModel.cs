@@ -294,6 +294,7 @@ namespace AerialMapping
                         // Sort the children based on time
                         location.Items = new ObservableCollection<MenuItem>(location.Items.OrderBy(time => time.Title).ToList());
 
+                        UpdateCurrentLocation(location);
                         locationExists = true;
                         break;
                     }
@@ -306,6 +307,7 @@ namespace AerialMapping
                     MenuItem root = new MenuItem() { Title = newLayer.Location };
                     root.Items.Add(new MenuItem() { Title = newLayer.Time.ToShortDateString() });
                     this.TreeViewItems.Add(root);
+                    UpdateCurrentLocation(root);
                 }
 
                 // Open the new layer
