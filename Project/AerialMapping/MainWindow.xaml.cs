@@ -71,19 +71,13 @@ namespace AerialMapping
         {
             mainViewModel.MapView = (MapView)sender;
             mainViewModel.MapView.MaxScale = 1; // set the maximum zoom value
-            mainViewModel.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+            //mainViewModel.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }
 
         // Button callback to allow the user to open a file.
         private void bOpenFileDialog_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.Filter = "Map Data|*.kml;*.kmz";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string filePath = openFileDialog.FileName;
-                mainViewModel.LoadKml(filePath, true, false);
-            }
+            mainViewModel.AddLayer(this);
         }
 
         // Callback for the quit button.
