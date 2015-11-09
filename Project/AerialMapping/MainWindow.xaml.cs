@@ -29,14 +29,16 @@ namespace AerialMapping
 {
     public partial class MainWindow : Window
     {
-        public double m_KmzZoomDelaySec = 3;
+        // Member Variables
+        public double kmzZoomDelaySec = 3;
         private double currAngle = 0;
-        private Viewpoint m_CenterPoint;
+        private Viewpoint centerPoint;
         KmlLayer kmllayerTest;
-        private List<Dataset> m_DatasetList;
+        private List<Dataset> datasetList;
         
         public MainViewModel mainViewModel;
 
+        // Constructor
         public MainWindow()
         {
             mainViewModel = new MainViewModel();
@@ -44,28 +46,10 @@ namespace AerialMapping
             InitializeComponent();
             
             //mainViewModel.m_MapView.MaxScale = 2100; // set the maximum zoom value
-            m_DatasetList = new List<Dataset>();
+            datasetList = new List<Dataset>();
         }
 
-        //public void LoadKml(string path, bool bZoomTo, bool bRelativePath)
-        //{
-        //    Debug.WriteLine("Path: " + path);
-        //    try
-        //    {
-        //        Uri dataPath = new Uri(path, bRelativePath ? UriKind.Relative : UriKind.Absolute);
-        //        KmlLayer kmllayer = new KmlLayer(dataPath);
-        //        kmllayer.ID = path;
-        //        m_IdToZoomOn = bZoomTo ? path : "";
-
-        //        mainViewModel.m_MapView.Map.Layers.Add(kmllayer);
-        //        kmllayerTest = kmllayer;
-        //    }
-        //    catch
-        //    {
-        //        Debug.WriteLine(string.Format("(MainWindows{LoadKml}) Could not load KML with path {0}", path));
-        //    }
-        //}
-
+        // Event triggered when the mapview has a new layer that is loaded.
         private void BaseMapView_LayerLoaded(object sender, LayerLoadedEventArgs e)
         {
             if (e.LoadError != null)
@@ -76,12 +60,13 @@ namespace AerialMapping
             if (mainViewModel.IdToZoomOn != "" && e.Layer.ID == mainViewModel.IdToZoomOn)
             {
                 mainViewModel.IdToZoomOn = "";
-                m_CenterPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
-                ((MapView)sender).SetViewAsync(m_CenterPoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
+                centerPoint = ((KmlLayer)e.Layer).RootFeature.Viewpoint;
+                ((MapView)sender).SetViewAsync(centerPoint, TimeSpan.FromSeconds(kmzZoomDelaySec));
             }
             AddLayerToTree(e.Layer);
         }
 
+        // Event triggered when the mapview is initialized.
         private void BaseMapView_Initialized(object sender, EventArgs e)
         {
             mainViewModel.MapView = (MapView)sender;
@@ -89,6 +74,7 @@ namespace AerialMapping
             mainViewModel.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }
 
+        // Button callback to allow the user to open a file.
         private void bOpenFileDialog_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
@@ -100,6 +86,7 @@ namespace AerialMapping
             }
         }
 
+        // Callback for the quit button.
         private void bExitProgram_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -150,6 +137,7 @@ namespace AerialMapping
             
         }
 
+        // Add the given layer to the tree.
         public void AddLayerToTree(Layer layer)
         {
             MenuItem root = new MenuItem() { Title = "Location" };
@@ -158,7 +146,7 @@ namespace AerialMapping
             //LayerView.Items.Add(root);
         }
 
-        // The following is for the time slider
+        // The following is for the time slider.
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             // this is for testing only.
@@ -174,10 +162,11 @@ namespace AerialMapping
             bTimeSlider.Value = currLayer;
         }
 
+        // Callback for button to center the view.
         private void bCenterView_Click(object sender, RoutedEventArgs e)
         {
             //((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
-            mainViewModel.MapView.SetViewAsync(m_CenterPoint);
+            mainViewModel.MapView.SetViewAsync(centerPoint);
         }
 
 
@@ -204,47 +193,5 @@ namespace AerialMapping
             }
         }
 
-
-        // Callback for the Add Layer button in the right side popout menu.
-        // This pops up an "Add Layer" window and gathers the appropriate data
-        // from the user. The new layer is then added to the "layers" treeview
-        // and loaded into the map.
-        //private void bAddLayer_Click(object sender, RoutedEventArgs e)
-        //{
-        //    // Popup a window to get the layer information
-        //    AddLayer addLayer = new AddLayer();
-        //    addLayer.Owner = this;
-        //    addLayer.ShowDialog();
-            
-        //    Dataset newLayer = addLayer.DatasetToAdd;
-        //    addLayer.Close();
-
-        //    if (!String.IsNullOrEmpty(newLayer.FilePath))
-        //    {
-        //        // Save the new dataset
-        //        m_DatasetList.Add(newLayer);
-
-        //        // Add it to the TreeView on the UI
-        //        MenuItem root = new MenuItem() { Title = newLayer.Location };
-        //        root.Items.Add(new MenuItem() { Title = newLayer.Time.ToShortDateString() });
-        //        mainViewModel.TreeViewItems.Add(root);
-
-        //        // Open the new layer
-        //        LoadKml(newLayer.FilePath, true, false);
-        //    }
-
-        //    Debug.WriteLine("Location: " + newLayer.Location);
-        //    Debug.WriteLine("Time: " + newLayer.Time);
-        //    Debug.WriteLine("File Path: " + newLayer.FilePath);
-            
-        //}
-
-        //private void bRemoveLayer_Click(object sender, RoutedEventArgs e)
-        //{
-        //    //LayerView.Items.
-
-        //    RemoveLayers removeLayers = new RemoveLayers();
-        //    removeLayers.ShowDialog();
-        //}
     }
 }
