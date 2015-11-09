@@ -29,7 +29,7 @@ namespace AerialMapping
         public const int minScale = 1;
         public const int maxScale = 40000000;
         public const int mapRotateDelta = 10;
-        public const int mapZoomScaleDelta = 0.2;
+        public const double mapZoomScaleDelta = 0.2;
 
         /// <summary>
         /// The following are other member variables.
