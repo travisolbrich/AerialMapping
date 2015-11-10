@@ -38,6 +38,8 @@ namespace AerialMapping
 
         private ObservableCollection<MenuItem> treeViewItems;
 
+        private string timeSliderToolTip;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel" /> class.
         /// This is the constructor for the MainViewModel.
@@ -139,6 +141,23 @@ namespace AerialMapping
             {
                 this.timeSliderMax = value;
                 this.NotifiyPropertyChanged("TimeSliderMax");
+            }
+        }
+
+        /// <summary>
+        /// Holds the tooltip for the time slider.
+        /// </summary>
+        public string TimeSliderToolTip
+        {
+            get
+            {
+                return this.timeSliderToolTip;
+            }
+
+            set
+            {
+                this.timeSliderToolTip = value;
+                this.NotifiyPropertyChanged("TimeSliderToolTip");
             }
         }
 
@@ -364,9 +383,15 @@ namespace AerialMapping
         /// </summary>
         private void TimeSliderChanged()
         {
-            Debug.WriteLine("Time slider value: " + TimeSliderValue);
+            Debug.WriteLine("Time slider value: " + TimeSliderValue);            
 
+            // Get all of the times for the current Location
             List<MenuItem> currentLocationItems = currentLocation.Items.ToList();
+
+            // Update the slider tooltip
+            this.TimeSliderToolTip = currentLocationItems[TimeSliderValue].Title;
+
+            // Set the selected time to visible and the rest to invisible.
             for (int i = 0; i < currentLocationItems.Count; i++)
             {
                 Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
