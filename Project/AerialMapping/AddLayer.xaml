@@ -6,7 +6,7 @@
         WindowStartupLocation="CenterOwner">
     <Grid>
         <Label Content="Location:" Margin="10,10,0,0"/>
-        <TextBox x:Name="LocationInput" Height="20" Width="200" Margin="75, 10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <ComboBox x:Name="LocationComboBox" Height="20" Width="200" Margin="75, 10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" IsEditable="True" />
         <Label Content="Time:" Margin="10,40,0,0"/>
         <!--<TextBox x:Name="TimeInput" Height="20" Width="200" Margin="75, 40, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
         <xctk:DateTimePicker x:Name="DateTimeInput" Height="20" Width="200" Margin="75,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />

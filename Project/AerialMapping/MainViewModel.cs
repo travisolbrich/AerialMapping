@@ -7,6 +7,7 @@
 namespace AerialMapping
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -285,8 +286,15 @@ namespace AerialMapping
         /// <param name="parameter">The window being passed.</param>
         public void AddLayer(object parameter)
         {
+            // Generate list of location names
+            ObservableCollection<string> locations = new ObservableCollection<string>();
+            foreach (MenuItem item in treeViewItems)
+            {
+                locations.Add(item.Title);
+            }
+
             // Popup a window to get the layer information
-            AddLayer addLayer = new AddLayer();
+            AddLayer addLayer = new AddLayer(locations);
             addLayer.Owner = (Window)parameter; // In the XAML we pass the window as the parameter
             addLayer.ShowDialog();
 

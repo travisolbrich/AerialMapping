@@ -6,6 +6,7 @@
 namespace AerialMapping
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -27,10 +28,17 @@ namespace AerialMapping
         /// <summary>
         /// Adds a layer to the Window
         /// </summary>
-        public AddLayer()
+        public AddLayer(ObservableCollection<string> locations)
         {
             this.InitializeComponent();
             this.DatasetToAdd = new Dataset();
+
+            // Populate locations combobox
+            LocationComboBox.ItemsSource = locations;
+            if (locations.Count >= 0)
+            {
+                LocationComboBox.SelectedIndex = 0;
+            }
         }
 
         /// <summary>
@@ -64,7 +72,7 @@ namespace AerialMapping
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
             // Read the data from the boxes on screen.
-            this.DatasetToAdd.Location = LocationInput.Text;
+            this.DatasetToAdd.Location = LocationComboBox.Text;
             
             if (DateTimeInput.Value.HasValue)
             {
