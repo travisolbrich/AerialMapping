@@ -32,8 +32,8 @@ namespace AerialMapping
         /// <summary>
         /// constructor: store the logic for executing and enabling the command
         /// </summary>
-        /// <param name="executeAction"></param>
-        /// <param name="canExecuteFunc"></param>
+        /// <param name="executeAction">method to execute</param>
+        /// <param name="canExecuteFunc">test to see if method can execute</param>
         public DelegateCommand(Action<object> executeAction, Func<object, bool> canExecuteFunc = null)
         {
             this.canExecute = canExecuteFunc;

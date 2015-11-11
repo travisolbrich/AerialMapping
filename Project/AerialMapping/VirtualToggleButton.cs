@@ -11,6 +11,9 @@ namespace AerialMapping
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
 
+    /// <summary>
+    /// Class for three-state button.
+    /// </summary>
     public static class VirtualToggleButton
     {
         /// <summary>
@@ -181,8 +184,8 @@ namespace AerialMapping
         /// <summary>
         /// Specifies the action when the left mouse button is pressed down.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Mouse event</param>
+        /// <param name="e">Mouse event args</param>
         private static void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
@@ -192,8 +195,8 @@ namespace AerialMapping
         /// <summary>
         /// Specifies the action when a key is pressed down. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Key press event</param>
+        /// <param name="e">Key press event args</param>
         private static void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.OriginalSource == sender)
@@ -220,7 +223,7 @@ namespace AerialMapping
         /// <summary>
         /// Update the check status
         /// </summary>
-        /// <param name="d"></param>
+        /// <param name="d">The dependency object that is getting checked.</param>
         private static void UpdateIsChecked(DependencyObject d)
         {
             bool? isChecked = GetIsChecked(d);
@@ -234,6 +237,11 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// Method to raise an event.
+        /// </summary>
+        /// <param name="target">The object to raise an event on</param>
+        /// <param name="args">Event args</param>
         private static void RaiseEvent(DependencyObject target, RoutedEventArgs args)
         {
             if (target is UIElement)

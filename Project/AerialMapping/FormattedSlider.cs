@@ -1,4 +1,11 @@
-// Written by Josh Smith - 9/2007
+//-----------------------------------------------------------------------
+// <copyright file="MainViewModel.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
+
+// Modified from Josh Smith's FormattedSlider.
+
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -12,8 +19,9 @@ namespace AerialMapping
 	/// </summary>
 	public class FormattedSlider : Slider
 	{
-		private ToolTip _autoToolTip;
-		private string _autoToolTipFormat;
+        // Member Variables
+		private ToolTip autoToolTip;
+		private string autoToolTipFormat;
 
 		/// <summary>
 		/// Gets/sets a format string used to modify the auto tooltip's content.
@@ -22,14 +30,18 @@ namespace AerialMapping
 		/// </summary>
 		public string AutoToolTipFormat
 		{
-			get { return _autoToolTipFormat; }
-			set { _autoToolTipFormat = value; }
+			get { return autoToolTipFormat; }
+			set { autoToolTipFormat = value; }
 		}
 
+        // Dependency Variable for the content of the tooltip.
         public static readonly DependencyProperty AutoToolTipContentProperty = 
             DependencyProperty.Register("AutoToolTipContent", typeof(string), 
             typeof(FormattedSlider));
 
+        /// <summary>
+        /// The string that the tooltip will display.
+        /// </summary>
         public string AutoToolTipContent
         {
             get
@@ -42,18 +54,29 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// Event fired when the user begins to drag the slider thumb.
+        /// </summary>
+        /// <param name="e">Drag event args</param>
 		protected override void OnThumbDragStarted(DragStartedEventArgs e)
 		{
 			base.OnThumbDragStarted(e);
 			this.FormatAutoToolTipContent();
 		}
 
+        /// <summary>
+        /// Event fired when the thumb changes values on the slider.
+        /// </summary>
+        /// <param name="e">Drg event args</param>
 		protected override void OnThumbDragDelta(DragDeltaEventArgs e)
 		{
 			base.OnThumbDragDelta(e);
 			this.FormatAutoToolTipContent();
 		}
 
+        /// <summary>
+        /// Method to update the tooltip content.
+        /// </summary>
 		private void FormatAutoToolTipContent()
 		{
 			if (!string.IsNullOrEmpty(this.AutoToolTipContent))
@@ -65,20 +88,23 @@ namespace AerialMapping
 			}
 		}
 
+        /// <summary>
+        /// The actual tooltip for the slider.
+        /// </summary>
 		private ToolTip AutoToolTip
 		{
 			get
 			{
-				if (_autoToolTip == null)
+				if (autoToolTip == null)
 				{
 					FieldInfo field = typeof(Slider).GetField(
 						"_autoToolTip",
 						BindingFlags.NonPublic | BindingFlags.Instance);
 
-					_autoToolTip = field.GetValue(this) as ToolTip;
+					autoToolTip = field.GetValue(this) as ToolTip;
 				}
 
-				return _autoToolTip;
+				return autoToolTip;
 			}
 		}	
 	}

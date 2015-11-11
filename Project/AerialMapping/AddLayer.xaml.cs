@@ -44,8 +44,8 @@ namespace AerialMapping
         /// <summary>
         /// The function for the button that looks up the file path. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The File Lookup button</param>
+        /// <param name="e">Button press event args</param>
         private void BFilePathLookup_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
@@ -59,8 +59,8 @@ namespace AerialMapping
         /// <summary>
         /// The function for the button "Add"
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The Add button</param>
+        /// <param name="e">Button press event args</param>
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
             // Read the data from the boxes on screen.

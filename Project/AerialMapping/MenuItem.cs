@@ -53,29 +53,46 @@ namespace AerialMapping
             this.Items = new ObservableCollection<MenuItem>();
         }
 
+        /// <summary>
+        /// Converts the title string into a date time.
+        /// </summary>
+        /// <returns>The date time</returns>
         public DateTime TimeAsDateTime()
         {
             return Convert.ToDateTime(Title);
         }
 
+        /// <summary>
+        /// File path to the related image.
+        /// </summary>
         public string FilePath 
         { 
             get; 
             set; 
         }
 
+        /// <summary>
+        /// The title shown on the treeviews. Will be either
+        /// the location or datetime.
+        /// </summary>
         public string Title 
         { 
             get; 
             set; 
         }
 
+        /// <summary>
+        /// Whether it is checked in the remove window screen.
+        /// </summary>
         public bool Checked 
         { 
             get; 
             set; 
         }
 
+        /// <summary>
+        /// The Items that make up the children nodes.
+        /// </summary>
         public ObservableCollection<MenuItem> Items 
         { 
             get; 
