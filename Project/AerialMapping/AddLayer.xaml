@@ -9,7 +9,7 @@
         <ComboBox x:Name="LocationComboBox" Height="20" Width="200" Margin="75, 10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" IsEditable="True" />
         <Label Content="Time:" Margin="10,40,0,0"/>
         <!--<TextBox x:Name="TimeInput" Height="20" Width="200" Margin="75, 40, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
-        <xctk:DateTimePicker x:Name="DateTimeInput" Height="20" Width="200" Margin="75,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:DateTimePicker x:Name="DateTimeInput" Height="20" Width="200" Margin="75,40,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top" Format="Custom" FormatString="ddd MMM dd, yyyy hh:mmtt"/>
         <Label Content="File Path:" Margin="10,70,0,0"/>
         <TextBox x:Name="FilePathInput" Height="20" Width="200" Margin="75, 70, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Button Content="Search" Height="20" Width="50" Margin="280,70,0,0" Click="BFilePathLookup_Click"  HorizontalAlignment="Left" VerticalAlignment="Top"/>

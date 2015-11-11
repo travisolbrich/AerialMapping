@@ -28,6 +28,7 @@ namespace AerialMapping
         /// <summary>
         /// Adds a layer to the Window
         /// </summary>
+        /// <param name="locations">List of location names</param>
         public AddLayer(ObservableCollection<string> locations)
         {
             this.InitializeComponent();
