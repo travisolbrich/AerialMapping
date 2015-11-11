@@ -81,6 +81,7 @@ namespace AerialMapping
         /// <returns>The data from locationsTimes in a list of removelayerviewmodels format.</returns>
         public static List<RemoveLayersViewModel> CreateViewModels(ObservableCollection<MenuItem> locationsTimes)
         {
+            // Create the root of the tree, which is for selecting all nodes.
             RemoveLayersViewModel root = new RemoveLayersViewModel("All", string.Empty)
             {
                 IsInitiallySelected = false,
@@ -88,6 +89,8 @@ namespace AerialMapping
                 Children = new List<RemoveLayersViewModel>()
             };
 
+            // Create the rest of the treeview. Each location is a child of the 
+            // root and has the times as its children.
             List<RemoveLayersViewModel> locations = new List<RemoveLayersViewModel>();
 
             foreach (MenuItem location in locationsTimes) 
@@ -140,11 +143,13 @@ namespace AerialMapping
 
             this.isChecked = value;
 
+            // Potentially update the children recursively.
             if (updateChildren && this.isChecked.HasValue)
             {
                 this.Children.ForEach(c => c.SetIsChecked(this.isChecked, true, false));
             }
 
+            // Potentially update the parent.
             if (updateParent && this.parent != null)
             {
                 this.parent.VerifyCheckState();

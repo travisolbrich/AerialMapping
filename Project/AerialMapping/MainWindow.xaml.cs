@@ -59,8 +59,8 @@ namespace AerialMapping
         /// <summary>
         /// The event that is triggered when the MapView has a new layer that is loaded. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">MapView object</param>
+        /// <param name="e">Layer Loaded event args</param>
         private void BaseMapView_LayerLoaded(object sender, LayerLoadedEventArgs e)
         {
             if (e.LoadError != null)
@@ -80,8 +80,8 @@ namespace AerialMapping
         /// <summary>
         /// The event that is triggered when the MapView is initialized.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">MapView object</param>
+        /// <param name="e">MapView Initiaized event args</param>
         private void BaseMapView_Initialized(object sender, EventArgs e)
         {
             mainViewModel.MapView = (MapView)sender;
@@ -92,8 +92,8 @@ namespace AerialMapping
         /// <summary>
         /// The button callback that allows the user to open a file. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Open File Button</param>
+        /// <param name="e">Button Click events</param>
         private void bOpenFileDialog_Click(object sender, RoutedEventArgs e)
         {
             mainViewModel.AddLayer(this);
@@ -102,8 +102,8 @@ namespace AerialMapping
         /// <summary>
         /// The button callback that quits the program. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Exit Button</param>
+        /// <param name="e">Button Click events</param>
         private void bExitProgram_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -126,8 +126,8 @@ namespace AerialMapping
         /// The button callback for the North Up button.
         /// Resets the map rotation to North Up. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">RReset Rotation Button</param>
+        /// <param name="e">Button Click events</param>
         private void bRotateDefault_Click(object sender, RoutedEventArgs e)
         {
             // apply the rotation to the map
@@ -139,8 +139,8 @@ namespace AerialMapping
         /// The button callback for the Rotate Right button.
         /// Rotates the map to the right.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Rotate Right Button</param>
+        /// <param name="e">Button CLick events args</param>
         private void bRotateRight_Click(object sender, RoutedEventArgs e)
         {
             currAngle = (currAngle -= mapRotateDelta) % 360;
@@ -152,8 +152,8 @@ namespace AerialMapping
         /// The button callback for the Zoom In (+) button.
         /// Zooms in the map by a scale. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Zoom In Button</param>
+        /// <param name="e">Button Click event args</param>
         private void bZoomIn_Click(object sender, RoutedEventArgs e)
         {
             mainViewModel.MapView.ZoomAsync(1 + mapZoomScaleDelta);
@@ -164,8 +164,8 @@ namespace AerialMapping
         /// The button callback for the Zoom Out (-) button.
         /// Zooms out the map by a scale. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Zoom Out Button</param>
+        /// <param name="e">Button Click event args</param>
         private void bZoomOut_Click(object sender, RoutedEventArgs e)
         {
             mainViewModel.MapView.ZoomAsync(1 - mapZoomScaleDelta);
@@ -175,8 +175,8 @@ namespace AerialMapping
         /// <summary>
         /// The callback for the Zoom Slider operation.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Zoom Slider</param>
+        /// <param name="e">Event args for change in the zoom slider</param>
         private void bZoomSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoomScale = logZoomSlider(e.NewValue);
@@ -190,8 +190,8 @@ namespace AerialMapping
         /// The callback for when the mouse wheel is moved.
         /// It is supposed to update the zoom slider position. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Mouse Wheel Event</param>
+        /// <param name="e">Mouse Whell Event args</param>
         private void zoomSlider_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             // this invokes some kinda witchcraft
@@ -254,7 +254,11 @@ namespace AerialMapping
             //LayerView.Items.Add(root);
         }
 
-        // The following is for the time slider.
+        /// <summary>
+        /// The following is for the time slider.
+        /// </summary>
+        /// <param name="sender">Time Slider</param>
+        /// <param name="e">Time Slider changed event args</param>
         private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             // this is for testing only.
@@ -263,22 +267,33 @@ namespace AerialMapping
             // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
         }
 
-        // This will update the time slider with new range and tick marks
+        /// <summary>
+        /// This will update the time slider with new range and tick marks
+        /// </summary>
+        /// <param name="numLayers">Number of ticks</param>
+        /// <param name="currLayer">Which tick to be on</param>
         private void updateTimeSlider(int numLayers, int currLayer)
         {
             bTimeSlider.Maximum = numLayers - 1;
             bTimeSlider.Value = currLayer;
         }
 
-        // Callback for button to center the view.
+        /// <summary>
+        /// Callback for button to center the view.
+        /// </summary>
+        /// <param name="sender">Center View Button</param>
+        /// <param name="e">Button Click event args</param>
         private void bCenterView_Click(object sender, RoutedEventArgs e)
         {
             //((MapView)sender).SetViewAsync(((KmlLayer)e.Layer).RootFeature.Viewpoint, TimeSpan.FromSeconds(m_KmzZoomDelaySec));
             mainViewModel.MapView.SetViewAsync(centerPoint);
         }
 
-
-        // Callback for the button that shows/hides the popout menu on the right side.
+        /// <summary>
+        /// Callback for the button that shows/hides the popout menu on the right side.
+        /// </summary>
+        /// <param name="sender">Show/Hide Menu Button</param>
+        /// <param name="e">Button Click event args</param>
         private void bRightMenuShowHide_Click(object sender, RoutedEventArgs e)
         {
             Button rightMenuToggle = sender as Button;

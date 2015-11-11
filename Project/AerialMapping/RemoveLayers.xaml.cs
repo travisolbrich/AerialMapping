@@ -102,7 +102,9 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Remove button callback.
+        /// Remove button callback. Closes the window so that the
+        /// mainviewmodel can perform the actual remove options
+        /// on the map.
         /// </summary>
         /// <param name="sender">The remove button.</param>
         /// <param name="e">Button clicked event args.</param>
