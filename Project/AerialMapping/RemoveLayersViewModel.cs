@@ -9,8 +9,12 @@ namespace AerialMapping
     using System.Collections.ObjectModel;
     using System.ComponentModel;
 
+    /// <summary>
+    /// View model for a treeview item on the RemoveLayers screen.
+    /// </summary>
     public class RemoveLayersViewModel : INotifyPropertyChanged
     {
+        // Member Variables
         private bool? isChecked = false;
 
         private RemoveLayersViewModel parent;
@@ -27,20 +31,32 @@ namespace AerialMapping
             this.Children = new List<RemoveLayersViewModel>();
         }
 
+        /// <summary>
+        /// Event to tell the view to update a certain property.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         public List<RemoveLayersViewModel> Children { get; private set; }
-
+        /// <summary>
+        /// Determines if the element is selected by default
+        /// when the window loads.
+        /// </summary>
         public bool IsInitiallySelected { get; private set; }
 
+        /// <summary>
+        /// The Text shown on the window for the element.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// File path to the corresponding image.
+        /// </summary>
         public string FilePath { get; private set; }
 
         /// <summary>
         /// Gets or sets the state of the associated UI toggle (ex. CheckBox).
         /// The return value is calculated based on the check state of all
-        /// child FooViewModels.  Setting this property to true or false
+        /// child RemoveLayersViewModels.  Setting this property to true or false
         /// will set all children to the same check state, and setting it 
         /// to any value will cause the parent to verify its check state.
         /// </summary>
