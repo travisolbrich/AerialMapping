@@ -360,7 +360,7 @@ namespace AerialMapping
                 }
 
                 // Open the new layer
-                this.LoadKml(newLayer.FilePath, true, false);
+                this.LoadKml(newLayer.FilePath, true, true);
             }
 
             Debug.WriteLine("Location: " + newLayer.Location);

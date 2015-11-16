@@ -8,6 +8,7 @@ namespace AerialMapping
     using System;
     using System.Collections.ObjectModel;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -61,7 +62,7 @@ namespace AerialMapping
             openFileDialog.Filter = "Map Data|*.kml;*.kmz";
             if (openFileDialog.ShowDialog() == true)
             {
-                FilePathInput.Text = openFileDialog.FileName;
+                FilePathInput.Text = "../../../../Data/SampleOne/" + openFileDialog.SafeFileName;
             }
         }
 
