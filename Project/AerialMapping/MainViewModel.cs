@@ -12,10 +12,13 @@ namespace AerialMapping
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows; 
+    using Newtonsoft.Json;
     using Esri.ArcGISRuntime.Controls;
     using Esri.ArcGISRuntime.Layers;   
 
@@ -301,6 +304,25 @@ namespace AerialMapping
             // Get the data from the AddLayer window
             Dataset newLayer = addLayer.DatasetToAdd;
             addLayer.Close();
+
+            // Read JSON file with existing layers
+            List<Dataset> layers;
+            string json;
+            using (StreamReader r = new StreamReader("../../Layers.json"))
+            {
+                json = r.ReadToEnd();
+                layers = JsonConvert.DeserializeObject<List<Dataset>>(json);
+            }
+
+            // Save new layer to flat JSON file
+            if (layers == null)
+            {
+                layers = new List<Dataset>();
+            }
+            layers.Add(newLayer);
+            json = JsonConvert.SerializeObject(layers.ToArray());
+            System.IO.File.WriteAllText("../../Layers.json", json);
+
 
             if (!string.IsNullOrEmpty(newLayer.FilePath))
             {
