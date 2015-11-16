@@ -53,30 +53,85 @@ namespace AerialMapping
         {
             this.Map = App.Current.Resources["IncidentMap"] as Map;
             this.TreeViewItems = new ObservableCollection<MenuItem>();
-            MenuItem root = new MenuItem()
-            { 
-                Title = "Test Location",
-                FilePath = "../../../../Data/SampleOne/TestData.kml"
-            };
-            root.Items.Add(new MenuItem()
-            { 
-                Title = "01-01-2015",
-                FilePath = "../../../../Data/SampleOne/TestData.kml"
-            });
-            root.Items.Add(new MenuItem()
+
+            // Read JSON file to get all existing layers
+            List<Dataset> layers;
+            string json;
+            using (StreamReader r = new StreamReader("../../Layers.json"))
             {
-                Title = "02-01-2015",
-                FilePath = "../../../../Data/SampleOne/TestData.kml"
-            });
-            UpdateCurrentLocation(root);
-            this.TreeViewItems.Add(root);
+                json = r.ReadToEnd();
+                layers = JsonConvert.DeserializeObject<List<Dataset>>(json);
+            }
+
+            // Not ready yet - will use correct if statement when ready
+            // Backup for the moment in case Layers.json is empty
+            //if (layers == null)
+            if (true)
+            {
+                MenuItem root = new MenuItem()
+                { 
+                    Title = "Test Location",
+                    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                };
+                root.Items.Add(new MenuItem()
+                { 
+                    Title = "01-01-2015",
+                    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                });
+                root.Items.Add(new MenuItem()
+                {
+                    Title = "02-01-2015",
+                    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                });
+                UpdateCurrentLocation(root);
+                this.TreeViewItems.Add(root);
+
+                LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+                LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+            }
+            else
+            {
+                // Create MenuItems for all locations and layers
+                MenuItem location = null;
+                foreach (Dataset ds in layers)
+                {
+                    // If location has not been added already
+                    if (location == null || location.Title != ds.Location)
+                    {
+                        location = new MenuItem()
+                        {
+                            Title = ds.Location,
+                            FilePath = ds.FilePath
+                        };
+                        // We may not need this if the item is already added
+                        location.Items.Add(new MenuItem()
+                        {
+                            Title = ds.Time.ToString(),
+                            FilePath = ds.FilePath
+                        });
+                    }
+                    // If location has been added already
+                    else
+                    {
+                        location.Items.Add(new MenuItem()
+                        {
+                            Title = ds.Time.ToString(),
+                            FilePath = ds.FilePath
+                        });
+                    }
+                    this.TreeViewItems.Add(location);
+                }
+
+                UpdateCurrentLocation(location);
+                foreach (MenuItem item in location.Items)
+                {
+                    LoadKml(item.FilePath, true, true);
+                }
+            }
 
             this.datasetList = new List<Dataset>();
             this.AddLayerCommand = new DelegateCommand(this.AddLayer);
             this.RemoveLayerCommand = new DelegateCommand(this.RemoveLayer);
-
-            LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-            LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
         }        
 
         /// <summary>
@@ -314,6 +369,7 @@ namespace AerialMapping
                 layers = JsonConvert.DeserializeObject<List<Dataset>>(json);
             }
 
+            // TODO: Sort layers by date before writing back to file
             // Save new layer to flat JSON file
             if (layers == null)
             {
