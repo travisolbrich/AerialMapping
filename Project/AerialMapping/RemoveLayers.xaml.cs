@@ -68,7 +68,7 @@ namespace AerialMapping
             {
                 // Add the location to the list.
                 MenuItem loc;
-                if (location.IsChecked != true)
+                if (location.IsChecked == true)
                 {
                    loc = new MenuItem(location.Name, location.FilePath, true);
                 }
@@ -81,7 +81,7 @@ namespace AerialMapping
                 foreach (RemoveLayersViewModel time in location.Children)
                 {
                     MenuItem t;
-                    if (time.IsChecked != true)
+                    if (time.IsChecked == true)
                     {
                         t = new MenuItem(time.Name, time.FilePath, true);
                     }
