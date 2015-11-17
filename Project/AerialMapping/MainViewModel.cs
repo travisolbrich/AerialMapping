@@ -78,16 +78,20 @@ namespace AerialMapping
                     Title = "01-01-2015",
                     FilePath = "../../../../Data/SampleOne/TestData.kml"
                 });
-                root.Items.Add(new MenuItem()
-                {
-                    Title = "02-01-2015",
-                    FilePath = "../../../../Data/SampleOne/TestData.kml"
-                });
-                UpdateCurrentLocation(root);
+                //root.Items.Add(new MenuItem()
+                //{
+                //    Title = "02-01-2015",
+                //    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                //});
+                
                 this.TreeViewItems.Add(root);
 
                 LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-                LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+                //LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+
+                // This needs to be after the initial KML load in order for the timeslider
+                // logic to update properly based off of the initial layers.
+                UpdateCurrentLocation(root);
             }
             else
             {
@@ -312,11 +316,46 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// Update the currentLocation object in order to setup the
+        /// time slider for the images of the selected location.
+        /// </summary>
+        /// <param name="newLocation">New location value for currentLocation.</param>
         private void UpdateCurrentLocation(MenuItem newLocation)
         {
             currentLocation = newLocation;
-            TimeSliderMax = currentLocation.Items.Count - 1;
-            TimeSliderValue = 0;
+            TimeSliderMax = currentLocation.Items.Count;
+            TimeSliderValue = 1;
+        }
+
+        /// <summary>
+        /// Update the currentLocation object in order to setup the
+        /// time slider for the images of the selected location.
+        /// </summary>
+        /// <param name="newLocation">New location value for currentLocation.</param>
+        /// <param name="childToSelect">Child image for the location that should be visible.</param>
+        private void UpdateCurrentLocation(MenuItem newLocation, MenuItem childToSelect)
+        {
+            currentLocation = newLocation;
+            TimeSliderMax = currentLocation.Items.Count;
+
+            // Set the TimeSlider to show the newly added child on the map
+            bool foundChild = false;
+            for (int i = 0; i < newLocation.Items.Count; i++)
+            {
+                if (newLocation.Items[i].Title == childToSelect.Title)
+                {
+                    TimeSliderValue = i + 1;
+                    foundChild = true;
+                    break;
+                }
+            }
+
+            // Default value just in case.
+            if (!foundChild)
+            {
+                TimeSliderValue = 1;
+            }
         }
 
         /// <summary>
@@ -399,7 +438,7 @@ namespace AerialMapping
                         // Sort the children based on time
                         location.Items = new ObservableCollection<MenuItem>(location.Items.OrderBy(time => time.Title).ToList());
 
-                        UpdateCurrentLocation(location);
+                        UpdateCurrentLocation(location, newChild);
                         locationExists = true;
                         break;
                     }
@@ -462,6 +501,27 @@ namespace AerialMapping
             this.TreeViewItems = new ObservableCollection<MenuItem>(itemsList);
 
             win.Close();
+
+            // Update the current location.
+            // First, check to see if the current location still exists.
+            bool locationStillExists = false;
+            foreach (MenuItem location in treeViewItems)
+            {
+                if (currentLocation.Title == location.Title)
+                {
+                    // The location still exists, so update it
+                    // in case any DateTimes were removed from it.
+                    UpdateCurrentLocation(location);
+                    locationStillExists = true;
+                    break;
+                }
+            }
+
+            // Or, if the location does not exist, then default to the first one.
+            if (!locationStillExists)
+            {
+                currentLocation = treeViewItems.FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -469,30 +529,42 @@ namespace AerialMapping
         /// </summary>
         private void TimeSliderChanged()
         {
-            Debug.WriteLine("Time slider value: " + TimeSliderValue);            
+            Debug.WriteLine("Time slider value: " + TimeSliderValue);
 
             // Get all of the times for the current Location
             List<MenuItem> currentLocationItems = currentLocation.Items.ToList();
 
-            // Update the slider tooltip
-            this.TimeSliderToolTip = currentLocationItems[TimeSliderValue].Title;
-
-            // Set the selected time to visible and the rest to invisible.
-            for (int i = 0; i < currentLocationItems.Count; i++)
+            if (TimeSliderValue == 0)
             {
-                Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
-                if (currentLayer != null)
+                this.TimeSliderToolTip = "GIS Data Only";
+
+                for (int i = 0; i < currentLocationItems.Count; i++)
                 {
-                    if (i == TimeSliderValue)
-                    {                    
-                        currentLayer.IsVisible = true;
-                    }
-                    else
-                    {
-                        currentLayer.IsVisible = false;
-                    }
+                    Map.Layers[currentLocationItems[i].FilePath].IsVisible = false;
                 }
-                
+            }
+            else
+            {
+                // Update the slider tooltip
+                this.TimeSliderToolTip = currentLocationItems[TimeSliderValue - 1].Title;
+
+                // Set the selected time to visible and the rest to invisible.
+                for (int i = 0; i < currentLocationItems.Count; i++)
+                {
+                    Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
+                    if (currentLayer != null)
+                    {
+                        if (i == TimeSliderValue - 1)
+                        {
+                            currentLayer.IsVisible = true;
+                        }
+                        else
+                        {
+                            currentLayer.IsVisible = false;
+                        }
+                    }
+
+                }
             }
         }
     }
