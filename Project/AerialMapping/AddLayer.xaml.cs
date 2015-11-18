@@ -26,6 +26,9 @@ namespace AerialMapping
     /// </summary>
     public partial class AddLayer : Window
     {
+        // Locations in the Locations ComboBox
+        private ObservableCollection<string> comboBoxLocations;
+
         /// <summary>
         /// Adds a layer to the Window
         /// </summary>
@@ -41,6 +44,8 @@ namespace AerialMapping
             {
                 LocationComboBox.SelectedIndex = 0;
             }
+
+            comboBoxLocations = locations;
         }
 
         /// <summary>
@@ -85,6 +90,29 @@ namespace AerialMapping
 
             // Close this window.
             this.Hide();
+        }
+
+        /// <summary>
+        /// The function to add a location.
+        /// </summary>
+        /// <param name="sender">Add location button</param>
+        /// <param name="e">Button press event args</param>
+        private void BAddLocation_Click(object sender, RoutedEventArgs e)
+        {
+            // Open the window for the user to enter a new location.
+            AddLocation addLocation = new AddLocation();
+            addLocation.Owner = this;
+            addLocation.ShowDialog();
+
+            // Get the new location entered by the user
+            string newLocation = addLocation.Location;
+
+            addLocation.Close();
+
+            // Add that new location to the combo box and select it.
+            comboBoxLocations.Add(newLocation);
+            LocationComboBox.ItemsSource = comboBoxLocations;
+            LocationComboBox.SelectedIndex = LocationComboBox.Items.Count - 1;
         }
     }
 }

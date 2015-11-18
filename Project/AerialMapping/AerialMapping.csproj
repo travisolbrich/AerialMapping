@@ -68,6 +68,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddLocation.xaml.cs">
+      <DependentUpon>AddLocation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="FormattedSlider.cs" />
     <Compile Include="RemoveLayersViewModel.cs" />
@@ -75,6 +78,10 @@
     <Compile Include="MenuItem.cs" />
     <Compile Include="VirtualToggleButton.cs" />
     <Compile Include="RemoveLayers.xaml.cs" />
+    <Page Include="AddLocation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AddLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

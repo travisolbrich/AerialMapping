@@ -7,6 +7,7 @@
     <Grid>
         <Label Content="Location:" Margin="10,10,0,0"/>
         <ComboBox x:Name="LocationComboBox" Height="20" Width="200" Margin="75, 10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" IsEditable="True" />
+        <Button Content="+" Height="20" Width="20" Margin="280, 10, 0, 0" Click="BAddLocation_Click" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>
         <Label Content="Time:" Margin="10,40,0,0"/>
         <!--<TextBox x:Name="TimeInput" Height="20" Width="200" Margin="75, 40, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
         <xctk:DateTimePicker x:Name="DateTimeInput" Height="20" Width="200" Margin="75,40,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top" Format="Custom" FormatString="ddd MMM dd, yyyy hh:mmtt"/>
