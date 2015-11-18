@@ -93,39 +93,47 @@ namespace AerialMapping
             }
             else
             {
-                // Create MenuItems for all locations and layers
-                MenuItem location = null;
+                // Create MenuItems for all locations
+                List<MenuItem> locations = new List<MenuItem>();
                 foreach (Dataset ds in layers)
                 {
                     // If location has not been added already
-                    if (location == null || location.Title != ds.Location)
+                    if (locations.Count == 0 || locations.Last().Title != ds.Location)
                     {
-                        location = new MenuItem()
+                        // Construct new root level node
+                        MenuItem node = new MenuItem()
                         {
                             Title = ds.Location,
                             FilePath = ds.FilePath
                         };
-                        // We may not need this if the item is already added
-                        location.Items.Add(new MenuItem()
+                        // Add first subnode to new root level node
+                        node.Items.Add(new MenuItem()
                         {
                             Title = ds.Time.ToString(),
                             FilePath = ds.FilePath
                         });
+                        locations.Add(node);
                     }
                     // If location has been added already
                     else
                     {
-                        location.Items.Add(new MenuItem()
+                        // Add another subnode to exisiting root level node
+                        locations.Last().Items.Add(new MenuItem()
                         {
                             Title = ds.Time.ToString(),
                             FilePath = ds.FilePath
                         });
                     }
-                    this.TreeViewItems.Add(location);
                 }
 
-                UpdateCurrentLocation(location);
-                foreach (MenuItem item in location.Items)
+                // Add root level nodes to tree
+                foreach (MenuItem item in locations)
+                {
+                    this.TreeViewItems.Add(item);
+                }
+
+                UpdateCurrentLocation(locations.First());
+                foreach (MenuItem item in locations.First().Items)
                 {
                     LoadKml(item.FilePath, true, true);
                 }
