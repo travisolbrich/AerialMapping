@@ -63,10 +63,8 @@ namespace AerialMapping
                 layers = JsonConvert.DeserializeObject<List<Dataset>>(json);
             }
 
-            // Not ready yet - will use correct if statement when ready
-            // Backup for the moment in case Layers.json is empty
-            //if (layers == null)
-            if (true)
+            // Backup to manually set up layers in case Layers.json is empty
+            if (layers == null)
             {
                 MenuItem root = new MenuItem()
                 { 
@@ -408,7 +406,6 @@ namespace AerialMapping
                 layers = JsonConvert.DeserializeObject<List<Dataset>>(json);
             }
 
-            // TODO: Sort layers by date before writing back to file
             // Save new layer to flat JSON file
             if (layers == null)
             {
