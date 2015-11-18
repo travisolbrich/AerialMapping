@@ -17,6 +17,7 @@ namespace AerialMapping
     using System.Windows.Media.Animation;
     using System.IO;
     using System.Collections.ObjectModel;
+    using System.Runtime.InteropServices;
     ﻿using Esri.ArcGISRuntime.Controls;
     using Esri.ArcGISRuntime.Geometry;
     using Esri.ArcGISRuntime.Layers;
@@ -314,6 +315,14 @@ namespace AerialMapping
 
                 rightMenuToggle.Content = "<";
             }
+        }
+        [DllImport("TreeDetection.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void Entry(string s);
+        private void TreeButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog file = new OpenFileDialog();
+            file.ShowDialog();
+            Entry(file.FileName);
         }
 
     }
