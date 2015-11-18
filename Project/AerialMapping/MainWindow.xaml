@@ -120,7 +120,7 @@
             <!--Main Panel of the Side Menu-->
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="150" Background="#4C808080" >
                 <StackPanel VerticalAlignment="Top">
-                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="100" ItemsSource="{Binding TreeViewItems}" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
+                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="210" ItemsSource="{Binding TreeViewItems}" Margin="0,10,0,0" VerticalAlignment="Top" Width="100">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
                                 <TextBlock Text="{Binding Title}" />
@@ -129,6 +129,7 @@
                     </TreeView>
                     <Button Content="Add Layer" Command="{Binding AddLayerCommand}" CommandParameter="{Binding ElementName=_this}" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
                     <Button Content="Remove Layer" Command="{Binding RemoveLayerCommand}" CommandParameter="{Binding ElementName=_this}" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
+                    <Button x:Name="TreeButton" Content="Tree stuffandjunk" Click="TreeButton_Click"  HorizontalAlignment="Center" Margin="24,10,24,0" Width="100"/>
                 </StackPanel>
             </Border>
         </StackPanel>

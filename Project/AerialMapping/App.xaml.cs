@@ -19,14 +19,8 @@ namespace AerialMapping
 
     public partial class App : Application
     {
-        [DllImport("TreeDetection.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void Entry(string s);
-
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            /*OpenFileDialog file = new OpenFileDialog();
-            file.ShowDialog();
-            entry(file.FileName);*/
             try
             {
                 // Deployed applications must be licensed at the Basic level or greater (https://developers.arcgis.com/licensing).

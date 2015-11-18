@@ -11,197 +11,218 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <map>
 
 using namespace std;
 using namespace cv;
 
+void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyImage, bool bDoNaive = false );
+
+vector<float> EntropyFunctionCache;
+
+int CacheBaseSize = -1;
+
 /*
 This is the function to be called to enter the dll
-*/
-extern "C" _declspec( dllexport ) void Entry( const char *s )
-{
-
-}
-
-/*
-From: https://lost-contact.mit.edu/afs/cs.stanford.edu/package/matlab-r2009b/matlab/r2009b/toolbox/images/images/private/libsrc/neighborhood/neighborhood.cpp
-ind_to_sub
-Convert from linear index to array coordinates.  This is similar
-to MATLAB's IND2SUB function, except that here it's zero-based
-instead of one-based.  This algorithm used here is adapted from
-ind2sub.m.
 
 Inputs
 ======
-p        - zero-based linear index
-num_dims - number of dimensions
-cumprod  - cumulative product of image dimensions
+FilePath - The file for the entropy function to be calculated on
 
 Output
 ======
-coords   - array of array coordinates
 */
-void ind_to_sub( const int &p, const int &num_dims, const int *cumprod, int *coords )
+extern "C" _declspec( dllexport ) void Entry( const char *filepath )
 {
-  int idx = p;
+  Mat image = imread( filepath ),
+      labImage,
+      luminosityImage,
+      result;
 
-  for( int j_up = 0; j_up < num_dims; j_up++ )
-  {
-    int j = num_dims - 1 - j_up;
+  std::vector<cv::Mat> channels;
 
-    coords[j] = idx / cumprod[j];
-    idx = idx % cumprod[j];
-  }
+  string outputPath = filepath;
+  outputPath = "entropy_" + outputPath;
+
+  //
+  // Converts image from RGB to LAB color space, dropping the A and B channels,
+  // leaving just the L channel
+  //
+  cvtColor( image, labImage, CV_RGB2Lab, 0 );
+  split( labImage, channels );
+  luminosityImage = channels[0];
+
+  GetEntropyImage( &luminosityImage, 9, &result );
+
+
+  imwrite( outputPath, result );
 }
 
 /*
-From: https://lost-contact.mit.edu/afs/cs.stanford.edu/package/matlab-r2009b/matlab/r2009b/toolbox/images/images/private/libsrc/neighborhood/neighborhood.cpp
-sub_to_ind
-Convert from array coordinates to linear index.  This is similar
-to MATLAB's SUB2IND function, except that here it's zero-based
-instead of one-based.  The algorithm used here is adapted from
-sub2ind.m.
-
+This function gets the value at the location of a matrix, it allows for automatic padding of data
 Inputs
 ======
-coords    - array of array coordinates
-size      - image size (linear index has to be computed with
-            respect to a known image size)
-cumprod   - cumulative product of image size
-num_dims  - number of dimensions
-
-Return
-======
-zero-based linear index
-*/
-int sub_to_ind( const int * coords, const int * cumprod, const int & num_dims )
-{
-  int index = 0;
-
-  for( int k = 0; k < num_dims; k++ )
-  {
-    index += coords[k] * cumprod[k];
-  }
-
-  return index;
-}
-
-/*
-This function calculates the shannon entropy for each entropy in a specified kernel
-This is function is a modified version from this one: http://stackoverflow.com/a/20398494
-
-Inputs
-======
-gray_src - The gray source image for the calculation to be performed
-roi_rect - A rectangle representing the region of interest (area to perform entropy calculations on)
+src - The src matrix for the function to be performed on
+x - The x coordinates of the pixel
+y - The y coordinates of the pixel
 
 Output
 ======
-local_entropy_image - The finished version will be outputted to this variable
+Return Value - the value of the pixel at the specified location
 */
-void GetLocalEntroyImage( const IplImage *gray_src, CvRect roi_rect, IplImage*local_entroy_image )
+int GetMatPixelVal( const Mat* src, uint x, uint y )
 {
-  //1.Define nerghbood model,here it's 9*9
-  int neighbood_dim = 2;
-  int neighbood_size[] = { 9, 9 };
+  int val = src->at<uchar>( 
+    borderInterpolate( y, src->rows, BORDER_REFLECT ),
+    borderInterpolate( x, src->cols, BORDER_REFLECT )
+    );
 
-  //2.Pad gray_src
-  Mat gray_src_mat = cvarrToMat( gray_src );
-  Mat pad_mat;
-  int left = ( neighbood_size[0] - 1 ) / 2;
-  int right = left;
-  int top = ( neighbood_size[1] - 1 ) / 2;
-  int bottom = top;
-  copyMakeBorder( gray_src_mat, pad_mat, top, bottom, left, right, BORDER_REPLICATE, 0 );
-  IplImage *pad_src = &IplImage( pad_mat );
+  return val;
+}
 
-  //Here, implement a histogram by ourself, each bin calcalates the gray value frequency
-  int hist_count[256] = { 0 };
-  int neighbood_num = 1;
-  for( int i = 0; i < neighbood_dim; i++ )
+/*
+This function does the entropy calculation for a given occurence.
+It uses a cached value when possible, since the operation is expensive to perform.
+Inputs
+======
+timesOccured     - The number of times this luminosity has been seen for a key pixel
+numberOfElements - The size of the neighborhood for the calculation
+
+Output
+======
+Return Value     - The result of the entropy calculation
+*/
+float entropyCalculation( int timesOccured, int numberOfElements )
+{
+  float returnValue,
+        frequency;
+
+  //
+  // If the size of the neighborhood we are caching changes
+  // then we need to empty and recreate the cache
+  //
+  if( CacheBaseSize != numberOfElements )
   {
-    neighbood_num *= neighbood_size[i];
+    CacheBaseSize = numberOfElements;
+    EntropyFunctionCache.clear();
+    EntropyFunctionCache.insert( EntropyFunctionCache.end(), numberOfElements + 1, ( float ) -1 );
   }
-  //neighbood_corrds_array is a neighbors_num-by-neighbood_dim array containing relative offsets
-  int *neighbood_corrds_array = ( int* ) malloc( sizeof( int ) *neighbood_num*neighbood_dim );
-  //Contains the cumulative product of the image_size array;used in the sub_to_ind and ind_to_sub calculations.
-  int *cumprod;
-  cumprod = ( int * ) malloc( neighbood_dim * sizeof( *cumprod ) );
-  cumprod[0] = 1;
-  for( int i = 1; i < neighbood_dim; i++ ){
-    cumprod[i] = cumprod[i - 1] * neighbood_size[i - 1];
-  }
-  int *image_cumprod = ( int* ) malloc( 2 * sizeof( *image_cumprod ) );
-  image_cumprod[0] = 1;
-  image_cumprod[1] = pad_src->width;
-  //initialize neighbood_corrds_array
-  int p;
-  int q;
-  int *coords;
-  for( p = 0; p < neighbood_num; p++ )
+  if( EntropyFunctionCache[timesOccured] == -1  )
   {
-    coords = neighbood_corrds_array + p * neighbood_dim;
-    ind_to_sub( p, neighbood_dim, cumprod, coords );
-    //ind_to_sub( p, neighbood_dim, neighbood_size, cumprod, coords );
-    for( q = 0; q < neighbood_dim; q++ )
+    frequency = ( float ) timesOccured / ( float ) numberOfElements;
+    returnValue = frequency * log2f( frequency );
+    EntropyFunctionCache[timesOccured] = returnValue;
+  }
+  else
+  {
+    returnValue = EntropyFunctionCache[timesOccured];
+  }
+  return returnValue;
+}
+
+/*
+This function calculates the shannon entropy for an image with a given kernel size
+Inputs
+======
+graySrc          - The gray source image for the calculation to be performed
+neighborhoodSize - An integer representing the size of the grid that will be used for sampling each pixels entropy
+                   This value must be positive and odd, and an exception will be thrown if it is not.
+bDoNaive         - Toggle to run the naive unoptimized version of this algorithim
+
+Output
+======
+entropyImage     - Contains a grayscale image representing the entropy of each pixel
+*/
+void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyImage, bool bDoNaive )
+{
+  //
+  // 256 comes from 0-255 aka the possible values for a pixel in a grayscale image
+  //
+  const int NUMBER_OF_BUCKETS = 256;
+
+  int lumionisity,
+      buckets[NUMBER_OF_BUCKETS] = { 0 };
+  
+  float range[] = { 0, 255 },
+        pixelFuncVal,
+        summation,
+        frequency;
+
+  Mat hist,
+      entropyMat;
+
+  if( neighborhoodSize <= 0 || !( neighborhoodSize % 2 ) )
+  {
+    throw invalid_argument("neighborhoodSize");
+  }
+
+  //
+  // Creates empyty matrix to assign entropy values to
+  //
+  entropyMat = Mat::zeros( graySrc->rows, graySrc->cols, CV_32F );
+  *entropyImage = Mat::zeros( graySrc->rows, graySrc->cols, CV_8UC1 );
+
+  //
+  // The following values are used here as:
+  // x,y - The current pixel being evaluated where x is the column and y is the row (aka the key pixel)
+  // j,q - Used to iterate through a grid around the key pixel, j is the column q is the row
+  //
+  for( int y = 0; y < graySrc->rows; y++ )
+  {
+    for( int x = 0; x < graySrc->cols; x++ )
     {
-      coords[q] -= ( neighbood_size[q] - 1 ) / 2;
-    }
-  }
-  //initlalize neighbood_offset in use of neighbood_corrds_array
-  int *neighbood_offset = ( int* ) malloc( sizeof( int ) *neighbood_num );
-  int *elem;
-  for( int i = 0; i < neighbood_num; i++ )
-  {
-    elem = neighbood_corrds_array + i * neighbood_dim;
-    neighbood_offset[i] = sub_to_ind( elem, image_cumprod, 2 );
-  }
-
-  //4.calculate entroy for pixel
-  uchar *array = ( uchar* ) pad_src->imageData;
-  //here,use entroy_table to avoid frequency log function which cost losts of time
-  float entroy_table[82];
-  const float log2 = log( 2.0f );
-  entroy_table[0] = 0.0;
-  float frequency = 0;
-  for( int i = 1; i < 82; i++ )
-  {
-    frequency = ( float ) i / 81;
-    entroy_table[i] = frequency * ( log( frequency ) / log2 );
-  }
-  int neighbood_index;
-  int max_index = pad_src->width * pad_src->height;
-  float temp;
-  float entropy;
-  int current_index = 0;
-  int current_index_in_origin = 0;
-  for( int y = roi_rect.y; y < roi_rect.height; y++ )
-  {
-    current_index = y * pad_src->width;
-    current_index_in_origin = ( y - 4 ) * gray_src->width;
-    for( int x = roi_rect.x; x < roi_rect.width; x++, current_index++, current_index_in_origin++ )
-    {
-      for( int j = 0; j < neighbood_num; j++ ){
-        int offset = neighbood_offset[j];
-        neighbood_index = current_index + neighbood_offset[j];
-        hist_count[array[neighbood_index]]++;
-      }
-      //get entroy
-      entropy = 0;
-      for( int k = 0; k < 256; k++ )
+      if( bDoNaive || true )
       {
-        if( hist_count[k] != 0 )
+        summation = 0;
+        for( long q = y - neighborhoodSize / 2; q <= y + neighborhoodSize / 2; q++ )
         {
-          int frequency = hist_count[k];
-          entropy -= entroy_table[hist_count[k]];
-          hist_count[k] = 0;
+          for( long j = x - neighborhoodSize / 2; j <= x + neighborhoodSize / 2; j++ )
+          {
+            //
+            // Here we grab the pixels lumionisity value. 
+            // The bin corresponding to this value is incremented.
+            // The end result is knowing the number of pixels with a certain value, the number corresponds 
+            // with the bin sizes.
+            //
+            lumionisity = GetMatPixelVal( graySrc, j, q );
+            buckets[lumionisity]++;
+          }
         }
       }
-      ( ( float* ) local_entroy_image->imageData )[current_index_in_origin] = entropy;
+      else
+      {
+        throw "TODO";
+      }
+      for( int ndx = 0; ndx < NUMBER_OF_BUCKETS; ndx++ )
+      {
+        //
+        // Buckets which have no associated values will not influence the value of the calculation
+        // and therefore can be skipped.
+        //
+        if( buckets[ndx] != 0 )
+        {
+          if( bDoNaive )
+          {
+            frequency = ( float ) buckets[ndx] / ( float ) ( neighborhoodSize * neighborhoodSize );
+            summation -= frequency * log2f( frequency );
+          }
+          else
+          {
+            summation -= entropyCalculation( buckets[ndx], ( neighborhoodSize * neighborhoodSize ) );
+          }
+          //
+          // Reset the number of pixels that fall in this bucket for the future key pixels
+          //
+          buckets[ndx] = 0;
+        }
+      }
+      entropyMat.at<float>( y, x ) = summation;
     }
   }
-  free( neighbood_corrds_array );
-  free( cumprod );
-  free( image_cumprod );
-  free( neighbood_offset );
+  //
+  // The entropy values need to be normalized so the lowest value becomes 0
+  // and the highest value is 255. This allows for display of images entropy.
+  //
+  normalize( entropyMat, *entropyImage, 0, 255, NORM_MINMAX, CV_8UC1 );
+  imshow( "Derp", *entropyImage );
 }
