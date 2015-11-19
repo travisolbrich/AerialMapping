@@ -64,28 +64,31 @@ namespace AerialMapping
             }
 
             // Backup to manually set up layers in case Layers.json is empty
-            if (layers == null)
+            //if (layers == null)
+            if (true)
             {
                 MenuItem root = new MenuItem()
                 { 
                     Title = "Test Location",
-                    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                    FilePath = "../../../../Data/SampleOne/TestData.kml",
+                    Checked = true
                 };
                 root.Items.Add(new MenuItem()
                 { 
                     Title = "01-01-2015",
-                    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                    FilePath = "../../../../Data/SampleOne/TestData.kml",
+                    Checked = true
                 });
-                //root.Items.Add(new MenuItem()
-                //{
-                //    Title = "02-01-2015",
-                //    FilePath = "../../../../Data/SampleOne/TestData.kml"
-                //});
+                root.Items.Add(new MenuItem()
+                {
+                    Title = "02-01-2015",
+                    FilePath = "../../../../Data/SampleOne/TestData2.kmz"
+                });
                 
                 this.TreeViewItems.Add(root);
 
                 LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-                //LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+                LoadKml("../../../../Data/SampleOne/TestData2.kmz", true, true);
 
                 // This needs to be after the initial KML load in order for the timeslider
                 // logic to update properly based off of the initial layers.
@@ -138,7 +141,7 @@ namespace AerialMapping
                     LoadKml(item.FilePath, true, true);
                 }
             }
-
+            
             this.datasetList = new List<Dataset>();
             this.AddLayerCommand = new DelegateCommand(this.AddLayer);
             this.RemoveLayerCommand = new DelegateCommand(this.RemoveLayer);
@@ -569,6 +572,57 @@ namespace AerialMapping
                         }
                     }
 
+                }
+            }
+        }
+
+        public void UpdateSelectedItem(MenuItem newlySelectedItem)
+        {
+            List<MenuItem> treeViewItemList = TreeViewItems.ToList();
+
+            // Iterate through each location.
+            foreach (MenuItem location in treeViewItemList)
+            {
+                bool activeLocation = false;
+
+                // First, check to see if the user clicked a location
+                if (location.Equals(newlySelectedItem))
+                {
+                    // If so, then select its first child
+                    UpdateCurrentLocation(location);
+                    location.Items.First().Checked = true;
+                    location.Checked = true;
+                    activeLocation = true;
+                    this.NotifiyPropertyChanged("TreeViewItems");
+                }
+                // Else, iterate through this location's children to see if
+                // one of them was selected.
+                else
+                {
+                    foreach (MenuItem time in location.Items)
+                    {
+                        // If this child was the selected item,
+                        // then set it as the active image.
+                        if (time.Equals(newlySelectedItem))
+                        {
+                            UpdateCurrentLocation(location, time);
+                            time.Checked = true;
+                            location.Checked = true;
+                            activeLocation = true;
+                            this.NotifiyPropertyChanged("TreeViewItems");
+                        }
+                        else
+                        {
+                            time.Checked = false;
+                        }
+                    }
+                }
+
+                // If this location, nor any of its children
+                // were selected, then make sure it is not highlighted.
+                if (!activeLocation)
+                {
+                    location.Checked = false;
                 }
             }
         }

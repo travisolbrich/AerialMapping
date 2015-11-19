@@ -120,10 +120,23 @@
             <!--Main Panel of the Side Menu-->
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="250" Background="#4C808080" >
                 <StackPanel VerticalAlignment="Top">
-                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="210" ItemsSource="{Binding TreeViewItems}" Margin="0,10,0,0" VerticalAlignment="Top" Width="200">
+                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="210" ItemsSource="{Binding TreeViewItems}" 
+                              SelectedItemChanged="LayerView_SelectedItemChanged" Margin="0,10,0,0" VerticalAlignment="Top" Width="200">
+                        
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
-                                <TextBlock Text="{Binding Title}" />
+                                <TextBlock Text="{Binding Title}" >
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Checked}" Value="True">
+                                                    <Setter Property="Background" Value="#adc6e5" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                        
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
@@ -136,3 +149,36 @@
 
     </Grid>
 </Window>
+
+<!--<local:ExtendedTreeView x:Name="LayerView" HorizontalAlignment="Center" Height="210" ItemsSource="{Binding TreeViewItems}" 
+                              SelectedItem_="{Binding SelectedItem, Mode=TwoWay}" Margin="0,10,0,0" VerticalAlignment="Top" Width="200">
+    <TreeView.ItemTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
+            <TextBlock Text="{Binding Title}" />
+        </HierarchicalDataTemplate>
+    </TreeView.ItemTemplate>
+</local:ExtendedTreeView>-->
+
+
+<!--<TreeView.ItemContainerStyle>
+    <Style TargetType="{x:Type TreeViewItem}">
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="BorderBrush" Value="#adc6e5"/>
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="True"/>
+                    <Condition Property="IsSelectionActive" Value="False"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="BorderBrush" Value="LightGray"/>
+            </MultiTrigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="2"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+</TreeView.ItemContainerStyle>-->

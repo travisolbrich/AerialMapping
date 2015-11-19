@@ -9,6 +9,7 @@ namespace AerialMapping
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace AerialMapping
     /// <summary>
     /// This class is used for the elements in the Layers TreeView on the ride side pop-out menu.
     /// </summary>
-    public class MenuItem
+    public class MenuItem : INotifyPropertyChanged
     {
         /// <summary>
         /// The default constructor for a MenuItem
@@ -81,13 +82,22 @@ namespace AerialMapping
             set; 
         }
 
+        private bool _checked;
+
         /// <summary>
         /// Whether it is checked in the remove window screen.
         /// </summary>
         public bool Checked 
-        { 
-            get; 
-            set; 
+        {
+            get
+            {
+                return _checked;
+            }
+            set
+            {
+                _checked = value;
+                NotifiyPropertyChanged("Checked");
+            }
         }
 
         /// <summary>
@@ -97,6 +107,35 @@ namespace AerialMapping
         { 
             get; 
             set; 
+        }
+
+        public bool Equals(MenuItem otherItem)
+        {
+            if (Title == otherItem.Title && FilePath == otherItem.FilePath)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// INotifyPropertyChanged event.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// INotifyPropertyChanged method for updating the UI.
+        /// </summary>
+        /// <param name="property">Name of the UI element to update.</param>
+        private void NotifiyPropertyChanged(string property)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
         }
     }
 }

@@ -316,6 +316,13 @@ namespace AerialMapping
                 rightMenuToggle.Content = "<";
             }
         }
+
+        private void LayerView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            mainViewModel.UpdateSelectedItem((MenuItem)e.NewValue);
+        }
+
+
         [DllImport("TreeDetection.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void Entry(string s);
         private void TreeButton_Click(object sender, RoutedEventArgs e)
