@@ -1,39 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿//-----------------------------------------------------------------------
+// <copyright file="AddLocation.xaml.cs" company="CSCE 482: Aerial Mapping">
+//     Copyright (c) CSCE 482 Aerial Mapping Design Team
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace AerialMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Interaction logic for Add_Location.xaml
     /// </summary>
     public partial class AddLocation : Window
     {
         /// <summary>
-        /// The Location entered by the user.
-        /// </summary>
-        public String Location 
-        { 
-            get; 
-            set; 
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the AddLocation class.
         /// </summary>
         public AddLocation()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Gets or sets the Location entered by the user.
+        /// </summary>
+        public string Location
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -44,7 +50,7 @@ namespace AerialMapping
         /// <param name="e">Button press event args</param>
         private void BAddLocation_Click(object sender, RoutedEventArgs e)
         {
-            Location = NewLocation.Text;
+            this.Location = NewLocation.Text;
             this.Hide();
         }
     }

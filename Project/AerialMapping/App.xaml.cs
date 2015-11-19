@@ -17,8 +17,18 @@ namespace AerialMapping
     using Esri.ArcGISRuntime;
     using Microsoft.Win32;
 
+    /// <summary>
+    /// The main application class.
+    /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Method executed on application startup.
+        /// Initializes the ArcGIS environment and then
+        /// starts the rest of the program.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Startup Event Arguments</param>
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             try

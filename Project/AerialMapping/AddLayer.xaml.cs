@@ -6,8 +6,8 @@
 namespace AerialMapping
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -30,6 +30,7 @@ namespace AerialMapping
         private ObservableCollection<string> comboBoxLocations;
 
         /// <summary>
+        /// Initializes a new instance of the AddLayer class.
         /// Adds a layer to the Window
         /// </summary>
         /// <param name="locations">List of location names</param>
@@ -45,13 +46,14 @@ namespace AerialMapping
                 LocationComboBox.SelectedIndex = 0;
             }
 
-            comboBoxLocations = locations;
+            this.comboBoxLocations = locations;
         }
 
         /// <summary>
         /// Gets or sets the Dataset that we want to add
         /// </summary>
-        public Dataset DatasetToAdd { 
+        public Dataset DatasetToAdd 
+        { 
             get; 
             set; 
         }
@@ -110,8 +112,8 @@ namespace AerialMapping
             addLocation.Close();
 
             // Add that new location to the combo box and select it.
-            comboBoxLocations.Add(newLocation);
-            LocationComboBox.ItemsSource = comboBoxLocations;
+            this.comboBoxLocations.Add(newLocation);
+            LocationComboBox.ItemsSource = this.comboBoxLocations;
             LocationComboBox.SelectedIndex = LocationComboBox.Items.Count - 1;
         }
     }

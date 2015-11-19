@@ -55,6 +55,8 @@ namespace AerialMapping
         /// Gets the IsChecked property.  This dependency property 
         /// indicates whether the toggle button is checked.
         /// </summary>
+        /// <param name="d">The corresponding Dependency Object</param>
+        /// <returns>A bool showing if it it checked.</returns>
         public static bool? GetIsChecked(DependencyObject d)
         {
             return (bool?)d.GetValue(IsCheckedProperty);
@@ -64,6 +66,8 @@ namespace AerialMapping
         /// Sets the IsChecked property.  This dependency property 
         /// indicates whether the toggle button is checked.
         /// </summary>
+        /// <param name="d">The corresponding Dependency Object</param>
+        /// <param name="value">A bool determining if it it checked.</param>
         public static void SetIsChecked(DependencyObject d, bool? value)
         {
             d.SetValue(IsCheckedProperty, value);
@@ -74,6 +78,8 @@ namespace AerialMapping
         /// indicates whether the control supports two or three states.  
         /// IsChecked can be set to null as a third state when IsThreeState is true.
         /// </summary>
+        /// <param name="d">The corresponding Dependency Object</param>
+        /// <returns>A bool showing if it is three state or not.</returns>
         public static bool GetIsThreeState(DependencyObject d)
         {
             return (bool)d.GetValue(IsThreeStateProperty);
@@ -84,6 +90,8 @@ namespace AerialMapping
         /// indicates whether the control supports two or three states. 
         /// IsChecked can be set to null as a third state when IsThreeState is true.
         /// </summary>
+        /// <param name="d">The corresponding Dependency Object</param>
+        /// <param name="value">A bool determining if it is three state or not.</param>
         public static void SetIsThreeState(DependencyObject d, bool value)
         {
             d.SetValue(IsThreeStateProperty, value);
@@ -94,6 +102,8 @@ namespace AerialMapping
         /// indicates whether the object to which the property is attached is treated as a VirtualToggleButton.  
         /// If true, the object will respond to keyboard and mouse input the same way a ToggleButton would.
         /// </summary>
+        /// <param name="d">The corresponding Dependency Object</param>
+        /// <returns>A bool telling if it is a virtual toggle button.</returns>
         public static bool GetIsVirtualToggleButton(DependencyObject d)
         {
             return (bool)d.GetValue(IsVirtualToggleButtonProperty);
@@ -104,6 +114,8 @@ namespace AerialMapping
         /// indicates whether the object to which the property is attached is treated as a VirtualToggleButton.  
         /// If true, the object will respond to keyboard and mouse input the same way a ToggleButton would.
         /// </summary>
+        /// <param name="d">The corresponding Dependency Object</param>
+        /// <param name="value">A bool that determines if it is a virtualtogglebutton.</param>
         public static void SetIsVirtualToggleButton(DependencyObject d, bool value)
         {
             d.SetValue(IsVirtualToggleButtonProperty, value);
@@ -113,6 +125,7 @@ namespace AerialMapping
         /// A static helper method to raise the Checked event on a target element.
         /// </summary>
         /// <param name="target">UIElement or ContentElement on which to raise the event</param>
+        /// <returns>The Routed Event Arguments</returns>
         internal static RoutedEventArgs RaiseCheckedEvent(UIElement target)
         {
             if (target == null)
@@ -130,6 +143,7 @@ namespace AerialMapping
         /// A static helper method to raise the Unchecked event on a target element.
         /// </summary>
         /// <param name="target">UIElement or ContentElement on which to raise the event</param>
+        /// <returns>The Routed Event Arguments</returns>
         internal static RoutedEventArgs RaiseUncheckedEvent(UIElement target)
         {
             if (target == null)
@@ -147,6 +161,7 @@ namespace AerialMapping
         /// A static helper method to raise the Indeterminate event on a target element.
         /// </summary>
         /// <param name="target">UIElement or ContentElement on which to raise the event</param>
+        /// <returns>The Routed Event Arguments</returns>
         internal static RoutedEventArgs RaiseIndeterminateEvent(UIElement target)
         {
             if (target == null)
@@ -163,6 +178,8 @@ namespace AerialMapping
         /// <summary>
         /// Handles changes to the IsVirtualToggleButton property.
         /// </summary>
+        /// <param name="d">The corresponding Dependency Object</param>
+        /// <param name="e">The Dependency Property Changed Event Arguments</param>
         private static void OnIsVirtualToggleButtonChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             IInputElement element = d as IInputElement;
@@ -257,6 +274,8 @@ namespace AerialMapping
         /// <summary>
         /// Handles changes to the IsChecked property.
         /// </summary>
+        /// <param name="d">The object to raise an event on</param>
+        /// <param name="e">Event args</param>
         private static void OnIsCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             UIElement pseudobutton = d as UIElement;

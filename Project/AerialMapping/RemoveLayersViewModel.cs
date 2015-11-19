@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="FooViewModel.cs" company="CSCE 482: Aerial Mapping">
+// <copyright file="RemoveLayersViewModel.cs" company="CSCE 482: Aerial Mapping">
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
@@ -20,7 +20,7 @@ namespace AerialMapping
         private RemoveLayersViewModel parent;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the RemoveLayersViewModel class.
         /// </summary>
         /// <param name="name">The string to put in the treeview.</param>
         /// <param name="filePath">The filepath associated with this object.</param>
@@ -36,20 +36,24 @@ namespace AerialMapping
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public List<RemoveLayersViewModel> Children { get; private set; }
         /// <summary>
-        /// Determines if the element is selected by default
+        /// Gets the Children of the current node.
+        /// </summary>
+        public List<RemoveLayersViewModel> Children { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the element is selected by default
         /// when the window loads.
         /// </summary>
         public bool IsInitiallySelected { get; private set; }
 
         /// <summary>
-        /// The Text shown on the window for the element.
+        /// Gets the Text shown on the window for the element.
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        /// File path to the corresponding image.
+        /// Gets the file path to the corresponding image.
         /// </summary>
         public string FilePath { get; private set; }
 

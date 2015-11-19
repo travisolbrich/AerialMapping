@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="MenuItems.cs" company="CSCE 482: Aerial Mapping">
+// <copyright file="MenuItem.cs" company="CSCE 482: Aerial Mapping">
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
@@ -19,8 +19,10 @@ namespace AerialMapping
     /// </summary>
     public class MenuItem : INotifyPropertyChanged
     {
+        private bool isChecked;
+
         /// <summary>
-        /// The default constructor for a MenuItem
+        /// Initializes a new instance of the MenuItem class.
         /// </summary>
         public MenuItem()
         {
@@ -28,7 +30,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// The overloaded constructor for a MenuItem
+        /// Initializes a new instance of the MenuItem class.
         /// </summary>
         /// <param name="title">The title of the item</param>
         /// <param name="filePath">The filepath to the item</param>
@@ -41,7 +43,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// The overloaded constructor for a MenuItem
+        /// Initializes a new instance of the MenuItem class.
         /// </summary>
         /// <param name="title">The title of the item</param>
         /// <param name="filePath">The filepath to the item</param>
@@ -55,16 +57,12 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Converts the title string into a date time.
+        /// INotifyPropertyChanged event.
         /// </summary>
-        /// <returns>The date time</returns>
-        public DateTime TimeAsDateTime()
-        {
-            return Convert.ToDateTime(Title);
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// File path to the related image.
+        /// Gets or sets the file path to the related image.
         /// </summary>
         public string FilePath 
         { 
@@ -73,7 +71,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// The title shown on the treeviews. Will be either
+        /// Gets or sets the title shown on the treeviews. Will be either
         /// the location or datetime.
         /// </summary>
         public string Title 
@@ -82,36 +80,41 @@ namespace AerialMapping
             set; 
         }
 
-        private bool _checked;
-
         /// <summary>
-        /// Whether it is checked in the remove window screen.
+        /// Gets or sets a value indicating whether this is selected
+        /// in the treeview.
         /// </summary>
         public bool Checked 
         {
             get
             {
-                return _checked;
+                return this.isChecked;
             }
+
             set
             {
-                _checked = value;
-                NotifiyPropertyChanged("Checked");
+                this.isChecked = value;
+                this.NotifiyPropertyChanged("Checked");
             }
         }
 
         /// <summary>
-        /// The Items that make up the children nodes.
+        /// Gets or sets the Items that make up the children nodes.
         /// </summary>
         public ObservableCollection<MenuItem> Items 
         { 
             get; 
-            set; 
+            set;
         }
 
+        /// <summary>
+        /// A method to compare if two MenuItems are the same.
+        /// </summary>
+        /// <param name="otherItem">The other MenuItem to compare with.</param>
+        /// <returns>Bool indicating if they are the same.</returns>
         public bool Equals(MenuItem otherItem)
         {
-            if (Title == otherItem.Title && FilePath == otherItem.FilePath)
+            if (this.Title == otherItem.Title && this.FilePath == otherItem.FilePath)
             {
                 return true;
             }
@@ -122,9 +125,13 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// INotifyPropertyChanged event.
+        /// Converts the title string into a date time.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <returns>The date time</returns>
+        public DateTime TimeAsDateTime()
+        {
+            return Convert.ToDateTime(this.Title);
+        }
 
         /// <summary>
         /// INotifyPropertyChanged method for updating the UI.

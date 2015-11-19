@@ -30,6 +30,7 @@ namespace AerialMapping
         private readonly Func<object, bool> canExecute;
 
         /// <summary>
+        /// Initializes a new instance of the DelegateCommand class.
         /// constructor: store the logic for executing and enabling the command
         /// </summary>
         /// <param name="executeAction">method to execute</param>
@@ -49,7 +50,7 @@ namespace AerialMapping
         /// if it was passed in, execute the enabling logic for the command
         /// </summary>
         /// <param name="parameter">Paramater to be tested</param>
-        /// <returns></returns>
+        /// <returns>Bool determining if the method can execute.</returns>
         public bool CanExecute(object parameter)
         {
             if (this.canExecute == null) 

@@ -18,9 +18,9 @@ namespace AerialMapping
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows; 
-    using Newtonsoft.Json;
     using Esri.ArcGISRuntime.Controls;
-    using Esri.ArcGISRuntime.Layers;   
+    using Esri.ArcGISRuntime.Layers;
+    using Newtonsoft.Json;   
 
     /// <summary>
     /// This is the MainViewModel class which displays the map
@@ -87,12 +87,12 @@ namespace AerialMapping
                 
                 this.TreeViewItems.Add(root);
 
-                LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-                LoadKml("../../../../Data/SampleOne/TestData2.kmz", true, true);
+                this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+                this.LoadKml("../../../../Data/SampleOne/TestData2.kmz", true, true);
 
                 // This needs to be after the initial KML load in order for the timeslider
                 // logic to update properly based off of the initial layers.
-                UpdateCurrentLocation(root);
+                this.UpdateCurrentLocation(root);
             }
             else
             {
@@ -109,6 +109,7 @@ namespace AerialMapping
                             Title = ds.Location,
                             FilePath = ds.FilePath
                         };
+
                         // Add first subnode to new root level node
                         node.Items.Add(new MenuItem()
                         {
@@ -117,9 +118,9 @@ namespace AerialMapping
                         });
                         locations.Add(node);
                     }
-                    // If location has been added already
                     else
                     {
+                        // If location has been added already
                         // Add another subnode to exisiting root level node
                         locations.Last().Items.Add(new MenuItem()
                         {
@@ -135,20 +136,25 @@ namespace AerialMapping
                     this.TreeViewItems.Add(item);
                 }
 
-                UpdateCurrentLocation(locations.First());
+                this.UpdateCurrentLocation(locations.First());
                 foreach (MenuItem item in locations.First().Items)
                 {
-                    LoadKml(item.FilePath, true, true);
+                    this.LoadKml(item.FilePath, true, true);
                 }
             }
             
             this.datasetList = new List<Dataset>();
             this.AddLayerCommand = new DelegateCommand(this.AddLayer);
             this.RemoveLayerCommand = new DelegateCommand(this.RemoveLayer);
-        }        
+        }
 
         /// <summary>
-        /// The Layer ID on which to zoom upon loading the map.
+        /// INotifyPropertyChanged event.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;        
+
+        /// <summary>
+        /// Gets or sets the Layer ID on which to zoom upon loading the map.
         /// </summary>
         public string IdToZoomOn
         {
@@ -164,7 +170,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// The ArcGIS MapView object that holds all of the map
+        /// Gets or sets the ArcGIS MapView object that holds all of the map
         /// and layer information.
         /// </summary>
         public MapView MapView
@@ -174,7 +180,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// The ArcGIS Map object that represents the primary map.
+        /// Gets or sets the ArcGIS Map object that represents the primary map.
         /// </summary>
         public Map Map
         { 
@@ -183,7 +189,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Reference to the ArcGIS Map application resource used in
+        /// Gets or sets the reference to the ArcGIS Map application resource used in
         /// creating the Map.
         /// </summary>
         public Map IncidentMap
@@ -200,7 +206,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Holds the number of ticks for the time slider.
+        /// Gets or sets the number of ticks for the time slider.
         /// </summary>
         public int TimeSliderMax
         {
@@ -217,7 +223,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Holds the tooltip for the time slider.
+        /// Gets or sets the tooltip for the time slider.
         /// </summary>
         public string TimeSliderToolTip
         {
@@ -234,7 +240,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// The current value of the time slider.
+        /// Gets or sets the current value of the time slider.
         /// </summary>
         public int TimeSliderValue
         {
@@ -247,12 +253,12 @@ namespace AerialMapping
             {
                 this.timeSliderValue = value;
                 this.NotifiyPropertyChanged("TimeSliderValue");
-                TimeSliderChanged();
+                this.TimeSliderChanged();
             }
         }
 
         /// <summary>
-        /// Holds the items that are in the Layers treeview on the
+        /// Gets or sets the items that are in the Layers treeview on the
         /// pop out menu.
         /// </summary>
         public ObservableCollection<MenuItem> TreeViewItems
@@ -270,7 +276,8 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Used for capturing the Add Layer Button Callback.
+        /// Gets or sets the DelegateCommand used for capturing 
+        /// the Add Layer Button Callback.
         /// </summary>
         public DelegateCommand AddLayerCommand
         {
@@ -279,12 +286,100 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Used for capturing the Remove Layers Button Callback.
+        /// Gets or sets the DelegateCommand used for capturing 
+        /// the Remove Layers Button Callback.
         /// </summary>
         public DelegateCommand RemoveLayerCommand
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// "Add Layer" button callback
+        /// Pops up a window that gets the user to input the necessary information
+        /// for adding a new layer and then adds the layer.
+        /// </summary>
+        /// <param name="parameter">The window being passed.</param>
+        public void AddLayer(object parameter)
+        {
+            // Generate list of location names
+            ObservableCollection<string> locations = new ObservableCollection<string>();
+            foreach (MenuItem item in this.treeViewItems)
+            {
+                locations.Add(item.Title);
+            }
+
+            // Popup a window to get the layer information
+            AddLayer addLayer = new AddLayer(locations);
+            addLayer.Owner = (Window)parameter; // In the XAML we pass the window as the parameter
+            addLayer.ShowDialog();
+
+            // Get the data from the AddLayer window
+            Dataset newLayer = addLayer.DatasetToAdd;
+            addLayer.Close();
+
+            // Read JSON file with existing layers
+            List<Dataset> layers;
+            string json;
+            using (StreamReader r = new StreamReader("../../Layers.json"))
+            {
+                json = r.ReadToEnd();
+                layers = JsonConvert.DeserializeObject<List<Dataset>>(json);
+            }
+
+            // Save new layer to flat JSON file
+            if (layers == null)
+            {
+                layers = new List<Dataset>();
+            }
+
+            layers.Add(newLayer);
+            json = JsonConvert.SerializeObject(layers.ToArray());
+            System.IO.File.WriteAllText("../../Layers.json", json);
+
+            if (!string.IsNullOrEmpty(newLayer.FilePath))
+            {
+                // Save the new dataset
+                this.datasetList.Add(newLayer);
+
+                // See if the Location already exists
+                bool locationExists = false;
+
+                foreach (MenuItem location in this.TreeViewItems)
+                {
+                    // If so, then add the new layer as a child of that Location
+                    if (location.Title == newLayer.Location)
+                    {
+                        MenuItem newChild = new MenuItem(newLayer.Time.ToShortDateString(), newLayer.FilePath);
+                        location.Items.Add(newChild);
+
+                        // Sort the children based on time
+                        location.Items = new ObservableCollection<MenuItem>(location.Items.OrderBy(time => time.Title).ToList());
+
+                        this.UpdateCurrentLocation(location, newChild);
+                        locationExists = true;
+                        break;
+                    }
+                }
+
+                // If not, then we also need to add the Location to the treeview
+                if (!locationExists)
+                {
+                    // Add it to the TreeView on the UI
+                    MenuItem root = new MenuItem() { Title = newLayer.Location };
+                    root.Items.Add(new MenuItem() { Title = newLayer.Time.ToShortDateString() });
+                    this.TreeViewItems.Add(root);
+                    this.UpdateCurrentLocation(root);
+                }
+
+                // Open the new layer
+                this.LoadKml(newLayer.FilePath, true, true);
+            }
+
+            Debug.WriteLine("Location: " + newLayer.Location);
+            Debug.WriteLine("Time: " + newLayer.Time);
+            Debug.WriteLine("File Path: " + newLayer.FilePath);
         }
 
         /// <summary>
@@ -326,149 +421,62 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Update the currentLocation object in order to setup the
-        /// time slider for the images of the selected location.
+        /// This method is called when the user clicks on an item in
+        /// the layers treeview in the popout right side menu. It
+        /// updates the currently selected image on the map as the
+        /// one that the user clicked on.
         /// </summary>
-        /// <param name="newLocation">New location value for currentLocation.</param>
-        private void UpdateCurrentLocation(MenuItem newLocation)
+        /// <param name="newlySelectedItem">The new images selected by 
+        /// the user to show on the map.</param>
+        public void UpdateSelectedItem(MenuItem newlySelectedItem)
         {
-            currentLocation = newLocation;
-            TimeSliderMax = currentLocation.Items.Count;
-            TimeSliderValue = 1;
-        }
+            List<MenuItem> treeViewItemList = this.TreeViewItems.ToList();
 
-        /// <summary>
-        /// Update the currentLocation object in order to setup the
-        /// time slider for the images of the selected location.
-        /// </summary>
-        /// <param name="newLocation">New location value for currentLocation.</param>
-        /// <param name="childToSelect">Child image for the location that should be visible.</param>
-        private void UpdateCurrentLocation(MenuItem newLocation, MenuItem childToSelect)
-        {
-            currentLocation = newLocation;
-            TimeSliderMax = currentLocation.Items.Count;
-
-            // Set the TimeSlider to show the newly added child on the map
-            bool foundChild = false;
-            for (int i = 0; i < newLocation.Items.Count; i++)
+            // Iterate through each location.
+            foreach (MenuItem location in treeViewItemList)
             {
-                if (newLocation.Items[i].Title == childToSelect.Title)
+                bool activeLocation = false;
+
+                // First, check to see if the user clicked a location
+                if (location.Equals(newlySelectedItem))
                 {
-                    TimeSliderValue = i + 1;
-                    foundChild = true;
-                    break;
+                    // If so, then select its first child
+                    this.UpdateCurrentLocation(location);
+                    location.Items.First().Checked = true;
+                    location.Checked = true;
+                    activeLocation = true;
+                    this.NotifiyPropertyChanged("TreeViewItems");
                 }
-            }
-
-            // Default value just in case.
-            if (!foundChild)
-            {
-                TimeSliderValue = 1;
-            }
-        }
-
-        /// <summary>
-        /// INotifyPropertyChanged event.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// INotifyPropertyChanged method for updating the UI.
-        /// </summary>
-        /// <param name="property">Name of the UI element to update.</param>
-        private void NotifiyPropertyChanged(string property)
-        {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
-        }
-
-        /// <summary>
-        /// "Add Layer" button callback
-        /// Pops up a window that gets the user to input the necessary information
-        /// for adding a new layer and then adds the layer.
-        /// </summary>
-        /// <param name="parameter">The window being passed.</param>
-        public void AddLayer(object parameter)
-        {
-            // Generate list of location names
-            ObservableCollection<string> locations = new ObservableCollection<string>();
-            foreach (MenuItem item in treeViewItems)
-            {
-                locations.Add(item.Title);
-            }
-
-            // Popup a window to get the layer information
-            AddLayer addLayer = new AddLayer(locations);
-            addLayer.Owner = (Window)parameter; // In the XAML we pass the window as the parameter
-            addLayer.ShowDialog();
-
-            // Get the data from the AddLayer window
-            Dataset newLayer = addLayer.DatasetToAdd;
-            addLayer.Close();
-
-            // Read JSON file with existing layers
-            List<Dataset> layers;
-            string json;
-            using (StreamReader r = new StreamReader("../../Layers.json"))
-            {
-                json = r.ReadToEnd();
-                layers = JsonConvert.DeserializeObject<List<Dataset>>(json);
-            }
-
-            // Save new layer to flat JSON file
-            if (layers == null)
-            {
-                layers = new List<Dataset>();
-            }
-            layers.Add(newLayer);
-            json = JsonConvert.SerializeObject(layers.ToArray());
-            System.IO.File.WriteAllText("../../Layers.json", json);
-
-
-            if (!string.IsNullOrEmpty(newLayer.FilePath))
-            {
-                // Save the new dataset
-                this.datasetList.Add(newLayer);
-
-                // See if the Location already exists
-                bool locationExists = false;
-
-                foreach (MenuItem location in this.TreeViewItems)
+                else
                 {
-                    // If so, then add the new layer as a child of that Location
-                    if (location.Title == newLayer.Location)
+                    // Else, iterate through this location's children to see if
+                    // one of them was selected.
+                    foreach (MenuItem time in location.Items)
                     {
-                        MenuItem newChild = new MenuItem(newLayer.Time.ToShortDateString(), newLayer.FilePath);
-                        location.Items.Add(newChild);
-
-                        // Sort the children based on time
-                        location.Items = new ObservableCollection<MenuItem>(location.Items.OrderBy(time => time.Title).ToList());
-
-                        UpdateCurrentLocation(location, newChild);
-                        locationExists = true;
-                        break;
+                        // If this child was the selected item,
+                        // then set it as the active image.
+                        if (time.Equals(newlySelectedItem))
+                        {
+                            this.UpdateCurrentLocation(location, time);
+                            time.Checked = true;
+                            location.Checked = true;
+                            activeLocation = true;
+                            this.NotifiyPropertyChanged("TreeViewItems");
+                        }
+                        else
+                        {
+                            time.Checked = false;
+                        }
                     }
                 }
 
-                // If not, then we also need to add the Location to the treeview
-                if (!locationExists)
+                // If this location, nor any of its children
+                // were selected, then make sure it is not highlighted.
+                if (!activeLocation)
                 {
-                    // Add it to the TreeView on the UI
-                    MenuItem root = new MenuItem() { Title = newLayer.Location };
-                    root.Items.Add(new MenuItem() { Title = newLayer.Time.ToShortDateString() });
-                    this.TreeViewItems.Add(root);
-                    UpdateCurrentLocation(root);
+                    location.Checked = false;
                 }
-
-                // Open the new layer
-                this.LoadKml(newLayer.FilePath, true, true);
             }
-
-            Debug.WriteLine("Location: " + newLayer.Location);
-            Debug.WriteLine("Time: " + newLayer.Time);
-            Debug.WriteLine("File Path: " + newLayer.FilePath);
         }
 
         /// <summary>
@@ -513,13 +521,13 @@ namespace AerialMapping
             // Update the current location.
             // First, check to see if the current location still exists.
             bool locationStillExists = false;
-            foreach (MenuItem location in treeViewItems)
+            foreach (MenuItem location in this.treeViewItems)
             {
-                if (currentLocation.Title == location.Title)
+                if (this.currentLocation.Title == location.Title)
                 {
                     // The location still exists, so update it
                     // in case any DateTimes were removed from it.
-                    UpdateCurrentLocation(location);
+                    this.UpdateCurrentLocation(location);
                     locationStillExists = true;
                     break;
                 }
@@ -528,7 +536,7 @@ namespace AerialMapping
             // Or, if the location does not exist, then default to the first one.
             if (!locationStillExists)
             {
-                currentLocation = treeViewItems.FirstOrDefault();
+                this.currentLocation = this.treeViewItems.FirstOrDefault();
             }
         }
 
@@ -537,12 +545,12 @@ namespace AerialMapping
         /// </summary>
         private void TimeSliderChanged()
         {
-            Debug.WriteLine("Time slider value: " + TimeSliderValue);
+            Debug.WriteLine("Time slider value: " + this.TimeSliderValue);
 
             // Get all of the times for the current Location
-            List<MenuItem> currentLocationItems = currentLocation.Items.ToList();
+            List<MenuItem> currentLocationItems = this.currentLocation.Items.ToList();
 
-            if (TimeSliderValue == 0)
+            if (this.TimeSliderValue == 0)
             {
                 this.TimeSliderToolTip = "GIS Data Only";
 
@@ -554,7 +562,7 @@ namespace AerialMapping
             else
             {
                 // Update the slider tooltip
-                this.TimeSliderToolTip = currentLocationItems[TimeSliderValue - 1].Title;
+                this.TimeSliderToolTip = currentLocationItems[this.TimeSliderValue - 1].Title;
 
                 // Set the selected time to visible and the rest to invisible.
                 for (int i = 0; i < currentLocationItems.Count; i++)
@@ -562,7 +570,7 @@ namespace AerialMapping
                     Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
                     if (currentLayer != null)
                     {
-                        if (i == TimeSliderValue - 1)
+                        if (i == this.TimeSliderValue - 1)
                         {
                             currentLayer.IsVisible = true;
                         }
@@ -571,59 +579,61 @@ namespace AerialMapping
                             currentLayer.IsVisible = false;
                         }
                     }
-
                 }
             }
         }
 
-        public void UpdateSelectedItem(MenuItem newlySelectedItem)
+        /// <summary>
+        /// Update the currentLocation object in order to setup the
+        /// time slider for the images of the selected location.
+        /// </summary>
+        /// <param name="newLocation">New location value for currentLocation.</param>
+        private void UpdateCurrentLocation(MenuItem newLocation)
         {
-            List<MenuItem> treeViewItemList = TreeViewItems.ToList();
+            this.currentLocation = newLocation;
+            this.TimeSliderMax = this.currentLocation.Items.Count;
+            this.TimeSliderValue = 1;
+        }
 
-            // Iterate through each location.
-            foreach (MenuItem location in treeViewItemList)
+        /// <summary>
+        /// Update the currentLocation object in order to setup the
+        /// time slider for the images of the selected location.
+        /// </summary>
+        /// <param name="newLocation">New location value for currentLocation.</param>
+        /// <param name="childToSelect">Child image for the location that should be visible.</param>
+        private void UpdateCurrentLocation(MenuItem newLocation, MenuItem childToSelect)
+        {
+            this.currentLocation = newLocation;
+            this.TimeSliderMax = this.currentLocation.Items.Count;
+
+            // Set the TimeSlider to show the newly added child on the map
+            bool foundChild = false;
+            for (int i = 0; i < newLocation.Items.Count; i++)
             {
-                bool activeLocation = false;
+                if (newLocation.Items[i].Title == childToSelect.Title)
+                {
+                    this.TimeSliderValue = i + 1;
+                    foundChild = true;
+                    break;
+                }
+            }
 
-                // First, check to see if the user clicked a location
-                if (location.Equals(newlySelectedItem))
-                {
-                    // If so, then select its first child
-                    UpdateCurrentLocation(location);
-                    location.Items.First().Checked = true;
-                    location.Checked = true;
-                    activeLocation = true;
-                    this.NotifiyPropertyChanged("TreeViewItems");
-                }
-                // Else, iterate through this location's children to see if
-                // one of them was selected.
-                else
-                {
-                    foreach (MenuItem time in location.Items)
-                    {
-                        // If this child was the selected item,
-                        // then set it as the active image.
-                        if (time.Equals(newlySelectedItem))
-                        {
-                            UpdateCurrentLocation(location, time);
-                            time.Checked = true;
-                            location.Checked = true;
-                            activeLocation = true;
-                            this.NotifiyPropertyChanged("TreeViewItems");
-                        }
-                        else
-                        {
-                            time.Checked = false;
-                        }
-                    }
-                }
+            // Default value just in case.
+            if (!foundChild)
+            {
+                this.TimeSliderValue = 1;
+            }
+        }
 
-                // If this location, nor any of its children
-                // were selected, then make sure it is not highlighted.
-                if (!activeLocation)
-                {
-                    location.Checked = false;
-                }
+        /// <summary>
+        /// INotifyPropertyChanged method for updating the UI.
+        /// </summary>
+        /// <param name="property">Name of the UI element to update.</param>
+        private void NotifiyPropertyChanged(string property)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
         }
     }

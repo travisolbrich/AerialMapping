@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="DelegateCommand.cs" company="CSCE 482: Aerial Mapping">
+// <copyright file="Dataset.cs" company="CSCE 482: Aerial Mapping">
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------

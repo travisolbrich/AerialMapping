@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Window1.xaml.cs" company="CSCE 482: Aerial Mapping">
+// <copyright file="RemoveLayers.xaml.cs" company="CSCE 482: Aerial Mapping">
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
@@ -10,12 +10,16 @@ namespace AerialMapping
     using System.Windows;
     using System.Windows.Input;
 
+    /// <summary>
+    /// The Code Behind for the RemoveLayers Window.
+    /// </summary>
     public partial class RemoveLayers : Window
     {
         private RemoveLayersViewModel root;
 
         /// <summary>
-        /// Constructor - takes the viewModels and sets up
+        /// Initializes a new instance of the RemoveLayers class.
+        /// Takes the viewModels and sets up
         /// the treeview for the window.
         /// </summary>
         /// <param name="viewModels">Data for the treeview.</param>
@@ -45,6 +49,9 @@ namespace AerialMapping
             this.tree.Focus();
         }
 
+        /// <summary>
+        /// Gets or sets the root element of the tree structure.
+        /// </summary>
         public RemoveLayersViewModel Root
         {
             get;
@@ -90,12 +97,10 @@ namespace AerialMapping
                         t = new MenuItem(time.Name, time.FilePath, false);
                     }
 
-                    loc.Items.Add(t);
-                    
+                    loc.Items.Add(t);                    
                 }
 
-                locationsToKeep.Add(loc);
-                
+                locationsToKeep.Add(loc);                
             }
 
             return locationsToKeep;
