@@ -428,7 +428,7 @@ namespace AerialMapping
         /// </summary>
         /// <param name="newlySelectedItem">The new images selected by 
         /// the user to show on the map.</param>
-        public void UpdateSelectedItem(MenuItem newlySelectedItem)
+        public void UpdateSelectedItem(MenuItem newlySelectedItem, bool updateLocation = true)
         {
             List<MenuItem> treeViewItemList = this.TreeViewItems.ToList();
 
@@ -441,7 +441,10 @@ namespace AerialMapping
                 if (location.Equals(newlySelectedItem))
                 {
                     // If so, then select its first child
-                    this.UpdateCurrentLocation(location);
+                    if (updateLocation)
+                    {
+                        this.UpdateCurrentLocation(location);
+                    }                    
                     location.Items.First().Checked = true;
                     location.Checked = true;
                     activeLocation = true;
@@ -457,7 +460,10 @@ namespace AerialMapping
                         // then set it as the active image.
                         if (time.Equals(newlySelectedItem))
                         {
-                            this.UpdateCurrentLocation(location, time);
+                            if (updateLocation)
+                            {
+                                this.UpdateCurrentLocation(location, time);
+                            }                            
                             time.Checked = true;
                             location.Checked = true;
                             activeLocation = true;
@@ -558,6 +564,9 @@ namespace AerialMapping
                 {
                     Map.Layers[currentLocationItems[i].FilePath].IsVisible = false;
                 }
+
+                // Not sure if this is needed.
+                //this.UpdateSelectedItem(this.currentLocation);
             }
             else
             {
@@ -580,6 +589,8 @@ namespace AerialMapping
                         }
                     }
                 }
+
+                this.UpdateSelectedItem(currentLocationItems[this.TimeSliderValue - 1], false);
             }
         }
 
