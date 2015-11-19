@@ -64,8 +64,7 @@ namespace AerialMapping
             }
 
             // Backup to manually set up layers in case Layers.json is empty
-            //if (layers == null)
-            if (true)
+            if (layers == null)
             {
                 MenuItem root = new MenuItem()
                 { 
@@ -79,16 +78,16 @@ namespace AerialMapping
                     FilePath = "../../../../Data/SampleOne/TestData.kml",
                     Checked = true
                 });
-                root.Items.Add(new MenuItem()
-                {
-                    Title = "02-01-2015",
-                    FilePath = "../../../../Data/SampleOne/TestData2.kmz"
-                });
+                //root.Items.Add(new MenuItem()
+                //{
+                //    Title = "02-01-2015",
+                //    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                //});
                 
                 this.TreeViewItems.Add(root);
 
                 this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-                this.LoadKml("../../../../Data/SampleOne/TestData2.kmz", true, true);
+                //this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
 
                 // This needs to be after the initial KML load in order for the timeslider
                 // logic to update properly based off of the initial layers.
