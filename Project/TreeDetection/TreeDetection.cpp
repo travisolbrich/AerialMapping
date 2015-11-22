@@ -1,6 +1,8 @@
 // This is the main DLL file.
-
 #include "stdafx.h"
+#ifdef RunPerformanceTest
+#include <windows.h>
+#endif
 
 #include "TreeDetection.h"
 
@@ -12,15 +14,66 @@
 #include <iostream>
 #include <stdio.h>
 #include <map>
+#include <fstream>
 
 using namespace std;
 using namespace cv;
 
-void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyImage, bool bDoNaive = false );
+void GetEntropyImage( const Mat *graySrc, int neighborhoodSize, Mat *entropyImage, bool bDoNaive = false );
 
 vector<float> EntropyFunctionCache;
 
 int CacheBaseSize = -1;
+
+#ifdef RunPerformanceTest
+/*
+This is the function can be used to a run a performacne test on
+the algorithim
+
+Inputs
+======
+gridSize - size of the square grid to be generated in with testing
+bUseNaive - toggles using naive algorithim or the optimized one
+
+Output
+======
+ReturnValue - returns the microseconds it took to execute the test
+*/
+LONGLONG PerfTest(unsigned int gridSize, bool bUseNaive )
+{
+  LARGE_INTEGER startTime,
+                endTime,
+                elapsedMicroseconds,
+                tickFreq;
+
+  Mat testMat = Mat::zeros( gridSize, gridSize, CV_8U ),
+      result;
+
+  //
+  // Want the same matrix for each grid size for reproduceability
+  //
+  srand( 0 );
+
+  for( int x = 0; x < gridSize; x++ )
+  {
+    for( int y = 0; y < gridSize; y++ )
+    {
+      testMat.at<uchar>( y, x ) = rand() % 256;
+    }
+  }
+  QueryPerformanceFrequency( &tickFreq );
+
+  QueryPerformanceCounter( &startTime );
+  GetEntropyImage( &testMat, 9, &result, bUseNaive );
+  QueryPerformanceCounter( &endTime );
+
+  elapsedMicroseconds.QuadPart = endTime.QuadPart - startTime.QuadPart;
+  elapsedMicroseconds.QuadPart *= 1000000;
+  elapsedMicroseconds.QuadPart /= tickFreq.QuadPart;
+
+  return elapsedMicroseconds.QuadPart;
+}
+#endif
 
 /*
 This is the function to be called to enter the dll
@@ -34,6 +87,7 @@ Output
 */
 extern "C" _declspec( dllexport ) void Entry( const char *filepath )
 {
+#ifndef RunPerformanceTest
   Mat image = imread( filepath ),
       labImage,
       luminosityImage,
@@ -53,9 +107,21 @@ extern "C" _declspec( dllexport ) void Entry( const char *filepath )
   luminosityImage = channels[0];
 
   GetEntropyImage( &luminosityImage, 9, &result );
-
-
-  imwrite( outputPath, result );
+  imshow( "derp", result );
+#else
+  Code to test performance
+  int base = 1;
+  ofstream myfile;
+  myfile.open( "A:\perf.txt" );
+  while( base <= 128 )
+  {
+    LONGLONG resultOpt = PerfTest( base, false );
+    LONGLONG resultNaive = PerfTest( base, true );
+    myfile << base << "," << resultNaive << "," << resultOpt << "\n";
+    base++;
+  }
+  myfile.close( );*/
+#endif
 }
 
 /*
@@ -70,7 +136,7 @@ Output
 ======
 Return Value - the value of the pixel at the specified location
 */
-int GetMatPixelVal( const Mat* src, uint x, uint y )
+int GetMatPixelVal( const Mat* src, int x, int y )
 {
   int val = src->at<uchar>( 
     borderInterpolate( y, src->rows, BORDER_REFLECT ),
@@ -133,7 +199,7 @@ Output
 ======
 entropyImage     - Contains a grayscale image representing the entropy of each pixel
 */
-void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyImage, bool bDoNaive )
+void GetEntropyImage( const Mat *graySrc, int neighborhoodSize, Mat *entropyImage, bool bDoNaive )
 {
   //
   // 256 comes from 0-255 aka the possible values for a pixel in a grayscale image
@@ -169,11 +235,23 @@ void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyIma
   //
   for( int y = 0; y < graySrc->rows; y++ )
   {
+    if( !bDoNaive )
+    {
+      //
+      // If we are not in naive mode we need to manually reset the value of the different buckets
+      // when we move from on row to the next
+      //
+      memset( buckets, 0, sizeof( buckets ) );
+    }
     for( int x = 0; x < graySrc->cols; x++ )
     {
-      if( bDoNaive || true )
+      summation = 0;
+      if( bDoNaive || x == 0 )
       {
-        summation = 0;
+        //
+        // This gets the entropy value for all surrounding pixels optimized version uses memoization to
+        // improve on this, but it needs to happen for the very first column for each row
+        //
         for( long q = y - neighborhoodSize / 2; q <= y + neighborhoodSize / 2; q++ )
         {
           for( long j = x - neighborhoodSize / 2; j <= x + neighborhoodSize / 2; j++ )
@@ -191,7 +269,18 @@ void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyIma
       }
       else
       {
-        throw "TODO";
+        long columnSub = x - neighborhoodSize / 2 - 1;
+        long columnAdd = x + neighborhoodSize / 2;
+        for( long q = y - neighborhoodSize / 2; q <= y + neighborhoodSize / 2; q++ )
+        {
+          lumionisity = GetMatPixelVal( graySrc, columnSub, q );
+          buckets[lumionisity]--;
+        }
+        for( long q = y - neighborhoodSize / 2; q <= y + neighborhoodSize / 2; q++ )
+        {
+          lumionisity = GetMatPixelVal( graySrc, columnAdd, q );
+          buckets[lumionisity]++;
+        }
       }
       for( int ndx = 0; ndx < NUMBER_OF_BUCKETS; ndx++ )
       {
@@ -210,10 +299,13 @@ void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyIma
           {
             summation -= entropyCalculation( buckets[ndx], ( neighborhoodSize * neighborhoodSize ) );
           }
-          //
-          // Reset the number of pixels that fall in this bucket for the future key pixels
-          //
-          buckets[ndx] = 0;
+          if( bDoNaive )
+          {
+            //
+            // Reset the number of pixels that fall in this bucket for the future key pixels
+            //
+            buckets[ndx] = 0;
+          }
         }
       }
       entropyMat.at<float>( y, x ) = summation;
@@ -224,5 +316,4 @@ void GetEntropyImage( const Mat *graySrc, uint neighborhoodSize, Mat *entropyIma
   // and the highest value is 255. This allows for display of images entropy.
   //
   normalize( entropyMat, *entropyImage, 0, 255, NORM_MINMAX, CV_8UC1 );
-  imshow( "Derp", *entropyImage );
 }
