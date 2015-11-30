@@ -72,6 +72,7 @@
       <DependentUpon>AddLocation.xaml</DependentUpon>
     </Compile>
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="TreeLineDetection.cs" />
     <Compile Include="FormattedSlider.cs" />
     <Compile Include="RemoveLayersViewModel.cs" />
     <Compile Include="MainViewModel.cs" />

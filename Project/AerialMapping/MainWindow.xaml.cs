@@ -317,19 +317,28 @@ namespace AerialMapping
             }
         }
 
+        /// <summary>
+        /// Button to update viwmodel of the selected items
+        /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="e">The event that triggered</param>
         private void LayerView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             mainViewModel.UpdateSelectedItem((MenuItem)e.NewValue);
         }
 
-
-        [DllImport("TreeDetection.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void Entry(string s);
+        /// <summary>
+        /// Runs tree analytics on seperate thread
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event</param>
         private void TreeButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog file = new OpenFileDialog();
+            file.Filter = "Map Data|*.kml;*.kmz";
             file.ShowDialog();
-            Entry(file.FileName);
+            TreeLineDetection temp = new TreeLineDetection();
+            Task.Run(() => temp.ConvertFolder((new FileInfo(file.FileName)).DirectoryName, this));
         }
 
     }

@@ -217,3 +217,5 @@ FakesAssemblies/
 _Pvt_Extensions
 /Project/AerialMapping/Window1.xaml.cs
 /Project/AerialMapping/RemoveLayerViewModel.cs
+*_treedetection
+*Layers.json
