@@ -69,7 +69,7 @@ namespace AerialMapping
             openFileDialog.Filter = "Map Data|*.kml;*.kmz";
             if (openFileDialog.ShowDialog() == true)
             {
-                FilePathInput.Text = "../../../../Data/SampleOne/" + openFileDialog.SafeFileName;
+                FilePathInput.Text = openFileDialog.FileName;
             }
         }
 
