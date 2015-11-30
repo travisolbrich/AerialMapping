@@ -366,8 +366,8 @@ namespace AerialMapping
                 if (!locationExists)
                 {
                     // Add it to the TreeView on the UI
-                    MenuItem root = new MenuItem() { Title = newLayer.Location };
-                    root.Items.Add(new MenuItem() { Title = newLayer.Time.ToShortDateString() });
+                    MenuItem root = new MenuItem(newLayer.Location, newLayer.FilePath);
+                    root.Items.Add(new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath));
                     this.TreeViewItems.Add(root);
                     this.UpdateCurrentLocation(root);
                 }
