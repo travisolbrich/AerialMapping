@@ -45,7 +45,7 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Gets or sets the zoomTo value.
+        /// Gets or sets a value indicating whether to zoom to this image.
         /// </summary>
         public bool ZoomTo
         {

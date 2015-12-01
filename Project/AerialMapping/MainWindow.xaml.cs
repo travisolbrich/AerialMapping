@@ -40,7 +40,7 @@ namespace AerialMapping
         public double kmzZoomDelaySec = 3;
         private double currAngle = 0;
         private Viewpoint centerPoint;
-        KmlLayer kmllayerTest;
+        
         private List<Dataset> datasetList;
         
         public MainViewModel mainViewModel;
@@ -256,28 +256,15 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// The following is for the time slider.
-        /// </summary>
-        /// <param name="sender">Time Slider</param>
-        /// <param name="e">Time Slider changed event args</param>
-        private void bTimeSlider_Click(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            // this is for testing only.
-            if (e.NewValue == 3) mainViewModel.MapView.Map.Layers.Add(kmllayerTest);
-            else if (e.NewValue == 2) mainViewModel.MapView.Map.Layers.Remove(kmllayerTest);
-            // m_MapView.Map.Layers.Move(layerVectorThing[e.NewValue], 0);
-        }
-
-        /// <summary>
         /// This will update the time slider with new range and tick marks
         /// </summary>
         /// <param name="numLayers">Number of ticks</param>
         /// <param name="currLayer">Which tick to be on</param>
-        private void updateTimeSlider(int numLayers, int currLayer)
-        {
-            bTimeSlider.Maximum = numLayers - 1;
-            bTimeSlider.Value = currLayer;
-        }
+        //private void updateTimeSlider(int numLayers, int currLayer)
+        //{
+        //    bTimeSlider.Maximum = numLayers - 1;
+        //    bTimeSlider.Value = currLayer;
+        //}
 
         /// <summary>
         /// Callback for button to center the view.
