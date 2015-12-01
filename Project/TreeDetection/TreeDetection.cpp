@@ -85,7 +85,7 @@ FilePath - The file for the entropy function to be calculated on
 Output
 ======
 */
-extern "C" _declspec( dllexport ) void Entry( const char *filepath )
+extern "C" _declspec( dllexport ) void Entry( const char *filepath, const char *outputpath )
 {
 #ifndef RunPerformanceTest
   Mat image = imread( filepath ),
@@ -94,9 +94,6 @@ extern "C" _declspec( dllexport ) void Entry( const char *filepath )
       result;
 
   std::vector<cv::Mat> channels;
-
-  string outputPath = filepath;
-  outputPath = "entropy_" + outputPath;
 
   //
   // Converts image from RGB to LAB color space, dropping the A and B channels,
@@ -107,7 +104,7 @@ extern "C" _declspec( dllexport ) void Entry( const char *filepath )
   luminosityImage = channels[0];
 
   GetEntropyImage( &luminosityImage, 9, &result );
-  imshow( "derp", result );
+  imwrite(outputpath, result);
 #else
   Code to test performance
   int base = 1;

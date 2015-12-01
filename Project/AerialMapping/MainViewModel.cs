@@ -78,16 +78,16 @@ namespace AerialMapping
                     FilePath = "../../../../Data/SampleOne/TestData.kml",
                     Checked = true
                 });
-                //root.Items.Add(new MenuItem()
-                //{
-                //    Title = "02-01-2015",
-                //    FilePath = "../../../../Data/SampleOne/TestData.kml"
-                //});
+                /*root.Items.Add(new MenuItem()
+                {
+                    Title = "02-01-2015",
+                    FilePath = "../../../../Data/SampleOne/TestData.kml"
+                });*/
                 
                 this.TreeViewItems.Add(root);
 
                 this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-                //this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
+                ////this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
 
                 // This needs to be after the initial KML load in order for the timeslider
                 // logic to update properly based off of the initial layers.
@@ -460,8 +460,6 @@ namespace AerialMapping
                 KmlLayer kmllayer = new KmlLayer(dataPath);
                 kmllayer.ID = path;
                 this.idToZoomOn = zoomTo ? path : string.Empty;
-
-                //this.MapView.Map.Layers.Add(kmllayer);
                 Map.Layers.Add(kmllayer);
                 this.kmllayerTest = kmllayer;
             }
@@ -491,6 +489,8 @@ namespace AerialMapping
         /// </summary>
         /// <param name="newlySelectedItem">The new images selected by 
         /// the user to show on the map.</param>
+        /// <param name="updateLocation">Flag to determine if we should set this location as the current
+        /// location active on the time bar.</param>
         public void UpdateSelectedItem(MenuItem newlySelectedItem, bool updateLocation = true)
         {
             List<MenuItem> treeViewItemList = this.TreeViewItems.ToList();
@@ -507,7 +507,8 @@ namespace AerialMapping
                     if (updateLocation)
                     {
                         this.UpdateCurrentLocation(location);
-                    }                    
+                    }
+
                     location.Items.First().Checked = true;
                     location.Checked = true;
                     activeLocation = true;
@@ -526,7 +527,8 @@ namespace AerialMapping
                             if (updateLocation)
                             {
                                 this.UpdateCurrentLocation(location, time);
-                            }                            
+                            }
+
                             time.Checked = true;
                             location.Checked = true;
                             activeLocation = true;

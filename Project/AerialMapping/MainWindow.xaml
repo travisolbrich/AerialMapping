@@ -21,7 +21,7 @@
                       LayerLoaded="BaseMapView_LayerLoaded"
                       
                       Map="{Binding IncidentMap}">
- 
+
         </esri:MapView>
         <DockPanel>
             <Menu x:Name="Menu_Bar" DockPanel.Dock="Top">
@@ -73,7 +73,7 @@
                 Orientation="Vertical" Minimum="0" 
                 Maximum="100" ValueChanged="bZoomSlider_Click"
                 IsDirectionReversed="True"/>
-        
+
         <!--Time Slider-->
         <local:FormattedSlider x:Name="bTimeSlider" HorizontalAlignment="Center" 
                 Margin="0,0,0,10" VerticalAlignment="Bottom" 
@@ -116,13 +116,13 @@
                     </Button.Template>
                 </Button>
             </Grid>
-            
+
             <!--Main Panel of the Side Menu-->
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="250" Background="#4C808080" >
                 <StackPanel VerticalAlignment="Top">
                     <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="210" ItemsSource="{Binding TreeViewItems}" 
                               SelectedItemChanged="LayerView_SelectedItemChanged" Margin="0,10,0,0" VerticalAlignment="Top" Width="200">
-                        
+
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
                                 <TextBlock Text="{Binding Title}" >
@@ -134,7 +134,7 @@
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                        
+
                                     </TextBlock.Style>
                                 </TextBlock>
                             </HierarchicalDataTemplate>
@@ -146,6 +146,16 @@
                 </StackPanel>
             </Border>
         </StackPanel>
+        <ProgressBar x:Name="ProgBarDetection" HorizontalAlignment="Left" Height="29" Margin="32,79,0,0" VerticalAlignment="Top" Width="465" RenderTransformOrigin="0.5,0.5" BorderThickness="3" Visibility="Hidden">
+            <ProgressBar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="-1"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </ProgressBar.RenderTransform>
+        </ProgressBar>
 
     </Grid>
 </Window>
