@@ -350,7 +350,7 @@ namespace AerialMapping
                     // If so, then add the new layer as a child of that Location
                     if (location.Title == newLayer.Location)
                     {
-                        MenuItem newChild = new MenuItem(newLayer.Time.ToShortDateString(), newLayer.FilePath);
+                        MenuItem newChild = new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath);
                         location.Items.Add(newChild);
 
                         // Sort the children based on time
@@ -379,6 +379,70 @@ namespace AerialMapping
             Debug.WriteLine("Location: " + newLayer.Location);
             Debug.WriteLine("Time: " + newLayer.Time);
             Debug.WriteLine("File Path: " + newLayer.FilePath);
+        }
+
+        /// <summary>
+        /// Adds a layer to the map and treeview.
+        /// </summary>
+        /// <param name="location">The location where the image was taken.</param>
+        /// <param name="dateAndTime">The date and time the image was taken.</param>
+        /// <param name="filePath">The file path to the image.</param>
+        /// <param name="zoomTo">Bool whether to zoom/pan to the image.</param>
+        public void AddLayer(string location, string dateAndTime, string filePath, bool zoomTo)
+        {
+            // Generate list of location names.
+            ObservableCollection<string> locations = new ObservableCollection<string>();
+            foreach (MenuItem item in this.treeViewItems)
+            {
+                locations.Add(item.Title);
+            }
+
+            // Build the dataset for the new layer.
+            Dataset newLayer = new Dataset()
+            {
+                Location = location,
+                Time = Convert.ToDateTime(dateAndTime),
+                FilePath = filePath
+            };
+
+            if (!string.IsNullOrEmpty(newLayer.FilePath))
+            {
+                // Save the new dataset
+                this.datasetList.Add(newLayer);
+
+                // See if the Location already exists
+                bool locationExists = false;
+
+                foreach (MenuItem loc in this.TreeViewItems)
+                {
+                    // If so, then add the new layer as a child of that Location
+                    if (loc.Title == newLayer.Location)
+                    {
+                        MenuItem newChild = new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath);
+                        loc.Items.Add(newChild);
+
+                        // Sort the children based on time
+                        loc.Items = new ObservableCollection<MenuItem>(loc.Items.OrderBy(time => time.Title).ToList());
+
+                        this.UpdateCurrentLocation(loc, newChild);
+                        locationExists = true;
+                        break;
+                    }
+                }
+
+                // If not, then we also need to add the Location to the treeview
+                if (!locationExists)
+                {
+                    // Add it to the TreeView on the UI
+                    MenuItem root = new MenuItem(newLayer.Location, newLayer.FilePath);
+                    root.Items.Add(new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath));
+                    this.TreeViewItems.Add(root);
+                    this.UpdateCurrentLocation(root);
+                }
+
+                // Open the new layer
+                this.LoadKml(newLayer.FilePath, zoomTo, false);
+            }
         }
 
         /// <summary>
