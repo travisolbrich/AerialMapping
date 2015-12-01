@@ -90,6 +90,8 @@ namespace AerialMapping
 
             this.DatasetToAdd.FilePath = FilePathInput.Text;
 
+            this.DatasetToAdd.ZoomTo = ZoomTo.IsChecked.GetValueOrDefault();
+
             // Close this window.
             this.Hide();
         }

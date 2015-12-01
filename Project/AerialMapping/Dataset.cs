@@ -43,5 +43,14 @@ namespace AerialMapping
             get; 
             set; 
         }
+
+        /// <summary>
+        /// Gets or sets the zoomTo value.
+        /// </summary>
+        public bool ZoomTo
+        {
+            get; 
+            set;
+        }
     }
 }
