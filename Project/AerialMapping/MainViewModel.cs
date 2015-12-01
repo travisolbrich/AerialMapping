@@ -64,36 +64,7 @@ namespace AerialMapping
             }
 
             // Backup to manually set up layers in case Layers.json is empty
-            if (layers == null)
-            {
-                MenuItem root = new MenuItem()
-                { 
-                    Title = "Test Location",
-                    FilePath = "../../../../Data/SampleOne/TestData.kml",
-                    Checked = true
-                };
-                root.Items.Add(new MenuItem()
-                { 
-                    Title = "01-01-2015",
-                    FilePath = "../../../../Data/SampleOne/TestData.kml",
-                    Checked = true
-                });
-                /*root.Items.Add(new MenuItem()
-                {
-                    Title = "02-01-2015",
-                    FilePath = "../../../../Data/SampleOne/TestData.kml"
-                });*/
-                
-                this.TreeViewItems.Add(root);
-
-                this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-                ////this.LoadKml("../../../../Data/SampleOne/TestData.kml", true, true);
-
-                // This needs to be after the initial KML load in order for the timeslider
-                // logic to update properly based off of the initial layers.
-                this.UpdateCurrentLocation(root);
-            }
-            else
+            if (layers != null)
             {
                 // Create MenuItems for all locations
                 List<MenuItem> locations = new List<MenuItem>();
