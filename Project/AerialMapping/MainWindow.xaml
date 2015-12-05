@@ -81,8 +81,8 @@
                             <Rectangle VerticalAlignment="Top" Height="10" Margin="7,2,7,1" RadiusX="10" RadiusY="10">
                                 <Rectangle.Fill>
                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#11FFFFFF" Offset="1"/>
-                                        <GradientStop Color="#B2FFFFFF" Offset="0"/>
+                                        <GradientStop Color="#08FFFFFF" Offset="1"/>
+                                        <GradientStop Color="#88FFFFFF" Offset="0"/>
                                     </LinearGradientBrush>
                                 </Rectangle.Fill>
                             </Rectangle>
@@ -198,7 +198,8 @@
                                 <Ellipse Stroke="#323232" StrokeThickness="2">
                                     <Ellipse.Fill>
                                         <RadialGradientBrush>
-                                            <GradientStop Offset="0" Color="#7ba9fe" />
+                                            <!--<GradientStop Offset="0" Color="#7ba9fe" />-->
+                                            <GradientStop Offset="0" Color="#6298FE" />
                                         </RadialGradientBrush>
                                     </Ellipse.Fill>
                                 </Ellipse>
@@ -460,7 +461,8 @@
                                         <Style TargetType="{x:Type TextBlock}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Checked}" Value="True">
-                                                        <Setter Property="Background" Value="#7ba9fe" />
+                                                        <!--<Setter Property="Background" Value="#7ba9fe" />-->
+                                                        <Setter Property="Background" Value="#6298FE" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
