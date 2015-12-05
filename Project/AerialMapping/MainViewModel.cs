@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Linq.Expressions;
+
 namespace AerialMapping
 {
     using System;
@@ -490,9 +492,16 @@ namespace AerialMapping
         /// <param name="item">The MenuItem item</param>
         public void UnloadKML(MenuItem item)
         {
-            if (!this.MapView.Map.Layers.Remove(item.FilePath))
+            try
             {
-                Debug.WriteLine("Failed to remove layer with filepath: " + item.FilePath); 
+                if (!this.MapView.Map.Layers.Remove(item.FilePath))
+                {
+                    Debug.WriteLine("Failed to remove layer with filepath: " + item.FilePath);
+                }
+            }
+            catch (NullReferenceException)
+            {
+                Debug.WriteLine("Map did not contain a layer with id: " + item.FilePath);
             }
         }
 
@@ -518,6 +527,14 @@ namespace AerialMapping
                 // First, check to see if the user clicked a location
                 if (location.Equals(newlySelectedItem))
                 {
+                    // Failed attempt at panning on click
+                    //Layer selectedLayer = this.Map.Layers[location.Items.First().FilePath];
+                    //this.MapView.SetView(selectedLayer.FullExtent.GetCenter());
+
+                    // Very Ghetto way to pan to the selected image.
+                    UnloadKML(location.Items.First());
+                    LoadKml(location.Items.First().FilePath, true, true);
+
                     // If so, then select its first child
                     if (updateLocation)
                     {
@@ -543,6 +560,10 @@ namespace AerialMapping
                             {
                                 this.UpdateCurrentLocation(location, time);
                             }
+
+                            // Very Ghetto way to pan to the selected image.
+                            UnloadKML(time);
+                            LoadKml(time.FilePath, true, true);
 
                             time.Checked = true;
                             location.Checked = true;
