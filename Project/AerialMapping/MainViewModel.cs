@@ -330,6 +330,10 @@ namespace AerialMapping
 
             if (!string.IsNullOrEmpty(newLayer.FilePath))
             {
+                // TODO - somewhere around here execute the code to do the tree analysis on the new image
+                // Presently, this will not require a change in the treeview, so the new image can go straight
+                // to LoadKML()
+
                 // Save the new dataset
                 this.datasetList.Add(newLayer);
 
@@ -341,7 +345,7 @@ namespace AerialMapping
                     // If so, then add the new layer as a child of that Location
                     if (location.Title == newLayer.Location)
                     {
-                        MenuItem newChild = new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath);
+                        MenuItem newChild = new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath, location.TreeCanopyFilePath);
                         location.Items.Add(newChild);
 
                         // Sort the children based on time
@@ -357,8 +361,8 @@ namespace AerialMapping
                 if (!locationExists)
                 {
                     // Add it to the TreeView on the UI
-                    MenuItem root = new MenuItem(newLayer.Location, newLayer.FilePath);
-                    root.Items.Add(new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath));
+                    MenuItem root = new MenuItem(newLayer.Location, newLayer.FilePath, newLayer.TreeCanopyFilePath);
+                    root.Items.Add(new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath, newLayer.TreeCanopyFilePath));
                     this.TreeViewItems.Add(root);
                     this.UpdateCurrentLocation(root);
                 }
@@ -372,69 +376,69 @@ namespace AerialMapping
             Debug.WriteLine("File Path: " + newLayer.FilePath);
         }
 
-        /// <summary>
-        /// Adds a layer to the map and treeview.
-        /// </summary>
-        /// <param name="location">The location where the image was taken.</param>
-        /// <param name="dateAndTime">The date and time the image was taken.</param>
-        /// <param name="filePath">The file path to the image.</param>
-        /// <param name="zoomTo">Bool whether to zoom/pan to the image.</param>
-        public void AddLayer(string location, string dateAndTime, string filePath, bool zoomTo)
-        {
-            // Generate list of location names.
-            ObservableCollection<string> locations = new ObservableCollection<string>();
-            foreach (MenuItem item in this.treeViewItems)
-            {
-                locations.Add(item.Title);
-            }
+        ///// <summary>
+        ///// Adds a layer to the map and treeview.
+        ///// </summary>
+        ///// <param name="location">The location where the image was taken.</param>
+        ///// <param name="dateAndTime">The date and time the image was taken.</param>
+        ///// <param name="filePath">The file path to the image.</param>
+        ///// <param name="zoomTo">Bool whether to zoom/pan to the image.</param>
+        //public void AddLayer(string location, string dateAndTime, string filePath, bool zoomTo)
+        //{
+        //    // Generate list of location names.
+        //    ObservableCollection<string> locations = new ObservableCollection<string>();
+        //    foreach (MenuItem item in this.treeViewItems)
+        //    {
+        //        locations.Add(item.Title);
+        //    }
 
-            // Build the dataset for the new layer.
-            Dataset newLayer = new Dataset()
-            {
-                Location = location,
-                Time = Convert.ToDateTime(dateAndTime),
-                FilePath = filePath
-            };
+        //    // Build the dataset for the new layer.
+        //    Dataset newLayer = new Dataset()
+        //    {
+        //        Location = location,
+        //        Time = Convert.ToDateTime(dateAndTime),
+        //        FilePath = filePath
+        //    };
 
-            if (!string.IsNullOrEmpty(newLayer.FilePath))
-            {
-                // Save the new dataset
-                this.datasetList.Add(newLayer);
+        //    if (!string.IsNullOrEmpty(newLayer.FilePath))
+        //    {
+        //        // Save the new dataset
+        //        this.datasetList.Add(newLayer);
 
-                // See if the Location already exists
-                bool locationExists = false;
+        //        // See if the Location already exists
+        //        bool locationExists = false;
 
-                foreach (MenuItem loc in this.TreeViewItems)
-                {
-                    // If so, then add the new layer as a child of that Location
-                    if (loc.Title == newLayer.Location)
-                    {
-                        MenuItem newChild = new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath);
-                        loc.Items.Add(newChild);
+        //        foreach (MenuItem loc in this.TreeViewItems)
+        //        {
+        //            // If so, then add the new layer as a child of that Location
+        //            if (loc.Title == newLayer.Location)
+        //            {
+        //                MenuItem newChild = new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath, newLayer.TreeCanopyFilePath);
+        //                loc.Items.Add(newChild);
 
-                        // Sort the children based on time
-                        loc.Items = new ObservableCollection<MenuItem>(loc.Items.OrderBy(time => time.Title).ToList());
+        //                // Sort the children based on time
+        //                loc.Items = new ObservableCollection<MenuItem>(loc.Items.OrderBy(time => time.Title).ToList());
 
-                        this.UpdateCurrentLocation(loc, newChild);
-                        locationExists = true;
-                        break;
-                    }
-                }
+        //                this.UpdateCurrentLocation(loc, newChild);
+        //                locationExists = true;
+        //                break;
+        //            }
+        //        }
 
-                // If not, then we also need to add the Location to the treeview
-                if (!locationExists)
-                {
-                    // Add it to the TreeView on the UI
-                    MenuItem root = new MenuItem(newLayer.Location, newLayer.FilePath);
-                    root.Items.Add(new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath));
-                    this.TreeViewItems.Add(root);
-                    this.UpdateCurrentLocation(root);
-                }
+        //        // If not, then we also need to add the Location to the treeview
+        //        if (!locationExists)
+        //        {
+        //            // Add it to the TreeView on the UI
+        //            MenuItem root = new MenuItem(newLayer.Location, newLayer.FilePath, newLayer.TreeCanopyFilePath);
+        //            root.Items.Add(new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath, newLayer.TreeCanopyFilePath));
+        //            this.TreeViewItems.Add(root);
+        //            this.UpdateCurrentLocation(root);
+        //        }
 
-                // Open the new layer
-                this.LoadKml(newLayer.FilePath, zoomTo, false);
-            }
-        }
+        //        // Open the new layer
+        //        this.LoadKml(newLayer.FilePath, zoomTo, false);
+        //    }
+        //}
 
         /// <summary>
         /// Gets the current location for the selected layer.
@@ -490,18 +494,18 @@ namespace AerialMapping
         /// Unloads a KML layer based on the file path in the MenuItem.
         /// </summary>
         /// <param name="item">The MenuItem item</param>
-        public void UnloadKML(MenuItem item)
+        public void UnloadKML(string filePath)
         {
             try
             {
-                if (!this.MapView.Map.Layers.Remove(item.FilePath))
+                if (!this.MapView.Map.Layers.Remove(filePath))
                 {
-                    Debug.WriteLine("Failed to remove layer with filepath: " + item.FilePath);
+                    Debug.WriteLine("Failed to remove layer with filepath: " + filePath);
                 }
             }
             catch (NullReferenceException)
             {
-                Debug.WriteLine("Map did not contain a layer with id: " + item.FilePath);
+                Debug.WriteLine("Map did not contain a layer with id: " + filePath);
             }
         }
 
@@ -532,8 +536,16 @@ namespace AerialMapping
                     //this.MapView.SetView(selectedLayer.FullExtent.GetCenter());
 
                     // Very Ghetto way to pan to the selected image.
-                    UnloadKML(location.Items.First());
-                    LoadKml(location.Items.First().FilePath, true, true);
+                    if (ViewTreeAnalytics)
+                    {
+                        UnloadKML(location.Items.First().TreeCanopyFilePath);
+                        LoadKml(location.Items.First().TreeCanopyFilePath, true, true);
+                    }
+                    else
+                    {
+                        UnloadKML(location.Items.First().FilePath);
+                        LoadKml(location.Items.First().FilePath, true, true);
+                    }
 
                     // If so, then select its first child
                     if (updateLocation)
@@ -562,8 +574,16 @@ namespace AerialMapping
                             }
 
                             // Very Ghetto way to pan to the selected image.
-                            UnloadKML(time);
-                            LoadKml(time.FilePath, true, true);
+                            if (ViewTreeAnalytics)
+                            {
+                                UnloadKML(time.TreeCanopyFilePath);
+                                LoadKml(time.TreeCanopyFilePath, true, true);
+                            }
+                            else
+                            {
+                                UnloadKML(time.FilePath);
+                                LoadKml(time.FilePath, true, true);
+                            }
 
                             time.Checked = true;
                             location.Checked = true;
@@ -607,7 +627,8 @@ namespace AerialMapping
                 {
                     if (itemsList[i].Items[j].Checked)
                     {
-                        this.UnloadKML(itemsList[i].Items[j]);
+                        this.UnloadKML(itemsList[i].Items[j].FilePath);
+                        this.UnloadKML(itemsList[i].Items[j].TreeCanopyFilePath);
                         itemsList[i].Items.Remove(itemsList[i].Items[j]);
                     }
                 }
@@ -663,7 +684,19 @@ namespace AerialMapping
 
                 for (int i = 0; i < currentLocationItems.Count; i++)
                 {
-                    Map.Layers[currentLocationItems[i].FilePath].IsVisible = false;
+                    // Plain Image
+                    Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
+                    if (currentLayer != null)
+                    {
+                        currentLayer.IsVisible = false;
+                    }
+
+                    // Tree Canopy Image
+                    currentLayer = Map.Layers[currentLocationItems[i].TreeCanopyFilePath];
+                    if (currentLayer != null)
+                    {
+                        currentLayer.IsVisible = false;
+                    }
                 }
 
                 // Not sure if this is needed.
@@ -677,10 +710,25 @@ namespace AerialMapping
                 // Set the selected time to visible and the rest to invisible.
                 for (int i = 0; i < currentLocationItems.Count; i++)
                 {
+                    // Logic for the plain image.
                     Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
                     if (currentLayer != null)
                     {
-                        if (i == this.TimeSliderValue - 1)
+                        if (i == this.TimeSliderValue - 1 && !ViewTreeAnalytics)
+                        {
+                            currentLayer.IsVisible = true;
+                        }
+                        else
+                        {
+                            currentLayer.IsVisible = false;
+                        }
+                    }
+
+                    // Logic for the tree canopy image.
+                    currentLayer = Map.Layers[currentLocationItems[i].TreeCanopyFilePath];
+                    if (currentLayer != null)
+                    {
+                        if (i == this.TimeSliderValue - 1 && ViewTreeAnalytics)
                         {
                             currentLayer.IsVisible = true;
                         }

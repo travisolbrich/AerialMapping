@@ -452,7 +452,7 @@
                         </wpfspark:ToggleSwitch>-->
 
                         <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="295" ItemsSource="{Binding TreeViewItems}" 
-                              SelectedItemChanged="LayerView_SelectedItemChanged" Margin="0,60,0,0" VerticalAlignment="Top" Width="200">
+                              SelectedItemChanged="LayerView_SelectedItemChanged" Margin="0,60,0,0" VerticalAlignment="Top" Width="200" Background="#DCDCDC">
 
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">

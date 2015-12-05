@@ -36,12 +36,21 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Gets or sets the path of the Dataset file. 
+        /// Gets or sets the path of the image. 
         /// </summary>
         public string FilePath 
         { 
             get; 
             set; 
+        }
+
+        /// <summary>
+        /// Gets or sets the path of the tree canopy file. 
+        /// </summary>
+        public string TreeCanopyFilePath
+        {
+            get;
+            set;
         }
 
         /// <summary>

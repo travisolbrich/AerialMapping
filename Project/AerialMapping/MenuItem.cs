@@ -34,9 +34,11 @@ namespace AerialMapping
         /// </summary>
         /// <param name="title">The title of the item</param>
         /// <param name="filePath">The filepath to the item</param>
-        public MenuItem(string title, string filePath)
+        /// <param name="treeFilePath">The filepath to the tree canopy image</param>
+        public MenuItem(string title, string filePath, string treeFilePath)
         {
             this.FilePath = filePath;
+            this.TreeCanopyFilePath = treeFilePath;
             this.Title = title;
             this.Checked = false;
             this.Items = new ObservableCollection<MenuItem>();
@@ -47,10 +49,12 @@ namespace AerialMapping
         /// </summary>
         /// <param name="title">The title of the item</param>
         /// <param name="filePath">The filepath to the item</param>
+        /// <param name="treeFilePath">The filepath to the tree canopy image</param>
         /// <param name="check">Whether the check is checked</param>
-        public MenuItem(string title, string filePath, bool check)
+        public MenuItem(string title, string filePath, string treeFilePath, bool check)
         {
             this.FilePath = filePath;
+            this.TreeCanopyFilePath = treeFilePath;
             this.Title = title;
             this.Checked = check;
             this.Items = new ObservableCollection<MenuItem>();
@@ -68,6 +72,15 @@ namespace AerialMapping
         { 
             get; 
             set; 
+        }
+
+        /// <summary>
+        /// Gets or sets the file path to the tree canopy image.
+        /// </summary>
+        public string TreeCanopyFilePath
+        {
+            get; 
+            set;
         }
 
         /// <summary>

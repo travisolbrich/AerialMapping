@@ -3,6 +3,9 @@
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
+
+using System;
+
 namespace AerialMapping
 {
     using System.Collections.Generic;
@@ -24,10 +27,11 @@ namespace AerialMapping
         /// </summary>
         /// <param name="name">The string to put in the treeview.</param>
         /// <param name="filePath">The filepath associated with this object.</param>
-        public RemoveLayersViewModel(string name, string filePath)
+        public RemoveLayersViewModel(string name, string filePath, string treeFilePath)
         {
             this.Name = name;
             this.FilePath = filePath;
+            this.TreeCanopyFilePath = treeFilePath;
             this.Children = new List<RemoveLayersViewModel>();
         }
 
@@ -58,6 +62,11 @@ namespace AerialMapping
         public string FilePath { get; private set; }
 
         /// <summary>
+        /// Gets the file path to the corresponding tree canopy image.
+        /// </summary>
+        public string TreeCanopyFilePath { get; private set; }
+
+        /// <summary>
         /// Gets or sets the state of the associated UI toggle (ex. CheckBox).
         /// The return value is calculated based on the check state of all
         /// child RemoveLayersViewModels.  Setting this property to true or false
@@ -86,7 +95,7 @@ namespace AerialMapping
         public static List<RemoveLayersViewModel> CreateViewModels(ObservableCollection<MenuItem> locationsTimes)
         {
             // Create the root of the tree, which is for selecting all nodes.
-            RemoveLayersViewModel root = new RemoveLayersViewModel("All", string.Empty)
+            RemoveLayersViewModel root = new RemoveLayersViewModel("All", string.Empty, string.Empty)
             {
                 IsInitiallySelected = false,
                 
@@ -99,12 +108,12 @@ namespace AerialMapping
 
             foreach (MenuItem location in locationsTimes) 
             {
-                RemoveLayersViewModel loc = new RemoveLayersViewModel(location.Title, location.FilePath);
+                RemoveLayersViewModel loc = new RemoveLayersViewModel(location.Title, location.FilePath, location.TreeCanopyFilePath);
                 List<RemoveLayersViewModel> times = new List<RemoveLayersViewModel>();
 
                 foreach (MenuItem time in location.Items)
                 {
-                    RemoveLayersViewModel t = new RemoveLayersViewModel(time.Title, time.FilePath);
+                    RemoveLayersViewModel t = new RemoveLayersViewModel(time.Title, time.FilePath, location.TreeCanopyFilePath);
                     times.Add(t);
                 }
 

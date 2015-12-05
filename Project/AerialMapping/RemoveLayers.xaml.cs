@@ -77,11 +77,11 @@ namespace AerialMapping
                 MenuItem loc;
                 if (location.IsChecked == true)
                 {
-                   loc = new MenuItem(location.Name, location.FilePath, true);
+                   loc = new MenuItem(location.Name, location.FilePath, location.TreeCanopyFilePath, true);
                 }
                 else
                 {
-                    loc = new MenuItem(location.Name, location.FilePath, false);
+                    loc = new MenuItem(location.Name, location.FilePath, location.TreeCanopyFilePath, false);
                 }
 
                 // Add each of the times for that location to that children of that location.
@@ -90,11 +90,11 @@ namespace AerialMapping
                     MenuItem t;
                     if (time.IsChecked == true)
                     {
-                        t = new MenuItem(time.Name, time.FilePath, true);
+                        t = new MenuItem(time.Name, time.FilePath, time.TreeCanopyFilePath, true);
                     }
                     else
                     {
-                        t = new MenuItem(time.Name, time.FilePath, false);
+                        t = new MenuItem(time.Name, time.FilePath, time.TreeCanopyFilePath, false);
                     }
 
                     loc.Items.Add(t);                    
