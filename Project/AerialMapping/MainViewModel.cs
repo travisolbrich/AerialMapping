@@ -32,8 +32,6 @@ namespace AerialMapping
 
         private List<Dataset> datasetList; // Holds all of the layer data.
 
-        private KmlLayer kmllayerTest; // need to reconcile this with the one in the mainwindow code behind
-
         private int timeSliderMax;
 
         private int timeSliderValue;
@@ -44,6 +42,8 @@ namespace AerialMapping
 
         private string timeSliderToolTip;
 
+        private bool viewTreeAnalytics;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel" /> class.
         /// This is the constructor for the MainViewModel.
@@ -51,6 +51,7 @@ namespace AerialMapping
         /// </summary>
         public MainViewModel()
         {
+            this.viewTreeAnalytics = false;
             this.Map = App.Current.Resources["IncidentMap"] as Map;
             this.TreeViewItems = new ObservableCollection<MenuItem>();
 
@@ -266,6 +267,23 @@ namespace AerialMapping
         }
 
         /// <summary>
+        /// Indicates whether or not to view the tree canopy images.
+        /// </summary>
+        public bool ViewTreeAnalytics
+        {
+            get
+            {
+                return this.viewTreeAnalytics;
+            }
+            set
+            {
+                viewTreeAnalytics = value;
+                Console.WriteLine("Tree analytics option is now: " + value);
+                NotifiyPropertyChanged("ViewTreeAnalytics");
+            }
+        }
+
+        /// <summary>
         /// "Add Layer" button callback
         /// Pops up a window that gets the user to input the necessary information
         /// for adding a new layer and then adds the layer.
@@ -417,6 +435,33 @@ namespace AerialMapping
         }
 
         /// <summary>
+        /// Gets the current location for the selected layer.
+        /// </summary>
+        /// <returns>The current location.</returns>
+        public string CurrentLocation()
+        {
+            return currentLocation.Title;
+        }
+
+        /// <summary>
+        /// Get the current DateTime for the selected layer.
+        /// </summary>
+        /// <returns>The current date and time as a string.</returns>
+        public string CurrentTime()
+        {
+            return currentLocation.Items.FirstOrDefault(x => x.Checked).Title;
+        }
+
+        /// <summary>
+        /// Get the filepath for the current layer.
+        /// </summary>
+        /// <returns>The filepath for the current layer.</returns>
+        public string CurrentFilePath()
+        {
+            return currentLocation.Items.FirstOrDefault(x => x.Checked).FilePath;
+        }
+
+        /// <summary>
         /// This function loads a KML layer to the map. 
         /// </summary>
         /// <param name="path">The path of the .kml file.</param>
@@ -432,7 +477,6 @@ namespace AerialMapping
                 kmllayer.ID = path;
                 this.idToZoomOn = zoomTo ? path : string.Empty;
                 Map.Layers.Add(kmllayer);
-                this.kmllayerTest = kmllayer;
             }
             catch
             {

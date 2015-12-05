@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013" 
         xmlns:local="clr-namespace:AerialMapping"
+        xmlns:wpfspark="clr-namespace:WPFSpark;assembly=WPFSpark"
         x:Name="_this"
 		Title="AirView" 
-		Height="350" 
-		Width="525" WindowState="Maximized">
+		Height="800" 
+		Width="1200" WindowState="Maximized">
     <Window.Resources>
         <Storyboard x:Key="sbShowRightMenu" >
             <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,-250,0" To="0,0,0,0" DecelerationRatio=".9" Duration="0:0:1" />
@@ -14,6 +15,97 @@
         <Storyboard x:Key="sbHideRightMenu">
             <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="0,0,-250,0" AccelerationRatio=".9" Duration="0:0:1" />
         </Storyboard>
+        <LinearGradientBrush x:Key="CheckedStateBrush"
+                             EndPoint="0,1"
+                             StartPoint="0,0">
+            <GradientStop Color="#1E41A5"
+                          Offset="0" />
+            <GradientStop Color="#2F6AEA"
+                          Offset="0.5" />
+            <GradientStop Color="#6298FE"
+                          Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="UncheckedStateBrush"
+                             EndPoint="0,1"
+                             StartPoint="0,0">
+            <GradientStop Color="#FF81230E" />
+            <GradientStop Color="#FFF15910"
+                          Offset="0.365" />
+            <GradientStop Color="#FFF5A782"
+                          Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="UncheckedStateBrushBW"
+                             EndPoint="0,1"
+                             StartPoint="0,0">
+            <GradientStop Color="#FF454343"
+                          Offset="0.004" />
+            <GradientStop Color="#FFB8B8B8"
+                          Offset="0.364" />
+            <GradientStop Color="#F1F1F1"
+                          Offset="1" />
+        </LinearGradientBrush>
+
+        <Style TargetType="{x:Type Button}" x:Key="CustomButtonStyle">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <!--<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF2778BB" Offset="0.51"/>
+                        <GradientStop Color="#FF2683C5" Offset="0.484"/>
+                        <GradientStop Color="#FF8CD4FF" Offset="1"/>
+                        <GradientStop Color="#FF1973AE" Offset="0.497"/>
+                    </LinearGradientBrush>-->
+                    <LinearGradientBrush EndPoint="0.5,1"
+                                     StartPoint="0.5,0">
+                        <GradientStop Color="#1E41A5"
+                                  Offset="0" />
+                        <GradientStop Color="#2F6AEA"
+                                  Offset="0.5" />
+                        <GradientStop Color="#6298FE"
+                                  Offset="1" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="#FF2B5F91"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="MinWidth" Value="20"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Rectangle Stroke="{TemplateBinding BorderBrush}" RadiusX="15" RadiusY="15" Fill="{TemplateBinding Background}"/>
+                            <Rectangle VerticalAlignment="Top" Height="10" Margin="7,2,7,1" RadiusX="10" RadiusY="10">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#11FFFFFF" Offset="1"/>
+                                        <GradientStop Color="#B2FFFFFF" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle x:Name="rectangle" RadiusX="15" RadiusY="15" Fill="White" Margin="1" Opacity="0"/>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Margin="{TemplateBinding Padding}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" TargetName="rectangle" Value="0.2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" TargetName="rectangle" Value="0.3"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Fill" TargetName="rectangle" Value="#666"/>
+                                <Setter Property="Opacity" TargetName="rectangle" Value="0.6"/>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <esri:MapView x:Name="BaseMapView"
@@ -106,7 +198,7 @@
                                 <Ellipse Stroke="#323232" StrokeThickness="2">
                                     <Ellipse.Fill>
                                         <RadialGradientBrush>
-                                            <GradientStop Offset="0" Color="PaleTurquoise" />
+                                            <GradientStop Offset="0" Color="#7ba9fe" />
                                         </RadialGradientBrush>
                                     </Ellipse.Fill>
                                 </Ellipse>
@@ -120,17 +212,255 @@
             <!--Main Panel of the Side Menu-->
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="250" Background="#4C808080" >
                 <StackPanel VerticalAlignment="Top">
-                    <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="210" ItemsSource="{Binding TreeViewItems}" 
-                              SelectedItemChanged="LayerView_SelectedItemChanged" Margin="0,10,0,0" VerticalAlignment="Top" Width="200">
+                    <Grid>
+                    <!--<Label Content="Tree Analytics:"
+                           FontSize="14"
+                           HorizontalAlignment="Left"
+                           Margin="30, 20, 0, 0"
+                           VerticalAlignment="Top"/>
+                    <wpfspark:ToggleSwitch Background="Black"
+                               BorderThickness="2"
+                               CheckedForeground="White"
+                               CheckedText="On"
+                               CornerRadius="10"
+                               FontFamily="Tahoma"
+                               FontSize="18"
+                               FontWeight="Normal"
+                               Height="25"
+                               HorizontalAlignment="Left"
+                               IsChecked="{Binding ViewTreeAnalytics}"            
+                               Margin="150,20,0,0"
+                               x:Name="toggleSwitch4"
+                               Padding="0"
+                               ThumbBorderThickness="2"
+                               ThumbCornerRadius="7"
+                               ThumbGlowColor="Gray"
+                               ThumbShineCornerRadius="6,6,5,5"
+                               UncheckedForeground="Black"
+                               UncheckedText="Off"
+                               VerticalAlignment="Top"
+                               Width="60"
+                               Grid.RowSpan="2">
+                        <wpfspark:ToggleSwitch.BorderBrush>
+                            <LinearGradientBrush EndPoint="0,0"
+                                     StartPoint="0,1">
+                                <GradientStop Color="#959595"
+                                  Offset="0" />
+                                <GradientStop Color="#A1A1A1"
+                                  Offset="0.5" />
+                                <GradientStop Color="#555555"
+                                  Offset="1" />
+                            </LinearGradientBrush>
+                        </wpfspark:ToggleSwitch.BorderBrush>
+                        <wpfspark:ToggleSwitch.CheckedBackground>
+                            <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                <GradientStop Color="#1E41A5"
+                                  Offset="0" />
+                                <GradientStop Color="#2F6AEA"
+                                  Offset="0.5" />
+                                <GradientStop Color="#6298FE"
+                                  Offset="1" />
+                            </LinearGradientBrush>
+                        </wpfspark:ToggleSwitch.CheckedBackground>
+                        <wpfspark:ToggleSwitch.ThumbBackground>
+                            <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                <GradientStop Color="#C1C1C1"
+                                  Offset="0" />
+                                <GradientStop Color="#A5A5A5"
+                                  Offset="0.5" />
+                                <GradientStop Color="#FCFCF6"
+                                  Offset="1" />
+                            </LinearGradientBrush>
+                        </wpfspark:ToggleSwitch.ThumbBackground>
+                        <wpfspark:ToggleSwitch.ThumbBorderBrush>
+                            <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                <GradientStop Color="#F6F6F6"
+                                  Offset="0" />
+                                <GradientStop Color="#959595"
+                                  Offset="0.5" />
+                                <GradientStop Color="#565656"
+                                  Offset="1" />
+                            </LinearGradientBrush>
+                        </wpfspark:ToggleSwitch.ThumbBorderBrush>
+                        <wpfspark:ToggleSwitch.UncheckedBackground>
+                            <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                <GradientStop Color="#626262"
+                                  Offset="0.1" />
+                                <GradientStop Color="#A5A5A5"
+                                  Offset="0.5" />
+                                <GradientStop Color="#F1F1F1"
+                                  Offset="1" />
+                            </LinearGradientBrush>
+                        </wpfspark:ToggleSwitch.UncheckedBackground>
+                    </wpfspark:ToggleSwitch>-->
+
+                        <wpfspark:ToggleSwitch Background="Black"
+                               BorderThickness="2"
+                               CheckedForeground="White"
+                               CheckedText="Tree Canopy"
+                               CornerRadius="2"
+                               FontFamily="Tahoma"
+                               FontSize="14"
+                               FontWeight="Normal"
+                               Height="25"
+                               HorizontalAlignment="Center"
+                               IsChecked="{Binding ViewTreeAnalytics}"            
+                               Margin="0,20,0,0"
+                               x:Name="toggleSwitch5"
+                               Padding="0"
+                               ThumbBorderThickness="2"
+                               ThumbCornerRadius="0"
+                               ThumbGlowColor="Gray"
+                               ThumbShineCornerRadius="0,0,0,0"
+                               ThumbWidth="15"
+                               UncheckedForeground="Black"
+                               UncheckedText="Plain Imagery"
+                               VerticalAlignment="Top"
+                               Width="135"
+                               Grid.RowSpan="2">
+                            <wpfspark:ToggleSwitch.BorderBrush>
+                                <LinearGradientBrush EndPoint="0,0"
+                                     StartPoint="0,1">
+                                    <GradientStop Color="#959595"
+                                  Offset="0" />
+                                    <GradientStop Color="#A1A1A1"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#555555"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                            </wpfspark:ToggleSwitch.BorderBrush>
+                            <wpfspark:ToggleSwitch.CheckedBackground>
+                                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                    <GradientStop Color="#1E41A5"
+                                  Offset="0" />
+                                    <GradientStop Color="#2F6AEA"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#6298FE"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                                <!--<SolidColorBrush Color="#7ba9fe"></SolidColorBrush>-->
+                            </wpfspark:ToggleSwitch.CheckedBackground>
+                            <wpfspark:ToggleSwitch.ThumbBackground>
+                                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                    <GradientStop Color="#C1C1C1"
+                                  Offset="0" />
+                                    <GradientStop Color="#A5A5A5"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#FCFCF6"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                            </wpfspark:ToggleSwitch.ThumbBackground>
+                            <wpfspark:ToggleSwitch.ThumbBorderBrush>
+                                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                    <GradientStop Color="#F6F6F6"
+                                  Offset="0" />
+                                    <GradientStop Color="#959595"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#565656"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                            </wpfspark:ToggleSwitch.ThumbBorderBrush>
+                            <wpfspark:ToggleSwitch.UncheckedBackground>
+                                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                    <GradientStop Color="#626262"
+                                  Offset="0.1" />
+                                    <GradientStop Color="#A5A5A5"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#F1F1F1"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                                <!--<SolidColorBrush Color="#F1F1F1"></SolidColorBrush>-->
+                            </wpfspark:ToggleSwitch.UncheckedBackground>
+                        </wpfspark:ToggleSwitch>
+
+                        <!--<wpfspark:ToggleSwitch Background="Black"
+                               ThumbWidth="25"
+                               BorderThickness="2"
+                               CheckedForeground="White"
+                               CheckedText="Tree Canopy"
+                               CornerRadius="5"
+                               FontFamily="Tahoma"
+                               FontSize="14"
+                               FontWeight="Normal"
+                               Height="37"
+                               HorizontalAlignment="Center"
+                               Margin="0,15,0,0"
+                               x:Name="toggleSwitch3"
+                               Padding="0"
+                               ThumbBorderThickness="2"
+                               ThumbCornerRadius="5"
+                               ThumbGlowColor="Gray"
+                               ThumbShineCornerRadius="6,6,3,3"
+                               UncheckedForeground="Black"
+                               UncheckedText="Plain Imagery"
+                               VerticalAlignment="Top"
+                               Width="135"
+                               UncheckedBackground="{DynamicResource UncheckedStateBrush}">
+                            <wpfspark:ToggleSwitch.CheckedBackground>
+                                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                    <GradientStop Color="#FF106011"
+                                  Offset="0" />
+                                    <GradientStop Color="#FF1DB43B"
+                                  Offset="0.496" />
+                                    <GradientStop Color="#FF62FE7A"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                            </wpfspark:ToggleSwitch.CheckedBackground>
+                            <wpfspark:ToggleSwitch.BorderBrush>
+                                <LinearGradientBrush EndPoint="0,0"
+                                     StartPoint="0,1">
+                                    <GradientStop Color="#959595"
+                                  Offset="0" />
+                                    <GradientStop Color="#A1A1A1"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#555555"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                            </wpfspark:ToggleSwitch.BorderBrush>
+                            <wpfspark:ToggleSwitch.ThumbBackground>
+                                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                    <GradientStop Color="#C1C1C1"
+                                  Offset="0" />
+                                    <GradientStop Color="#A5A5A5"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#FCFCF6"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                            </wpfspark:ToggleSwitch.ThumbBackground>
+                            <wpfspark:ToggleSwitch.ThumbBorderBrush>
+                                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                                    <GradientStop Color="#F6F6F6"
+                                  Offset="0" />
+                                    <GradientStop Color="#959595"
+                                  Offset="0.5" />
+                                    <GradientStop Color="#565656"
+                                  Offset="1" />
+                                </LinearGradientBrush>
+                            </wpfspark:ToggleSwitch.ThumbBorderBrush>
+                        </wpfspark:ToggleSwitch>-->
+
+                        <TreeView x:Name="LayerView" HorizontalAlignment="Center" Height="295" ItemsSource="{Binding TreeViewItems}" 
+                              SelectedItemChanged="LayerView_SelectedItemChanged" Margin="0,60,0,0" VerticalAlignment="Top" Width="200">
 
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type MenuItem}" ItemsSource="{Binding Items}">
                                 <TextBlock Text="{Binding Title}" >
                                     <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
+                                        <Style TargetType="{x:Type TextBlock}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Checked}" Value="True">
-                                                    <Setter Property="Background" Value="#adc6e5" />
+                                                        <Setter Property="Background" Value="#7ba9fe" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -140,9 +470,10 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
-                    <Button Content="Add Layer" Command="{Binding AddLayerCommand}" CommandParameter="{Binding ElementName=_this}" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
-                    <Button Content="Remove Layer" Command="{Binding RemoveLayerCommand}" CommandParameter="{Binding ElementName=_this}" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Width="100"/>
-                    <Button x:Name="TreeButton" Content="Tree Analytics" Click="TreeButton_Click"  HorizontalAlignment="Center" Margin="24,10,24,0" Width="100"/>
+                        <Button Style="{StaticResource CustomButtonStyle}" Content="Add" Command="{Binding AddLayerCommand}" CommandParameter="{Binding ElementName=_this}" Height="25"  HorizontalAlignment="Center" Margin="0, 365, 90, 0" Width="75"/>
+                        <Button Style="{StaticResource CustomButtonStyle}" Content="Remove" Command="{Binding RemoveLayerCommand}" CommandParameter="{Binding ElementName=_this}" Height ="25" HorizontalAlignment="Center" Margin="90, 365, 0, 0" Width="75"/>
+                    <!--<Button x:Name="TreeButton" Content="Tree Analytics" Click="TreeButton_Click"  HorizontalAlignment="Center" Margin="24,10,24,0" Width="100"/>-->
+                    </Grid>
                 </StackPanel>
             </Border>
         </StackPanel>
