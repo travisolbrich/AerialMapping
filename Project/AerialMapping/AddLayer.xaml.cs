@@ -47,6 +47,8 @@ namespace AerialMapping
             }
 
             this.comboBoxLocations = locations;
+
+            this.DateTimeInput.Value = DateTime.Now;
         }
 
         /// <summary>

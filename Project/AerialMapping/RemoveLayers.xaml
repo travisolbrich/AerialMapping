@@ -5,18 +5,81 @@
   xmlns:local="clr-namespace:AerialMapping"
   xmlns:dw="clr-namespace:AerialMapping"
   FontSize="13"
-  Title="TreeView with CheckBoxes"
+  Title="Remove Layers"
   Width="300" Height="300" 
   WindowStartupLocation="CenterScreen"  
   >
   <Window.Resources>
+      
     <ResourceDictionary>
       <!-- Load this specific theme because the Aero theme for CheckBox has issues. -->
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/PresentationFramework.Royale;V3.0.0.0;31bf3856ad364e35;component\themes\royale.normalcolor.xaml" />
       </ResourceDictionary.MergedDictionaries>
 
-      <Style x:Key="TreeViewItemStyle" TargetType="TreeViewItem">
+            <Style TargetType="{x:Type Button}" x:Key="CustomButtonStyle">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <!--<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF2778BB" Offset="0.51"/>
+                        <GradientStop Color="#FF2683C5" Offset="0.484"/>
+                        <GradientStop Color="#FF8CD4FF" Offset="1"/>
+                        <GradientStop Color="#FF1973AE" Offset="0.497"/>
+                    </LinearGradientBrush>-->
+                        <LinearGradientBrush EndPoint="0.5,1"
+                                     StartPoint="0.5,0">
+                            <GradientStop Color="#1E41A5"
+                                  Offset="0" />
+                            <GradientStop Color="#2F6AEA"
+                                  Offset="0.5" />
+                            <GradientStop Color="#6298FE"
+                                  Offset="1" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="BorderBrush" Value="#FF2B5F91"/>
+                <Setter Property="Margin" Value="1"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="MinWidth" Value="20"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid>
+                                <Rectangle Stroke="{TemplateBinding BorderBrush}" RadiusX="15" RadiusY="15" Fill="{TemplateBinding Background}"/>
+                                <Rectangle VerticalAlignment="Top" Height="10" Margin="7,2,7,1" RadiusX="10" RadiusY="10">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#08FFFFFF" Offset="1"/>
+                                            <GradientStop Color="#88FFFFFF" Offset="0"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <Rectangle x:Name="rectangle" RadiusX="15" RadiusY="15" Fill="White" Margin="1" Opacity="0"/>
+                                <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Margin="{TemplateBinding Padding}"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" TargetName="rectangle" Value="0.2"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Opacity" TargetName="rectangle" Value="0.3"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Fill" TargetName="rectangle" Value="#666"/>
+                                    <Setter Property="Opacity" TargetName="rectangle" Value="0.6"/>
+                                    <Setter Property="Opacity" TargetName="contentPresenter" Value="0.3"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TreeViewItemStyle" TargetType="TreeViewItem">
         <Setter Property="IsExpanded" Value="True" />
         <Setter Property="IsSelected" Value="{Binding IsInitiallySelected, Mode=OneTime}" />
         <Setter Property="KeyboardNavigation.AcceptsReturn" Value="True" />
@@ -58,6 +121,7 @@
       HorizontalAlignment="Center"
       Margin="0,2"
       Padding="8,0"
+        Style="{StaticResource CustomButtonStyle}"
       />
     <TreeView 
       x:Name="tree"

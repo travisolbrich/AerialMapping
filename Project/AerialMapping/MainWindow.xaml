@@ -115,7 +115,7 @@
                       Map="{Binding IncidentMap}">
 
         </esri:MapView>
-        <DockPanel>
+        <!--<DockPanel>
             <Menu x:Name="Menu_Bar" DockPanel.Dock="Top">
                 <MenuItem x:Name="File_Menu" Header="_File">
                     <MenuItem Header="_Open"
@@ -131,36 +131,36 @@
                 </MenuItem>
             </Menu>
             <StackPanel></StackPanel>
-        </DockPanel>
+        </DockPanel>-->
 
         <Button x:Name="bRotateLeft" Content="⟲"
-                Height="20" Width="20" Margin="10,40,0,0"
+                Height="25" Width="25" Margin="10,30,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bRotateLeft_Click">
+                Background="Gainsboro" Click="bRotateLeft_Click">
             <Button.ToolTip>Rotate to the left</Button.ToolTip>
         </Button>
         <Button x:Name="bRotateDefault" Content="↑"
-                Height="20" Width="20" Margin="30,40,0,0"
+                Height="25" Width="25" Margin="35,30,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bRotateDefault_Click">
+                Background="Gainsboro" Click="bRotateDefault_Click">
             <Button.ToolTip>Default rotation</Button.ToolTip>
         </Button>
         <Button x:Name="bRotateRight" Content="⟳"
-                Height="20" Width="20" Margin="50, 40, 0 0"
+                Height="25" Width="25" Margin="60, 30, 0 0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bRotateRight_Click">
+                Background="Gainsboro" Click="bRotateRight_Click">
             <Button.ToolTip>Rotate to the right</Button.ToolTip>
         </Button>
         <Button x:Name="bZoomIn" Content="+"
-                Height="20" Width="20" Margin="10, 80, 0 0"
+                Height="25" Width="25" Margin="10, 70, 0 0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bZoomIn_Click" />
+                Background="Gainsboro" Click="bZoomIn_Click" />
         <Button x:Name="bZoomOut" Content="-"
-                Height="20" Width="20" Margin="10,410,0,-111"
+                Height="25" Width="25" Margin="10,400,0,-111"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="Beige" Click="bZoomOut_Click" />
+                Background="Gainsboro" Click="bZoomOut_Click" />
         <Slider x:Name="bZoomSlider" HorizontalAlignment="Left" 
-                Margin="10,105,0,0" VerticalAlignment="Top" 
+                Margin="12,100,0,0" VerticalAlignment="Top" 
                 Height="300" Width="20" RenderTransformOrigin="0.5,0.5"
                 Orientation="Vertical" Minimum="0" 
                 Maximum="100" ValueChanged="bZoomSlider_Click"
