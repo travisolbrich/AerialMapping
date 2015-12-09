@@ -479,7 +479,7 @@
                 </StackPanel>
             </Border>
         </StackPanel>
-        <ProgressBar x:Name="ProgBarDetection" HorizontalAlignment="Left" Height="29" Margin="32,79,0,0" VerticalAlignment="Top" Width="465" RenderTransformOrigin="0.5,0.5" BorderThickness="3" Visibility="Hidden">
+        <ProgressBar x:Name="ProgBarDetection" HorizontalAlignment="Right" Height="29" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="465" RenderTransformOrigin="0.5,0.5" BorderThickness="3" Visibility="Hidden">
             <ProgressBar.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1"/>

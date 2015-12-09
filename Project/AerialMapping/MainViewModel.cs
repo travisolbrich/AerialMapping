@@ -743,20 +743,32 @@ namespace AerialMapping
             {
                 this.TimeSliderToolTip = "GIS Data Only";
 
-                for (int i = 0; i < currentLocationItems.Count; i++)
-                {
-                    // Plain Image
-                    Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
-                    if (currentLayer != null)
-                    {
-                        currentLayer.IsVisible = false;
-                    }
+                //for (int i = 0; i < currentLocationItems.Count; i++)
+                //{
+                //    // Plain Image
+                //    Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
+                //    if (currentLayer != null)
+                //    {
+                //        currentLayer.IsVisible = false;
+                //    }
 
-                    // Tree Canopy Image
-                    currentLayer = Map.Layers[currentLocationItems[i].TreeCanopyFilePath];
-                    if (currentLayer != null)
+                //    // Tree Canopy Image
+                //    currentLayer = Map.Layers[currentLocationItems[i].TreeCanopyFilePath];
+                //    if (currentLayer != null)
+                //    {
+                //        currentLayer.IsVisible = false;
+                //    }
+                //}
+                bool first = true;
+                foreach (Layer layer in Map.Layers)
+                {
+                    if (!first)
                     {
-                        currentLayer.IsVisible = false;
+                        layer.IsVisible = false;
+                    }
+                    else
+                    {
+                        first = false;
                     }
                 }
 
