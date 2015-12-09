@@ -38,13 +38,13 @@ namespace AerialMapping
             {
                 DirectoryInfo source = new DirectoryInfo(path),
                               target = new DirectoryInfo(path + "_treedetection");
-                try
+                /*try
                 {
                     target.Delete(true);
                 }
                 catch (Exception)
                 {
-                }
+                }*/
 
                 target.Create();
                 this.CopyFilesRecursively(source, target);
