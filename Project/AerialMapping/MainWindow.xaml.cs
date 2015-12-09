@@ -50,7 +50,7 @@ namespace AerialMapping
         /// </summary>
         public MainWindow()
         {
-            mainViewModel = new MainViewModel();
+            mainViewModel = new MainViewModel(this);
             this.DataContext = mainViewModel;
             this.MouseWheel += zoomSlider_MouseWheel;
             InitializeComponent();

@@ -46,13 +46,17 @@ namespace AerialMapping
 
         private bool viewTreeAnalytics;
 
+        private MainWindow mainWindow;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel" /> class.
         /// This is the constructor for the MainViewModel.
         /// When the view model initializes, it reads the map from the App.xaml resources.
         /// </summary>
-        public MainViewModel()
+        public MainViewModel(MainWindow window)
         {
+            this.mainWindow = window;
+
             this.viewTreeAnalytics = false;
             this.Map = App.Current.Resources["IncidentMap"] as Map;
             this.TreeViewItems = new ObservableCollection<MenuItem>();
@@ -333,6 +337,8 @@ namespace AerialMapping
                 // TODO - somewhere around here execute the code to do the tree analysis on the new image
                 // Presently, this will not require a change in the treeview, so the new image can go straight
                 // to LoadKML()
+                TreeLineDetection temp = new TreeLineDetection();
+                Task.Run(() => temp.ConvertFolder((new FileInfo(newLayer.FilePath)).DirectoryName, mainWindow));
 
                 // Save the new dataset
                 this.datasetList.Add(newLayer);

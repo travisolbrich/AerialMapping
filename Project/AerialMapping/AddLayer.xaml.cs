@@ -93,7 +93,8 @@ namespace AerialMapping
             this.DatasetToAdd.FilePath = FilePathInput.Text;
 
             // TODO - This needs to be the file path for the related tree canopy file!!!!!!!!!!!!!!!!
-            this.DatasetToAdd.TreeCanopyFilePath = FilePathInput.Text;
+            FileInfo temp = new FileInfo(FilePathInput.Text);
+            this.DatasetToAdd.TreeCanopyFilePath = temp.Directory + "_treedetection\\" + temp.Name;
 
             this.DatasetToAdd.ZoomTo = ZoomTo.IsChecked.GetValueOrDefault();
 

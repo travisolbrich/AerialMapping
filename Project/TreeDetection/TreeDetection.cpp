@@ -16,10 +16,14 @@
 #include <map>
 #include <fstream>
 
+#define ENTROPY_THRESHOLD 190
+
 using namespace std;
 using namespace cv;
 
-void GetEntropyImage( const Mat *graySrc, int neighborhoodSize, Mat *entropyImage, bool bDoNaive = false );
+void GetEntropyImage( const Mat *graSrc, int neighborhoodSize, Mat *entropyImage, bool bDoNaive = false );
+
+void FilterResult( Mat *src );
 
 vector<float> EntropyFunctionCache;
 
@@ -104,7 +108,25 @@ extern "C" _declspec( dllexport ) void Entry( const char *filepath, const char *
   luminosityImage = channels[0];
 
   GetEntropyImage( &luminosityImage, 9, &result );
-  imwrite(outputpath, result);
+  FilterResult( &result );
+  morphologyEx( result, result, MORPH_CLOSE, getStructuringElement( MORPH_ELLIPSE, Size( 9, 9 ) ), cv::Point( -1, -1 ), 1 );
+  morphologyEx( result, result, MORPH_ERODE, getStructuringElement( MORPH_ELLIPSE, Size( 9, 9 ) ), cv::Point( -1, -1 ), 1 );
+  morphologyEx( result, result, MORPH_DILATE, getStructuringElement( MORPH_ELLIPSE, Size( 9, 9 ) ), cv::Point( -1, -1 ), 1 );
+  morphologyEx( result, result, MORPH_CLOSE, getStructuringElement( MORPH_ELLIPSE, Size( 9, 9 ) ), cv::Point( -1, -1 ), 3 );
+  
+  for( int x = 0; x < result.cols; x++ )
+  {
+    for( int y = 0; y < result.rows; y++ )
+    {
+      if( result.at<uchar>( y, x ) == 0 && luminosityImage.at<uchar>( y, x ) != 0 )
+      {
+        uchar lum = luminosityImage.at<uchar>( y, x ) * .8;
+        image.at<Vec4b>( y, x ) = Vec4b( lum, lum, lum );
+      }
+    }
+  }
+
+  imwrite(outputpath, image);
 #else
   Code to test performance
   int base = 1;
@@ -313,4 +335,29 @@ void GetEntropyImage( const Mat *graySrc, int neighborhoodSize, Mat *entropyImag
   // and the highest value is 255. This allows for display of images entropy.
   //
   normalize( entropyMat, *entropyImage, 0, 255, NORM_MINMAX, CV_8UC1 );
+}
+
+/*
+This function 
+Inputs
+======
+
+
+Output
+======
+
+*/
+void FilterResult( Mat *result )
+{
+  for( int x = 0; x < result->cols; x++ )
+  {
+    for( int y = 0; y < result->rows; y++ )
+    {
+      int value = result->at<uchar>( y, x );
+      if( result->at<uchar>( y, x ) < ENTROPY_THRESHOLD )
+      {
+        result->at<uchar>( y, x ) = 0;
+      }
+    }
+  }
 }

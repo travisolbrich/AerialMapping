@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AerialMapping", "AerialMapping\AerialMapping.csproj", "{39DE280E-2709-4C05-8F0C-01F8774D73C7}"
@@ -38,6 +38,7 @@ Global
 		{39DE280E-2709-4C05-8F0C-01F8774D73C7}.Release|Win32.ActiveCfg = Release|Any CPU
 		{39DE280E-2709-4C05-8F0C-01F8774D73C7}.Release|x64.ActiveCfg = Release|Any CPU
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Debug|Any CPU.Build.0 = Debug|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Debug|ARM.ActiveCfg = Debug|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Debug|Mixed Platforms.Build.0 = Debug|Win32
@@ -45,6 +46,7 @@ Global
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Debug|Win32.Build.0 = Debug|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Debug|x64.ActiveCfg = Debug|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Release|Any CPU.ActiveCfg = Release|Win32
+		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Release|Any CPU.Build.0 = Release|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Release|ARM.ActiveCfg = Release|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{EA5B58E5-42EB-4B6C-895A-ACA500F39087}.Release|Mixed Platforms.Build.0 = Release|Win32
