@@ -77,21 +77,32 @@ namespace AerialMapping
                 List<MenuItem> locations = new List<MenuItem>();
                 foreach (Dataset ds in layers)
                 {
+                    MenuItem currentLocationRootNode = null;
+                    foreach (MenuItem item in locations) 
+                    {
+                        if (item.Title == ds.Location)
+                        {
+                            currentLocationRootNode = item;
+                        }
+                    }
+
                     // If location has not been added already
-                    if (locations.Count == 0 || locations.Last().Title != ds.Location)
+                    if (currentLocationRootNode == null)
                     {
                         // Construct new root level node
                         MenuItem node = new MenuItem()
                         {
                             Title = ds.Location,
-                            FilePath = ds.FilePath
+                            FilePath = ds.FilePath,
+                            TreeCanopyFilePath = ds.TreeCanopyFilePath
                         };
 
                         // Add first subnode to new root level node
                         node.Items.Add(new MenuItem()
                         {
                             Title = ds.Time.ToString(),
-                            FilePath = ds.FilePath
+                            FilePath = ds.FilePath,
+                            TreeCanopyFilePath = ds.TreeCanopyFilePath
                         });
                         locations.Add(node);
                     }
@@ -99,10 +110,11 @@ namespace AerialMapping
                     {
                         // If location has been added already
                         // Add another subnode to exisiting root level node
-                        locations.Last().Items.Add(new MenuItem()
+                        currentLocationRootNode.Items.Add(new MenuItem()
                         {
                             Title = ds.Time.ToString(),
-                            FilePath = ds.FilePath
+                            FilePath = ds.FilePath,
+                            TreeCanopyFilePath = ds.TreeCanopyFilePath
                         });
                     }
                 }
@@ -284,6 +296,7 @@ namespace AerialMapping
             set
             {
                 viewTreeAnalytics = value;
+                
                 Console.WriteLine("Tree analytics option is now: " + value);
                 NotifiyPropertyChanged("ViewTreeAnalytics");
             }
@@ -351,7 +364,7 @@ namespace AerialMapping
                     // If so, then add the new layer as a child of that Location
                     if (location.Title == newLayer.Location)
                     {
-                        MenuItem newChild = new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath, location.TreeCanopyFilePath);
+                        MenuItem newChild = new MenuItem(newLayer.Time.ToString(), newLayer.FilePath, location.TreeCanopyFilePath);
                         location.Items.Add(newChild);
 
                         // Sort the children based on time
@@ -368,7 +381,7 @@ namespace AerialMapping
                 {
                     // Add it to the TreeView on the UI
                     MenuItem root = new MenuItem(newLayer.Location, newLayer.FilePath, newLayer.TreeCanopyFilePath);
-                    root.Items.Add(new MenuItem(newLayer.Time.ToLongDateString(), newLayer.FilePath, newLayer.TreeCanopyFilePath));
+                    root.Items.Add(new MenuItem(newLayer.Time.ToString(), newLayer.FilePath, newLayer.TreeCanopyFilePath));
                     this.TreeViewItems.Add(root);
                     this.UpdateCurrentLocation(root);
                 }
@@ -671,6 +684,42 @@ namespace AerialMapping
             if (!locationStillExists)
             {
                 this.currentLocation = this.treeViewItems.FirstOrDefault();
+            }
+
+            List<Dataset> layers = new List<Dataset>();
+            string json;
+            CollectAllTreeItems(treeViewItems, layers);
+            json = JsonConvert.SerializeObject(layers.ToArray());
+            if (layers.Count == 0)
+            {
+                json = "";
+            }
+            System.IO.File.WriteAllText("../../Layers.json", json);
+        }
+
+        void CollectAllTreeItems(ObservableCollection<MenuItem> MenuItem, List<Dataset> source, string location = "")
+        {
+            //
+            // Since we don't differentiate between whether a Title is a location or a time items in the first iteration
+            // are locations - otherwise they are layers with a date
+            //
+            bool bIsFirstIteration = location == "";
+            foreach (MenuItem I in MenuItem)
+            {
+                if (bIsFirstIteration)
+                {
+                    CollectAllTreeItems(I.Items, source, I.Title);
+                }
+                else
+                {
+                    Dataset S = new Dataset();
+                    S.Location = location;
+                    S.Time = I.TimeAsDateTime();
+                    S.FilePath = I.FilePath;
+                    S.TreeCanopyFilePath = I.TreeCanopyFilePath;
+                    source.Add(S);
+                    CollectAllTreeItems(I.Items, source);
+                }
             }
         }
 
