@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-
 namespace AerialMapping
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -27,6 +26,7 @@ namespace AerialMapping
         /// </summary>
         /// <param name="name">The string to put in the treeview.</param>
         /// <param name="filePath">The filepath associated with this object.</param>
+        /// <param name="treeFilePath">The filepath associated with the processed object.</param>
         public RemoveLayersViewModel(string name, string filePath, string treeFilePath)
         {
             this.Name = name;

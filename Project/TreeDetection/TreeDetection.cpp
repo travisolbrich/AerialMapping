@@ -229,7 +229,6 @@ void GetEntropyImage( const Mat *graySrc, int neighborhoodSize, Mat *entropyImag
       buckets[NUMBER_OF_BUCKETS] = { 0 };
   
   float range[] = { 0, 255 },
-        pixelFuncVal,
         summation,
         frequency;
 

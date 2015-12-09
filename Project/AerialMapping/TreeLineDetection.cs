@@ -42,7 +42,10 @@ namespace AerialMapping
                 {
                     target.Delete(true);
                 }
-                catch (Exception){}
+                catch (Exception)
+                {
+                }
+
                 target.Create();
                 this.CopyFilesRecursively(source, target);
                 this.RunImageProcessingRecursively(target);

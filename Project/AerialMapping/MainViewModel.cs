@@ -3,9 +3,6 @@
 //     Copyright (c) CSCE 482 Aerial Mapping Design Team
 // </copyright>
 //-----------------------------------------------------------------------
-
-using System.Linq.Expressions;
-
 namespace AerialMapping
 {
     using System;
@@ -16,6 +13,7 @@ namespace AerialMapping
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
@@ -47,12 +45,13 @@ namespace AerialMapping
         private bool viewTreeAnalytics;
 
         private MainWindow mainWindow;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel" /> class.
         /// This is the constructor for the MainViewModel.
         /// When the view model initializes, it reads the map from the App.xaml resources.
         /// </summary>
+        /// <param name="window">The window the mainviewmodel belongs to.</param>
         public MainViewModel(MainWindow window)
         {
             this.mainWindow = window;
@@ -285,7 +284,8 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Indicates whether or not to view the tree canopy images.
+        /// Gets or sets a value indicating whether or not to display the
+        /// processed or plain image
         /// </summary>
         public bool ViewTreeAnalytics
         {
@@ -293,12 +293,13 @@ namespace AerialMapping
             {
                 return this.viewTreeAnalytics;
             }
+
             set
             {
-                viewTreeAnalytics = value;
+                this.viewTreeAnalytics = value;
                 
                 Console.WriteLine("Tree analytics option is now: " + value);
-                NotifiyPropertyChanged("ViewTreeAnalytics");
+                this.NotifiyPropertyChanged("ViewTreeAnalytics");
             }
         }
 
@@ -351,7 +352,7 @@ namespace AerialMapping
                 // Presently, this will not require a change in the treeview, so the new image can go straight
                 // to LoadKML()
                 TreeLineDetection temp = new TreeLineDetection();
-                Task.Run(() => temp.ConvertFolder((new FileInfo(newLayer.FilePath)).DirectoryName, mainWindow));
+                Task.Run(() => temp.ConvertFolder((new FileInfo(newLayer.FilePath)).DirectoryName, this.mainWindow));
 
                 // Save the new dataset
                 this.datasetList.Add(newLayer);
@@ -465,7 +466,7 @@ namespace AerialMapping
         /// <returns>The current location.</returns>
         public string CurrentLocation()
         {
-            return currentLocation.Title;
+            return this.currentLocation.Title;
         }
 
         /// <summary>
@@ -474,7 +475,7 @@ namespace AerialMapping
         /// <returns>The current date and time as a string.</returns>
         public string CurrentTime()
         {
-            return currentLocation.Items.FirstOrDefault(x => x.Checked).Title;
+            return this.currentLocation.Items.FirstOrDefault(x => x.Checked).Title;
         }
 
         /// <summary>
@@ -483,7 +484,7 @@ namespace AerialMapping
         /// <returns>The filepath for the current layer.</returns>
         public string CurrentFilePath()
         {
-            return currentLocation.Items.FirstOrDefault(x => x.Checked).FilePath;
+            return this.currentLocation.Items.FirstOrDefault(x => x.Checked).FilePath;
         }
 
         /// <summary>
@@ -510,9 +511,9 @@ namespace AerialMapping
         }
 
         /// <summary>
-        /// Unloads a KML layer based on the file path in the MenuItem.
+        /// Unloads a KML layer based on the file path in the MenuItem
         /// </summary>
-        /// <param name="item">The MenuItem item</param>
+        /// <param name="filePath">Filepath that belongs to the layer to unload</param>
         public void UnloadKML(string filePath)
         {
             try
@@ -555,15 +556,15 @@ namespace AerialMapping
                     //this.MapView.SetView(selectedLayer.FullExtent.GetCenter());
 
                     // Very Ghetto way to pan to the selected image.
-                    if (ViewTreeAnalytics)
+                    if (this.ViewTreeAnalytics)
                     {
-                        UnloadKML(location.Items.First().TreeCanopyFilePath);
-                        LoadKml(location.Items.First().TreeCanopyFilePath, true, true);
+                        this.UnloadKML(location.Items.First().TreeCanopyFilePath);
+                        this.LoadKml(location.Items.First().TreeCanopyFilePath, true, true);
                     }
                     else
                     {
-                        UnloadKML(location.Items.First().FilePath);
-                        LoadKml(location.Items.First().FilePath, true, true);
+                        this.UnloadKML(location.Items.First().FilePath);
+                        this.LoadKml(location.Items.First().FilePath, true, true);
                     }
 
                     // If so, then select its first child
@@ -593,15 +594,15 @@ namespace AerialMapping
                             }
 
                             // Very Ghetto way to pan to the selected image.
-                            if (ViewTreeAnalytics)
+                            if (this.ViewTreeAnalytics)
                             {
-                                UnloadKML(time.TreeCanopyFilePath);
-                                LoadKml(time.TreeCanopyFilePath, true, true);
+                                this.UnloadKML(time.TreeCanopyFilePath);
+                                this.LoadKml(time.TreeCanopyFilePath, true, true);
                             }
                             else
                             {
-                                UnloadKML(time.FilePath);
-                                LoadKml(time.FilePath, true, true);
+                                this.UnloadKML(time.FilePath);
+                                this.LoadKml(time.FilePath, true, true);
                             }
 
                             time.Checked = true;
@@ -688,37 +689,42 @@ namespace AerialMapping
 
             List<Dataset> layers = new List<Dataset>();
             string json;
-            CollectAllTreeItems(treeViewItems, layers);
+            this.CollectAllTreeItems(this.treeViewItems, layers);
             json = JsonConvert.SerializeObject(layers.ToArray());
             if (layers.Count == 0)
             {
-                json = "";
+                json = string.Empty;
             }
+
             System.IO.File.WriteAllText("../../Layers.json", json);
         }
 
-        void CollectAllTreeItems(ObservableCollection<MenuItem> MenuItem, List<Dataset> source, string location = "")
+        /// <summary>
+        /// Collects all leaf items in the tree view
+        /// </summary>
+        /// <param name="menuItems">The root menu item</param>
+        /// <param name="source">Dataset to populate with collected values</param>
+        /// <param name="location">Internal do not use.</param>
+        private void CollectAllTreeItems(ObservableCollection<MenuItem> menuItems, List<Dataset> source, string location = "")
         {
-            //
             // Since we don't differentiate between whether a Title is a location or a time items in the first iteration
             // are locations - otherwise they are layers with a date
-            //
-            bool bIsFirstIteration = location == "";
-            foreach (MenuItem I in MenuItem)
+            bool isFirstIteration = location == string.Empty;
+            foreach (MenuItem item in menuItems)
             {
-                if (bIsFirstIteration)
+                if (isFirstIteration)
                 {
-                    CollectAllTreeItems(I.Items, source, I.Title);
+                    this.CollectAllTreeItems(item.Items, source, item.Title);
                 }
                 else
                 {
-                    Dataset S = new Dataset();
-                    S.Location = location;
-                    S.Time = I.TimeAsDateTime();
-                    S.FilePath = I.FilePath;
-                    S.TreeCanopyFilePath = I.TreeCanopyFilePath;
-                    source.Add(S);
-                    CollectAllTreeItems(I.Items, source);
+                    Dataset dataSet = new Dataset();
+                    dataSet.Location = location;
+                    dataSet.Time = item.TimeAsDateTime();
+                    dataSet.FilePath = item.FilePath;
+                    dataSet.TreeCanopyFilePath = item.TreeCanopyFilePath;
+                    source.Add(dataSet);
+                    this.CollectAllTreeItems(item.Items, source);
                 }
             }
         }
@@ -769,7 +775,7 @@ namespace AerialMapping
                     Layer currentLayer = Map.Layers[currentLocationItems[i].FilePath];
                     if (currentLayer != null)
                     {
-                        if (i == this.TimeSliderValue - 1 && !ViewTreeAnalytics)
+                        if (i == this.TimeSliderValue - 1 && !this.ViewTreeAnalytics)
                         {
                             currentLayer.IsVisible = true;
                         }
@@ -783,7 +789,7 @@ namespace AerialMapping
                     currentLayer = Map.Layers[currentLocationItems[i].TreeCanopyFilePath];
                     if (currentLayer != null)
                     {
-                        if (i == this.TimeSliderValue - 1 && ViewTreeAnalytics)
+                        if (i == this.TimeSliderValue - 1 && this.ViewTreeAnalytics)
                         {
                             currentLayer.IsVisible = true;
                         }
