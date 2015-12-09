@@ -297,7 +297,7 @@ namespace AerialMapping
             set
             {
                 this.viewTreeAnalytics = value;
-                
+                UpdateCurrentLocation(currentLocation);
                 Console.WriteLine("Tree analytics option is now: " + value);
                 this.NotifiyPropertyChanged("ViewTreeAnalytics");
             }
