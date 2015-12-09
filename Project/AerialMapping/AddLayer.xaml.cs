@@ -82,6 +82,11 @@ namespace AerialMapping
         /// <param name="e">Button press event args</param>
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
+            if (FilePathInput.Text == string.Empty)
+            {
+                return;
+            }
+
             // Read the data from the boxes on screen.
             this.DatasetToAdd.Location = LocationComboBox.Text;
             
