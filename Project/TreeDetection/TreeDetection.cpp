@@ -121,7 +121,7 @@ extern "C" _declspec( dllexport ) void Entry( const char *filepath, const char *
       if( result.at<uchar>( y, x ) == 0 && luminosityImage.at<uchar>( y, x ) != 0 )
       {
         uchar lum = luminosityImage.at<uchar>( y, x ) * .8;
-        image.at<Vec4b>( y, x ) = Vec4b( lum, lum, lum );
+        image.at<Vec3b>( y, x ) = Vec3b( lum, lum, lum );
       }
     }
   }
