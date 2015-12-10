@@ -5,7 +5,7 @@
   xmlns:local="clr-namespace:AerialMapping"
   xmlns:dw="clr-namespace:AerialMapping"
   FontSize="13"
-  Title="Remove Layers"
+  Title="Remove Images"
   Width="300" Height="300" 
   WindowStartupLocation="CenterScreen"  
   >

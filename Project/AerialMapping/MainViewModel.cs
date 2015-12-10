@@ -823,6 +823,11 @@ namespace AerialMapping
         /// <param name="newLocation">New location value for currentLocation.</param>
         private void UpdateCurrentLocation(MenuItem newLocation)
         {
+            if (newLocation == null)
+            {
+                return;
+            }
+
             this.currentLocation = newLocation;
             this.TimeSliderMax = this.currentLocation.Items.Count;
             this.TimeSliderValue = 1;
